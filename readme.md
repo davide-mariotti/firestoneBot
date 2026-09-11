@@ -337,11 +337,18 @@ retreat_stages = 5
 
 3. Configure the path to your Firestone Idle RPG game directory by editing the `src/Directory.Build.props` file if needed:
     - By default, the path is set to `C:\Program Files (x86)\Steam\steamapps\common\Firestone` (Windows, standard Steam library location). If your game is installed elsewhere (a custom Steam library folder, or Epic Games), change the `<GameRoot>` property in this file to the correct path.
-    - You can also set the environment variable `COMMON_DIR` to override the base directory instead of editing the file. In this case, the game path will be `$(COMMON_DIR)\Firestone`.
+    - You can also set the environment variable `COMMON_DIR` to override the base directory instead of editing the file. In this case, the game path will be `$(COMMON_DIR)\Firestone`. This is the easiest way to target a specific install when you have multiple side-by-side Steam installations (e.g. `Steam-0`, `Steam-1`, `Steam-2`, each with its own account/library) - just point `COMMON_DIR` at the one you want to build for.
       - Example (custom Steam library on a different drive):
 
           ```xml
           <GameRoot>D:\SteamLibrary\steamapps\common\Firestone</GameRoot>
+          ```
+
+      - Example (numbered Steam installs, PowerShell):
+
+          ```powershell
+          $env:COMMON_DIR = "C:\Program Files (x86)\Steam-0\steamapps\common"
+          dotnet build src/firebot.csproj -c Debug
           ```
 
 4. Build the project using your preferred method (e.g., Visual Studio, `dotnet build src/firebot.csproj -c Debug`).
