@@ -12,6 +12,7 @@ public abstract class BotTask
     private readonly string _className;
     private MelonPreferences_Category _category;
     private MelonPreferences_Entry<bool> _enabledEntry;
+    private MelonPreferences_Entry<string> _nextRunTimeEntry;
     private GameElement _notificationElement;
 
     protected BotTask()
@@ -53,7 +54,26 @@ public abstract class BotTask
             $"Enables or disables the {SectionTitle} automation task." +
             $"\nWhen disabled, this task will be ignored during the execution loop.");
 
+        _nextRunTimeEntry = _category.CreateEntry("next_run_time_internal", "", "Next Run Time (internal)",
+            "Bot-managed: remembers when this task should next check, across game/bot restarts. " +
+            "Do not edit manually.");
+
+        if (DateTime.TryParse(_nextRunTimeEntry.Value, out var savedNextRunTime) && savedNextRunTime > DateTime.Now)
+            NextRunTime = savedNextRunTime;
+
         OnConfigure(_category);
+        _category.SaveToFile();
+    }
+
+    /// <summary>
+    ///     Writes the current NextRunTime to disk so a bot/game restart doesn't forget a real
+    ///     in-game cooldown and re-check everything immediately.
+    /// </summary>
+    public void PersistNextRunTime()
+    {
+        if (_nextRunTimeEntry == null) return;
+
+        _nextRunTimeEntry.Value = NextRunTime.ToString("O");
         _category.SaveToFile();
     }
 
@@ -66,6 +86,19 @@ public abstract class BotTask
         => IsEnabled && NotificationElement != null && NotificationElement.IsVisible();
 
     public abstract IEnumerator Execute();
+
+    /// <summary>
+    ///     Called after every execution. If the task's own logic already scheduled a real future run
+    ///     (something was claimed, started, or is on a genuine cooldown), this does nothing. Otherwise
+    ///     (nothing to do this cycle) it retries after minDelay instead of immediately re-tying for the
+    ///     next scan cycle. Notification-driven tasks are unaffected: a visible notification badge is
+    ///     still checked every cycle regardless of this floor.
+    /// </summary>
+    public void EnsureMinimumNextRun(TimeSpan minDelay)
+    {
+        var floor = DateTime.Now + minDelay;
+        if (NextRunTime < floor) NextRunTime = floor;
+    }
 
     protected void Debug(string message, [CallerMemberName] string member = "", [CallerLineNumber] int line = 0)
         => Logger.Debug($"[{_className}::{member}:{line}] {message}");

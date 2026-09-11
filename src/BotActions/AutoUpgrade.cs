@@ -1,9 +1,8 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Firebot.Core;
 using Firebot.GameModel.Base;
-using Firebot.GameModel.Features.MainScene;
 using Firebot.GameModel.Primitives;
 using Firebot.Infrastructure;
 using Firebot.Utilities;
@@ -24,18 +23,11 @@ public static class AutoUpgrade
     private static bool _isRunning;
     private static object _autoUpgradeRoutineHandle;
     private static bool _isInitialized;
-    private static MelonPreferences_Entry<KeyCode> _shortcutKey;
+    private static string _cachedLevel = string.Empty;
     private static MelonPreferences_Entry<bool> _isEnabled;
     private static MelonPreferences_Entry<string> _upgradeTargetSlots;
 
     private static bool IsEnabled => _isEnabled?.Value ?? false;
-
-    private static bool IsShortcutDisabled => _shortcutKey?.Value == KeyCode.None;
-
-    private static KeyCode ShortcutKey =>
-        Enum.IsDefined(typeof(KeyCode), _shortcutKey?.Value ?? KeyCode.F6)
-            ? _shortcutKey?.Value ?? KeyCode.F6
-            : KeyCode.F6;
 
     public static void Initialize()
     {
@@ -47,18 +39,11 @@ public static class AutoUpgrade
         var section = MelonPreferences.CreateCategory(sectionId, $"{clazzName} Settings");
         section.SetFilePath(BotSettings.ConfigPath);
 
-        _shortcutKey = section.CreateEntry(
-            "shortcut_key",
-            KeyCode.F6,
-            "Shortcut Key",
-            "The physical key used to manually toggle the AutoUpgrade execution state during gameplay. Default: F6."
-        );
-
         _isEnabled = section.CreateEntry(
             "enabled",
             false,
             "Enable AutoUpgrade",
-            "Enables or disables the AutoUpgrade automation task. When disabled, this task will be ignored during the execution loop. Default: false."
+            "Enables or disables the AutoUpgrade automation task. Starts and stops together with the main bot (shortcut_key in [firebot_settings]). Default: false."
         );
 
         _upgradeTargetSlots = section.CreateEntry(
@@ -66,15 +51,14 @@ public static class AutoUpgrade
             "",
             "Upgrade Target Slots",
             "AUTOUPGRADE TARGET SLOT CONFIGURATION. " +
-            "\nThis setting controls which upgrade slots (heroes/skills) will be upgraded. " +
+            "\nThis setting controls which upgrade slots (leader/heroes) will be upgraded. " +
             "\nSLOT IDs ARE ZERO-BASED and range from 0 to 6. " +
-            "\nORIENTATION: Slot numbering follows the list from top to bottom. " +
-            "\nSLOT MAP: 0 = Base upgrade, 1 = Guardian, 2 to 6 = Heroes. " +
+            "\nSLOT MAP: 0 = Leader, 1 to 6 = Heroes. " +
             "\nTASK PRIORITY: Main bot tasks always have priority over AutoUpgrade. " +
-            "\nAUTO PAUSE/RESUME: When a main task is approaching, AutoUpgrade pauses about 30 seconds before that task runs, allows the task to execute, and then resumes automatically. " +
+            "\nAUTO PAUSE/RESUME: AutoUpgrade pauses while a main task is actively executing and resumes automatically right after. " +
             "\nHOW TO USE: Enter comma-separated slot IDs to select the targets to upgrade. " +
             "\nEXAMPLES: '0,6' = only slots 0 and 6 will be upgraded. '3,1,5' = only slots 3, 1 and 5. " +
-            "\nIf empty, AutoUpgrade will upgrade all visible slots. " +
+            "\nIf empty, AutoUpgrade will upgrade all slots. " +
             "\nInvalid values are ignored."
         );
 
@@ -83,40 +67,35 @@ public static class AutoUpgrade
         Logger.Info("AutoUpgrade configuration initialized.");
     }
 
+    private static List<CachedGameButton> AllButtons()
+    {
+        var buttons = new List<CachedGameButton>
+        {
+            new(Paths.BattleLoc.BottomSideUINewLoc.LeaderPanelLoc.LvlUpBtn)
+        };
+
+        var heroSlots = new GameElement(Paths.BattleLoc.BottomSideUINewLoc.HeroSlotsLoc.Root);
+        foreach (var slot in heroSlots.GetChildren())
+            buttons.Add(new CachedGameButton(Paths.BattleLoc.BottomSideUINewLoc.HeroSlotsLoc.LvlUpBtn, slot));
+
+        return buttons;
+    }
+
     private static List<CachedGameButton> Buttons()
     {
-        var ge = new GameElement(Paths.MenusLoc.CanvasLoc.MainSceneLoc.UpgradesLoc.UpgradesList);
         ButtonsBuffer.Clear();
-
+        var allButtons = AllButtons();
         var selectedTargetSlots = GetSelectedTargetSlots();
 
         if (selectedTargetSlots.Length == 0)
         {
-            foreach (var child in ge.GetChildren())
-            {
-                if (child == null) continue;
-
-                var button = "customUpgrade".Equals(child.Name)
-                    ? new CachedGameButton(Paths.MenusLoc.CanvasLoc.MainSceneLoc.UpgradesLoc.BuyBtn, child)
-                    : new CachedGameButton(Paths.MenusLoc.CanvasLoc.MainSceneLoc.UpgradesLoc.LvlUpBtn, child);
-
-                ButtonsBuffer.Add(button);
-            }
-
+            ButtonsBuffer.AddRange(allButtons);
             return ButtonsBuffer;
         }
 
         foreach (var position in selectedTargetSlots)
-        {
-            var child = ge.GetChild(position);
-            if (child == null) continue;
-
-            var button = "customUpgrade".Equals(child.Name)
-                ? new CachedGameButton(Paths.MenusLoc.CanvasLoc.MainSceneLoc.UpgradesLoc.BuyBtn, child)
-                : new CachedGameButton(Paths.MenusLoc.CanvasLoc.MainSceneLoc.UpgradesLoc.LvlUpBtn, child);
-
-            ButtonsBuffer.Add(button);
-        }
+            if (position >= 0 && position < allButtons.Count)
+                ButtonsBuffer.Add(allButtons[position]);
 
         return ButtonsBuffer;
     }
@@ -146,32 +125,55 @@ public static class AutoUpgrade
         return result.Count > 0 ? result.ToArray() : Array.Empty<int>();
     }
 
-    public static void Update()
+    private static bool IsTopTier(string levelText) =>
+        levelText.IndexOf("x100", StringComparison.OrdinalIgnoreCase) >= 0 ||
+        levelText.IndexOf("MAX", StringComparison.OrdinalIgnoreCase) >= 0;
+
+    /// <summary>
+    ///     Cycles the buy-quantity toggle until it reaches x100 or MAX, whichever the button offers,
+    ///     so each upgrade click spends as much gold as possible in one go.
+    /// </summary>
+    private static IEnumerator SetUpgradeLevel()
     {
-        if (_shortcutKey == null)
-            return;
+        var levelTxt = new GameText(Paths.BattleLoc.BottomSideUINewLoc.ChangeLevelUpModeLoc.Text);
+        var toggleBtn = new GameButton(Paths.BattleLoc.BottomSideUINewLoc.ChangeLevelUpModeLoc.Button);
 
-        if (!IsEnabled && _isRunning)
+        var currentLevel = levelTxt.GetParsedText();
+
+        if (!string.IsNullOrEmpty(currentLevel) &&
+            string.Equals(currentLevel, _cachedLevel, StringComparison.Ordinal))
+            yield break;
+
+        if (!string.IsNullOrEmpty(currentLevel) && IsTopTier(currentLevel))
         {
-            Stop();
-            return;
+            _cachedLevel = currentLevel;
+            yield break;
         }
 
-        if (IsShortcutDisabled) return;
-        if (!Input.GetKeyDown(ShortcutKey)) return;
-
-        if (_isRunning)
+        const int maxAttempts = 10; // Prevent infinite loop in case of unexpected issues
+        for (var attempts = 0; attempts < maxAttempts; attempts++)
         {
-            Stop();
-            return;
+            yield return toggleBtn.Click();
+            var nextLevel = levelTxt.GetParsedText();
+
+            if (string.IsNullOrEmpty(nextLevel)) break;
+            if (IsTopTier(nextLevel))
+            {
+                currentLevel = nextLevel;
+                break;
+            }
+
+            // Cycled all the way back to where we started without finding x100/MAX.
+            if (string.Equals(nextLevel, currentLevel, StringComparison.Ordinal)) break;
+
+            currentLevel = nextLevel;
         }
 
-        Start();
+        _cachedLevel = currentLevel;
     }
 
-    private static void Start()
+    public static void Start()
     {
-        if (IsShortcutDisabled) return;
         if (!IsEnabled) return;
         if (_isRunning) return;
         _isRunning = true;
@@ -179,37 +181,26 @@ public static class AutoUpgrade
         Logger.Info("AutoUpgrade started.");
     }
 
-    private static void Stop()
+    public static void Stop()
     {
         if (!_isRunning) return;
         _isRunning = false;
         if (_autoUpgradeRoutineHandle != null) MelonCoroutines.Stop(_autoUpgradeRoutineHandle);
         _autoUpgradeRoutineHandle = null;
-        MelonCoroutines.Start(CloseUpgradesMenu());
         Logger.Info("AutoUpgrade stopped.");
     }
 
     private static IEnumerator UpgradeLoop()
     {
-        var wasPaused = false;
         while (_isRunning)
         {
-            var isPaused = BotManager.ShouldPauseAutoUpgrade();
-            if (isPaused)
+            if (BotManager.ShouldPauseBackgroundTasks())
             {
-                if (!wasPaused && Upgrades.IsVisible) yield return Upgrades.Close;
-                wasPaused = true;
                 yield return IdlePollWait;
                 continue;
             }
 
-            if (wasPaused) wasPaused = false;
-            if (!Upgrades.IsVisible)
-            {
-                yield return new GameButton(Paths.BattleLoc.BottomSideUIDesktopLoc.MenuButtonsLoc.UpgradesBtn).Click();
-                yield return Upgrades.SetUpgradeLevel();
-                yield return IdlePollWait;
-            }
+            yield return SetUpgradeLevel();
 
             var buttons = Buttons();
             if (buttons.Count == 0)
@@ -220,18 +211,12 @@ public static class AutoUpgrade
 
             foreach (var buyUpgradeBtn in buttons)
             {
-                if (BotManager.ShouldPauseAutoUpgrade()) break;
+                if (BotManager.ShouldPauseBackgroundTasks()) break;
 
                 Logger.Debug($"Name: {buyUpgradeBtn.Name}, IsVisible: {buyUpgradeBtn.IsVisible()}");
                 yield return buyUpgradeBtn.HoldButton(HoldPerButtonSeconds);
                 yield return GapBetweenButtonsWait;
             }
         }
-    }
-
-    private static IEnumerator CloseUpgradesMenu()
-    {
-        if (!Upgrades.IsVisible) yield break;
-        yield return Upgrades.Close;
     }
 }

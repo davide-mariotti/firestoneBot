@@ -9,8 +9,11 @@ namespace Firebot.GameModel.Base;
 
 public class GameElement
 {
+    // Shared across every instance (fresh GameElements are constructed constantly) so the same
+    // recurring failure is only ever logged once per session instead of on every single check.
+    private static readonly HashSet<string> LoggedFailures = new();
+
     private readonly string _className;
-    private readonly HashSet<string> _loggedFailures = new();
 
     public GameElement(string path = null, GameElement parent = null, Transform transform = null)
     {
@@ -36,18 +39,8 @@ public class GameElement
     protected string Path { get; }
 
     // Always resolve from Path; do not cache transforms.
-    protected Transform Root
-    {
-        get
-        {
-            var resolved = ResolvePath(Path);
-
-            if (resolved == null && !string.IsNullOrEmpty(Path))
-                DebugOnce($"root-resolve:{Path}", $"[FAILED] Critical: Could not resolve Transform. Path: {Path}");
-
-            return resolved;
-        }
-    }
+    // ResolvePath already logs the specific reason on failure, so nothing is logged here.
+    protected Transform Root => ResolvePath(Path);
 
     public string Name => Root?.name ?? string.Empty;
 
@@ -90,8 +83,9 @@ public class GameElement
     public virtual bool IsVisible()
     {
         var currentRoot = Root;
-        var success = currentRoot != null && currentRoot.gameObject.activeInHierarchy;
+        if (currentRoot == null) return false; // ResolvePath already logged why.
 
+        var success = currentRoot.gameObject.activeInHierarchy;
         if (!success)
             DebugOnce($"hidden:{Path}", $"[FAILED] Element is hidden or inactive. Path: {Path}");
 
@@ -115,11 +109,7 @@ public class GameElement
     public IEnumerable<GameElement> GetChildren()
     {
         var currentRoot = Root;
-        if (currentRoot == null)
-        {
-            DebugOnce($"children-root-null:{Path}", $"[FAILED] Cannot get children: Root is null. Path: {Path}");
-            yield break;
-        }
+        if (currentRoot == null) yield break; // ResolvePath already logged why.
 
         for (var i = 0; i < currentRoot.childCount; i++)
             yield return new GameElement(transform: currentRoot.GetChild(i));
@@ -168,6 +158,6 @@ public class GameElement
     private void DebugOnce(string key, string message, [CallerMemberName] string member = "",
         [CallerLineNumber] int line = 0)
     {
-        if (_loggedFailures.Add(key)) Debug(message, member, line);
+        if (LoggedFailures.Add(key)) Debug(message, member, line);
     }
 }

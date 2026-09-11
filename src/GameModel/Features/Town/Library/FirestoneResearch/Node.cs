@@ -45,15 +45,4 @@ public class Node : GameElement
 
         yield return new GameButton(parent: child).Click();
     }
-
-    public IEnumerator SelectAny()
-    {
-        var tree = GetTree();
-        var child = tree.GetChildren().FirstOrDefault(IsActiveNode);
-
-        if (child == null)
-            yield break;
-
-        yield return new GameButton(parent: child).Click();
-    }
 }

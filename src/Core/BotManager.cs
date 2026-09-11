@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
+using Firebot.BotActions;
 using Firebot.Core.Tasks;
 using Firebot.Utilities;
 using MelonLoader;
@@ -14,14 +15,15 @@ namespace Firebot.Core;
 
 public static class BotManager
 {
-    private const double AutoUpgradeMinExecutionWindowSeconds = 30d;
+    // How long an idle task (nothing to do this cycle) waits before checking again.
+    private static readonly TimeSpan IdleRetryDelay = TimeSpan.FromMinutes(2);
+
     private static readonly List<BotTask> Tasks = new();
     private static object _botRoutineHandle;
-    private static bool _shouldPauseAutoUpgrade;
     public static bool IsRunning { get; private set; }
     private static bool IsTaskExecuting { get; set; }
 
-    public static bool ShouldPauseAutoUpgrade() => IsRunning && (_shouldPauseAutoUpgrade || IsTaskExecuting);
+    public static bool ShouldPauseBackgroundTasks() => IsRunning && IsTaskExecuting;
 
     public static void Initialize()
     {
@@ -55,8 +57,10 @@ public static class BotManager
         if (Tasks.Count == 0) Initialize();
 
         IsRunning = true;
-        _shouldPauseAutoUpgrade = false;
         _botRoutineHandle = MelonCoroutines.Start(BotSchedulerLoop());
+        AutoSkill.Start();
+        AutoUpgrade.Start();
+        AutoRetreat.Start();
         Logger.Info($"Started. Tasks loaded: {Tasks.Count(t => t.IsEnabled)}");
     }
 
@@ -65,8 +69,10 @@ public static class BotManager
         if (!IsRunning) return;
         IsRunning = false;
         IsTaskExecuting = false;
-        _shouldPauseAutoUpgrade = false;
         if (_botRoutineHandle != null) MelonCoroutines.Stop(_botRoutineHandle);
+        AutoSkill.Stop();
+        AutoUpgrade.Stop();
+        AutoRetreat.Stop();
         Logger.Info("Stopped.");
     }
 
@@ -79,13 +85,9 @@ public static class BotManager
             BotTask notificationTask = null;
             BotTask readyTask = null;
             var earliest = DateTime.MaxValue;
-            var nextEnabledTaskRun = DateTime.MaxValue;
 
             foreach (var task in Tasks)
             {
-                if (task.IsEnabled && task.NextRunTime < nextEnabledTaskRun)
-                    nextEnabledTaskRun = task.NextRunTime;
-
                 if (notificationTask == null && task.IsNotificationVisible())
                 {
                     notificationTask = task;
@@ -101,10 +103,6 @@ public static class BotManager
 
             if (notificationTask != null) readyTask = notificationTask;
 
-            var hasNearTask = nextEnabledTaskRun != DateTime.MaxValue &&
-                              (nextEnabledTaskRun - DateTime.Now).TotalSeconds <= AutoUpgradeMinExecutionWindowSeconds;
-            _shouldPauseAutoUpgrade = notificationTask != null || readyTask != null || hasNearTask;
-
             if (readyTask != null)
             {
                 IsTaskExecuting = true;
@@ -115,6 +113,8 @@ public static class BotManager
 
                     yield return RunSafe(readyTask.Execute(), $"Task {readyTask.SectionTitle}");
                     readyTask.LastRunTime = DateTime.Now;
+                    readyTask.EnsureMinimumNextRun(IdleRetryDelay);
+                    readyTask.PersistNextRunTime();
 
                     stopwatch.Stop();
 

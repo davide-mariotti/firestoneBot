@@ -25,7 +25,7 @@ public static class Paths
 
         public static class NotificationsLoc
         {
-            public const string Root = BattleLoc.Root + "/leftSideUI/notifications/Viewport/grid";
+            public const string Root = BattleLoc.Root + "/leftSideUINew/notifications/Viewport/grid";
 
             public const string EngineerBtn = Root + "/Engineer";
 
@@ -61,26 +61,51 @@ public static class Paths
             public const string CharacterLevel = Root + "/characterLevelBg/characterLevel";
         }
 
-        public static class BottomSideUIDesktopLoc
+        public static class RightSideUILoc
         {
-            private const string Root = BattleLoc.Root + "/bottomSideUIDesktop";
+            private const string Root = BattleLoc.Root + "/rightSideUI/menuButtons";
+
+            public const string TownBtn = Root + "/townButton";
+        }
+
+        public static class StageProgressionLoc
+        {
+            private const string Root = BattleLoc.Root + "/topSideUI/stageProgression";
+
+            public const string CurrentStageNumTxt = Root + "/currentStage/stageNum";
+
+            public const string GoBackBtn = Root + "/goBackStage";
+        }
+
+        public static class BottomSideUINewLoc
+        {
+            private const string Root = BattleLoc.Root + "/bottomSideUINew/bgBlack";
 
             public static class LeaderPanelLoc
             {
-                private const string Root = BottomSideUIDesktopLoc.Root + "/leaderPanel";
+                private const string Root = BottomSideUINewLoc.Root + "/LeaderPanel/leaderPanelNew";
 
-                public const string HotKeyOneBtn = Root + "/abilityBattle (0)";
+                public const string LvlUpBtn = Root + "/lvlUpButtonBig";
 
-                public const string HotKeyTwoBtn = Root + "/abilityBattle (1)";
+                public const string HotKeyOneBtn = Root + "/abilitiesContainer/abilityBattle (0)";
 
-                public const string HotKeyThreeBtn = Root + "/abilityBattle (2)";
+                public const string HotKeyTwoBtn = Root + "/abilitiesContainer/abilityBattle (1)";
+
+                public const string HotKeyThreeBtn = Root + "/abilitiesContainer/abilityBattle (2)";
             }
 
-            public static class MenuButtonsLoc
+            public static class HeroSlotsLoc
             {
-                private const string Root = BottomSideUIDesktopLoc.Root + "/menuButtons";
+                public const string Root = BottomSideUINewLoc.Root + "/layout";
 
-                public const string UpgradesBtn = Root + "/upgradesButtonUI";
+                public const string LvlUpBtn = "/lvlUpButtonBig";
+            }
+
+            public static class ChangeLevelUpModeLoc
+            {
+                public const string Button = BottomSideUINewLoc.Root + "/rightSide/changeLevelUpModeButton";
+
+                public const string Text = Button + "/text";
             }
         }
     }
@@ -95,22 +120,35 @@ public static class Paths
 
             public static class MainSceneLoc
             {
-                public static class UpgradesLoc
+                public static class TownIrongardLoc
                 {
-                    public const string Root = CanvasLoc.Root + "/menus/Upgrades/";
+                    private const string Root = CanvasLoc.Root + "/menus/TownIrongard";
 
                     public const string CloseBtn = Root + "/closeButton";
 
-                    public const string UpgradesList = Root + "/upgradesList";
+                    public const string TempleOfEternalsBtn = Root + "/townBg/parent/templeOfEternals";
 
-                    public const string BuyBtn = "/buyButton";
-
-                    public const string LvlUpBtn = "/lvlUpButton";
-
-                    public const string ChangeLevelUpModeButton = Root + "/changeLevelUpModeButton";
-
-                    public const string ChangeLevelUpModeBtnTxt = ChangeLevelUpModeButton + "/text";
                 }
+
+                public static class TempleOfEternalsLoc
+                {
+                    private const string Root = CanvasLoc.Root + "/menus/TempleOfEternals";
+
+                    private const string PrestigeSubmenuRoot = Root + "/submenus/bgNew/prestigeSubmenu";
+
+                    public const string CloseBtn = Root + "/closeButton";
+
+                    public const string EmpowerBtn = PrestigeSubmenuRoot + "/adventureInfo/openEmpowerButton";
+
+                    public const string AdventureTimePlayedTxt =
+                        PrestigeSubmenuRoot + "/adventureInfo/adventureTimePlayed";
+
+                    public const string FirestonesFoundTxt = PrestigeSubmenuRoot + "/adventureInfo/firestonesFound";
+
+                    public const string FirestonesYouOwnTxt =
+                        PrestigeSubmenuRoot + "/progress/firestonesYouOwnBg/firestonesYouOwn";
+                }
+
             }
 
             private static class PopupsLoc
@@ -118,6 +156,31 @@ public static class Paths
                 public const string Root = CanvasLoc.Root + "/popups";
 
                 public const string CloseBtn = "/bg/closeButton";
+            }
+
+            public static class EmpowerPopupLoc
+            {
+                private const string Root = PopupsLoc.Root + "/EmpowerPopup";
+
+                public const string CloseBtn = Root + PopupsLoc.CloseBtn;
+
+                public const string EmpowerBtn = Root + "/bg/empowerBg/empowerButton";
+            }
+
+            public static class ActionRequiredLoc
+            {
+                private const string Root = PopupsLoc.Root + "/ActionRequired";
+
+                public const string ConfirmBtn = Root + "/bg/confirmButton";
+
+                public const string CancelBtn = Root + "/bg/cancelButton";
+            }
+
+            public static class TOEPrestigeCompleteLoc
+            {
+                private const string Root = PopupsLoc.Root + "/TOEPrestigeComplete";
+
+                public const string ConfirmBtn = Root + "/bg/confirmButton";
             }
 
             public static class StoreLoc
@@ -306,6 +369,8 @@ public static class Paths
 
                         public const string SelectResearchTable = Root + "/selectResearchTable";
 
+                        public const string UnlockSlotBtn = Root + "/unlockResearchSlot/confirmButton";
+
                         public const string ClaimBtn = "/container/claimButton";
 
                         public const string NextRunTimeTxt = "/container/researchInfo/progressBarBg/timeLeftText";
@@ -331,12 +396,17 @@ public static class Paths
                     {
                         private const string Root = PopupsLoc.Root + "/FirestoneResearchPreview";
 
+                        public const string CloseBtn = Root + PopupsLoc.CloseBtn;
+
+                        public const string LevelTxt = Root + "/bg/innerBg/researchLevelText";
+
                         public const string UnlockedTxt = Root + "/bg/innerBg/unlocked";
 
                         public const string MaxedTxt = Root + "/bg/innerBg/maxed";
 
-                        public const string ActivateBtn =
-                            Root + "/bg/innerBg/unlocked/buttonHolder/researchActivateButton";
+                        public const string RealTimeTxt = UnlockedTxt + "/researchPending/realTime";
+
+                        public const string ActivateBtn = UnlockedTxt + "/buttonHolder/researchActivateButton";
                     }
                 }
 

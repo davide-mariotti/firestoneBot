@@ -31,14 +31,14 @@ Firebot **is not a cheat**. It does not modify game resources, grant unfair adva
 
 - **Easy Start/Stop**: Turn the bot on or off during gameplay with a hotkey (default `F7`, `shortcut_key`). You can also auto-start and adjust bot timings with `auto_start`, `start_bot_delay`, `scan_interval`, `interaction_delay`, and `max_task_runtime`.
 - **Automatic Daily Rewards**: Collects daily rewards for you when they are available.
-- **Engineer Collection**: Picks up ready Engineer tools automatically.
+- **Engineer Collection**: Picks up ready Engineer tools automatically (unlocks at character level 50).
 - **Warfront Rewards**: Collects available Warfront campaign scroll rewards.
 - **Map Missions on Auto**: Collects finished missions and starts new ones with available squads. You can choose mission order with `mission_time_order` (`asc` or `desc`).
 - **Expeditions on Auto**: Finishes and restarts expeditions automatically.
 - **Library Research Automation**: Starts and collects Firestone research, with optional priority order using `research_priority`.
-- **Oracle Automation**: Collects completed rituals and starts new ones when possible.
+- **Oracle Automation**: Collects completed rituals and starts new ones when possible (unlocks at character level 200).
 - **Guardian Training Automation**: Starts training in Magic Quarters automatically. You can choose the guardian with `guardian_index` and enable strange dust usage with `use_strange_dust`.
-- **Alchemist Automation**: Runs alchemist experiments and can focus on specific resources using `resource_type`.
+- **Alchemist Automation**: Runs alchemist experiments and can focus on specific resources using `resource_type` (unlocks at character level 120).
 - **Free Pickaxe Claiming**: Claims free pickaxes automatically based on your preferred quantity with `pickaxe_claim_threshold`.
 - **AutoSkill Mode**: Uses leader skills automatically, with its own key (`[auto_skill].shortcut_key`) and combo setup (`combo_sequence`).
 - **AutoUpgrade Mode**: Upgrades heroes/skills automatically, with its own key (`[auto_upgrade].shortcut_key`) and optional slot selection (`upgrade_target_slots`).

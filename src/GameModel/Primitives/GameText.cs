@@ -37,6 +37,36 @@ public class GameText : GameElement
             : fallback;
     }
 
+    /// <summary>
+    ///     Parses compact/abbreviated numbers (e.g. "86,27M", "10.916.942.093,4") into a double.
+    ///     Tries invariant and current culture first, then falls back to European-style grouping
+    ///     ('.' as thousands separator, ',' as decimal separator).
+    /// </summary>
+    public double GetParsedDoubleAbbreviated(double fallback = 0)
+    {
+        var text = GetParsedText().Trim();
+        if (text.Length == 0) return fallback;
+
+        var multiplier = 1d;
+        var suffix = char.ToUpperInvariant(text[^1]);
+        if (suffix is 'K' or 'M' or 'B' or 'T')
+        {
+            multiplier = suffix switch { 'K' => 1e3, 'M' => 1e6, 'B' => 1e9, _ => 1e12 };
+            text = text[..^1].Trim();
+        }
+
+        if (double.TryParse(text, NumberStyles.Float, CultureInfo.InvariantCulture, out var invariantValue))
+            return invariantValue * multiplier;
+
+        if (double.TryParse(text, NumberStyles.Float, CultureInfo.CurrentCulture, out var currentCultureValue))
+            return currentCultureValue * multiplier;
+
+        var europeanStyle = text.Replace(".", "").Replace(",", ".");
+        return double.TryParse(europeanStyle, NumberStyles.Float, CultureInfo.InvariantCulture, out var europeanValue)
+            ? europeanValue * multiplier
+            : fallback;
+    }
+
     public string GetParsedText()
     {
         if (!IsVisible()) return string.Empty;

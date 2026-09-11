@@ -5,7 +5,6 @@ using Firebot.Core;
 using Firebot.Infrastructure;
 using Firebot.Utilities;
 using MelonLoader;
-using UnityEngine;
 using Logger = Firebot.Core.Logger;
 
 namespace Firebot.BotActions;
@@ -17,14 +16,8 @@ public static class AutoSkill
     private static bool _isRunning;
     private static object _autoSkillRoutineHandle;
     private static bool _isInitialized;
-    private static MelonPreferences_Entry<KeyCode> _shortcutKey;
     private static MelonPreferences_Entry<bool> _isEnabled;
     private static bool IsEnabled => _isEnabled?.Value ?? false;
-
-    private static KeyCode ShortcutKey =>
-        Enum.IsDefined(typeof(KeyCode), _shortcutKey.Value) && _shortcutKey.Value != KeyCode.None
-            ? _shortcutKey.Value
-            : KeyCode.F8;
 
     public static void Initialize()
     {
@@ -35,18 +28,11 @@ public static class AutoSkill
         var section = MelonPreferences.CreateCategory(sectionId, $"{clazzName} Settings");
         section.SetFilePath(BotSettings.ConfigPath);
 
-        _shortcutKey = section.CreateEntry(
-            "shortcut_key",
-            KeyCode.F8,
-            "Shortcut Key",
-            "The physical key used to manually toggle the AutoSkill execution state during gameplay. Default: F8."
-        );
-
         _isEnabled = section.CreateEntry(
             "enabled",
             false,
             "Enable AutoSkill",
-            "Enables or disables the AutoSkill automation task. When disabled, this task will be ignored during the execution loop. Default: false."
+            "Enables or disables the AutoSkill automation task. Starts and stops together with the main bot (shortcut_key in [firebot_settings]). Default: false."
         );
 
         _comboSequence = section.CreateEntry(
@@ -65,9 +51,9 @@ public static class AutoSkill
 
     private static void ParseComboSequence()
     {
-        var hotkey1 = new Hotkey(Paths.BattleLoc.BottomSideUIDesktopLoc.LeaderPanelLoc.HotKeyOneBtn);
-        var hotkey2 = new Hotkey(Paths.BattleLoc.BottomSideUIDesktopLoc.LeaderPanelLoc.HotKeyTwoBtn);
-        var hotkey3 = new Hotkey(Paths.BattleLoc.BottomSideUIDesktopLoc.LeaderPanelLoc.HotKeyThreeBtn);
+        var hotkey1 = new Hotkey(Paths.BattleLoc.BottomSideUINewLoc.LeaderPanelLoc.HotKeyOneBtn);
+        var hotkey2 = new Hotkey(Paths.BattleLoc.BottomSideUINewLoc.LeaderPanelLoc.HotKeyTwoBtn);
+        var hotkey3 = new Hotkey(Paths.BattleLoc.BottomSideUINewLoc.LeaderPanelLoc.HotKeyThreeBtn);
 
         var comboStr = _comboSequence?.Value ?? "1";
         var parts = comboStr.Split(',', StringSplitOptions.RemoveEmptyEntries);
@@ -91,24 +77,14 @@ public static class AutoSkill
         _comboHotkeys = combo.Count > 0 ? combo : new List<Hotkey>();
     }
 
-    private static void Start()
+    public static void Start()
     {
         if (!IsEnabled || _isRunning) return;
         _isRunning = true;
         _autoSkillRoutineHandle = MelonCoroutines.Start(ComboLoop());
     }
 
-    public static void Update()
-    {
-        if (!Input.GetKeyDown(ShortcutKey)) return;
-
-        if (_isRunning)
-            Stop();
-        else
-            Start();
-    }
-
-    private static void Stop()
+    public static void Stop()
     {
         if (!_isRunning) return;
         _isRunning = false;

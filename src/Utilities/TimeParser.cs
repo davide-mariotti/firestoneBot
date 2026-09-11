@@ -19,7 +19,7 @@ public static class TimeParser
     ///     Extracts and parses a duration (e.g., 03:40:52) from a string with variable text.
     ///     Returns TimeSpan.Zero if no time pattern is found.
     /// </summary>
-    private static TimeSpan ParseFrom(string raw)
+    public static TimeSpan ParseFrom(string raw)
     {
         if (string.IsNullOrWhiteSpace(raw)) return TimeSpan.Zero;
 
