@@ -36,7 +36,7 @@ public static class AutoRetreat
     private static bool _suppressedUntilReset;
 
     private static bool IsEnabled => _isEnabled?.Value ?? false;
-    private static float StallMinutes => Mathf.Clamp(_stallMinutes?.Value ?? 15f, 1f, 180f);
+    private static float StallMinutes => Mathf.Clamp(_stallMinutes?.Value ?? 3f, 1f, 180f);
     private static int RetreatStages => Mathf.Clamp(_retreatStages?.Value ?? 5, 1, 50);
 
     public static void Initialize()

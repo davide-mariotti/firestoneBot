@@ -43,6 +43,7 @@ Firebot **is not a cheat**. It does not modify game resources, grant unfair adva
 - **AutoSkill Mode**: Uses leader skills automatically, with its own key (`[auto_skill].shortcut_key`) and combo setup (`combo_sequence`).
 - **AutoUpgrade Mode**: Upgrades heroes/skills automatically, with its own key (`[auto_upgrade].shortcut_key`) and optional slot selection (`upgrade_target_slots`).
 - **Free Speedups**: Uses free speedups (no gems) whenever a timer is close enough to finish, based on `free_speedup_seconds`.
+- **AutoRetreat**: When the current battle stage stops advancing for `stall_minutes` (a difficulty wall), steps back `retreat_stages` stages to keep farming quickly until the next Temple of Eternals reset/empower.
 
 ---
 
@@ -305,6 +306,17 @@ enabled = false
 # If empty, AutoUpgrade will upgrade all visible slots. 
 # Invalid values are ignored.
 upgrade_target_slots = ""
+
+[auto_retreat]
+# Enables or disables AutoRetreat. Starts and stops together with the main bot (shortcut_key in [firebot_settings]).
+# When the current stage stops advancing for `stall_minutes` (a difficulty wall), clicks the in-battle
+# 'go back stage' arrow `retreat_stages` times to drop to an easier stage that clears quickly. After that it
+# stays put (no further checks) until the next Temple of Eternals reset/empower. Default: false.
+enabled = false
+# How long the current stage number must stay unchanged before it's treated as a wall. Clamped between 1 and 180 minutes. Default: 3.
+stall_minutes = 3.0
+# How many stages to step back (one click each) once a wall is detected. Clamped between 1 and 50. Default: 5.
+retreat_stages = 5
 ```
 
 ---
@@ -314,25 +326,26 @@ upgrade_target_slots = ""
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/danilogmoura/firestone-bot.git
+   git clone https://github.com/davide-mariotti/firestoneBot.git
    ```
 
 2. Navigate to the project directory:
 
    ```bash
-   cd firebot
+   cd firestoneBot
    ```
 
 3. Configure the path to your Firestone Idle RPG game directory by editing the `src/Directory.Build.props` file if needed:
-    - By default, the path is set to `C:\Program Files (x86)\Steam\Firestone` (Windows). If your game is installed elsewhere, change the `<GameRoot>` property in this file to the correct path.
-    - You can also set the environment variable `COMMON_DIR` to override the base directory. In this case, the game path will be `$(COMMON_DIR)\Firestone`.
-      - Example:
+    - By default, the path is set to `C:\Program Files (x86)\Steam\steamapps\common\Firestone` (Windows, standard Steam library location). If your game is installed elsewhere (a custom Steam library folder, or Epic Games), change the `<GameRoot>` property in this file to the correct path.
+    - You can also set the environment variable `COMMON_DIR` to override the base directory instead of editing the file. In this case, the game path will be `$(COMMON_DIR)\Firestone`.
+      - Example (custom Steam library on a different drive):
 
           ```xml
-          <GameRoot>C:\Program Files (x86)\Steam\Firestone</GameRoot>
+          <GameRoot>D:\SteamLibrary\steamapps\common\Firestone</GameRoot>
           ```
 
-4. Build the project using your preferred method (e.g., Visual Studio, command line).
+4. Build the project using your preferred method (e.g., Visual Studio, `dotnet build src/firebot.csproj -c Debug`).
+    - On a successful build, `firebot.dll` is copied automatically into `<GameRoot>\Mods`. The game must be closed for this last step to succeed (the file is locked while Firestone is running).
 
 ---
 
