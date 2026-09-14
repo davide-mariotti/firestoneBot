@@ -43,6 +43,8 @@ public static partial class Paths
             public const string GuardianTrainingBtn = Root + "/GuardianTraining";
 
             public const string OracleRitualsBtn = Root + "/OracleRituals";
+
+            public const string ExperimentsBtn = Root + "/Experiments";
         }
 
         public static class RightSideUILoc

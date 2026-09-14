@@ -114,6 +114,8 @@ public static partial class Paths
             public const string MagicQuartersBtn = Root + "/townBg/parent/magicQuarters";
 
             public const string OracleBtn = Root + "/townBg/parent/oracle";
+
+            public const string AlchemistBtn = Root + "/townBg/parent/alchemist";
         }
 
         public static class EngineerLoc
@@ -196,6 +198,28 @@ public static partial class Paths
                 public const string StartBtn = "/startButton";
 
                 public const string NextRunTimeTxt = Root + "/timeBg/timeLeft";
+            }
+        }
+
+        public static class AlchemistLoc
+        {
+            private const string Root = MenusLoc.Root + "/menus/Alchemist";
+
+            public const string CloseBtn = Root + "/closeButton";
+
+            public static class ExperimentsLoc
+            {
+                public const string Root = AlchemistLoc.Root + "/submenus/bg/experimentsSubmenu/experiments";
+
+                public const string StartBtn = "/startExperiment";
+
+                public const string ClaimBtn = "/claimButton";
+
+                public const string NextRunTimeTxt = "/progressBarBg/timeLeftText";
+
+                public const string SpeedupBtn = "/speedUpButton";
+
+                public const string SpeedupFinishDesc = SpeedupBtn + "/finishDesc";
             }
         }
 

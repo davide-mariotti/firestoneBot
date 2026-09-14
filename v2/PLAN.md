@@ -54,7 +54,7 @@ Cambia (le due cose che davvero pesano su CPU/RAM con tanti bot):
 | 7 | **Expeditions** | Esiste (rinominato meglio: v1 lo aveva in un file con nome sbagliato) | Fatto. Porting + stessa aggiunta dei task precedenti: navigazione manuale esplicita (rightSideUI/guildButton → TownGuild/expeditions), non presente in v1. NotificationPath mantenuto dalla v1 nonostante il claim+start combinati (comportamento già live-testato, non modificato). |
 | 8 | **Guardian Training** (Magic Quarters) | Esiste | Fatto. Porting + navigazione manuale esplicita (rightSideUI/townButton → TownIrongard/townBg/parent/magicQuarters), non presente in v1. Logica di selezione guardiano e "strange dust" invariata dalla v1. |
 | 9 | **Oracle Rituals** | Esiste | Fatto. Porting + navigazione manuale esplicita (rightSideUI/townButton → TownIrongard/townBg/parent/oracle), non presente in v1. Schermata "Oracle" (rituali) distinta da "OracleStore" (Task 2, negozio regali). |
-| 10 | **Experiments** (Alchemist) | Esiste | Porting, con opzione risorsa come in v1. |
+| 10 | **Experiments** (Alchemist) | Esiste | Fatto. Porting + navigazione manuale esplicita (rightSideUI/townButton → TownIrongard/townBg/parent/alchemist). Comportamento di default invariato dalla v1: se `resource_type` non è configurato, non claima/avvia nulla (sono risorse limitate reali - Dragon blood/Strange dust/Exotic coin - richiede opt-in esplicito, stesso principio del Task 3 sugli acquisti). Aggiunto `BotSettings.FreeSpeedupSeconds` (mancava in v2, usato anche dai task futuri 11/12). |
 | 11 | **Map Missions + Warfront Campaign Loot** | Esistono entrambi | Porting, due task correlati. |
 | 12 | **Firestone Research** | Esiste | Il più complesso (logica priorità talenti) — ultimo. |
 
@@ -78,6 +78,6 @@ rapida che compili, poi passo al successivo solo dopo conferma.
 - [x] Task 7: Expeditions
 - [x] Task 8: Guardian Training
 - [x] Task 9: Oracle Rituals
-- [ ] Task 10: Experiments
+- [x] Task 10: Experiments
 - [ ] Task 11: Map Missions + Warfront Campaign Loot
 - [ ] Task 12: Firestone Research

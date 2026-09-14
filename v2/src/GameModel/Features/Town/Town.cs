@@ -15,5 +15,7 @@ public static class Town
 
     public static IEnumerator OpenOracle => new GameButton(Paths.MenusLoc.TownIrongardLoc.OracleBtn).Click();
 
+    public static IEnumerator OpenAlchemist => new GameButton(Paths.MenusLoc.TownIrongardLoc.AlchemistBtn).Click();
+
     public static IEnumerator Close => new GameButton(Paths.MenusLoc.TownIrongardLoc.CloseBtn).Click();
 }
