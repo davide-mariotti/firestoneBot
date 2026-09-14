@@ -110,6 +110,8 @@ public static partial class Paths
             public const string CloseBtn = Root + "/closeButton";
 
             public const string EngineerBtn = Root + "/townBg/parent/engineer";
+
+            public const string MagicQuartersBtn = Root + "/townBg/parent/magicQuarters";
         }
 
         public static class EngineerLoc
@@ -121,6 +123,34 @@ public static partial class Paths
             public const string ClaimBtn = Root + "/submenus/bg/engineerSubmenu/toolsProductionSection/claimToolsButton";
 
             public const string NextRunTimeTxt = ClaimBtn + "/cooldownOn/cooldownTimeLeft";
+        }
+
+        public static class MagicQuartersLoc
+        {
+            private const string Root = MenusLoc.Root + "/menus/MagicQuarters";
+
+            public const string CloseBtn = Root + "/closeButton";
+
+            public const string GuardiansRoot = Root + "/guardianList";
+
+            // Relative to a guardian child - GuardianLoc below.
+            public const string GuardianStarsIcon = "/starsParent";
+
+            private const string UnlockedGuardianRoot = Root + "/submenus/bg/infoSubmenu/activities/unlocked";
+
+            public const string EnlightenmentBtn = UnlockedGuardianRoot + "/enlightenment/enlightenmentButton";
+
+            public const string TrainBtn = UnlockedGuardianRoot + "/train/trainButton";
+
+            public const string NextRunTimeTxt = TrainBtn + "/cooldownOn/cooldownTimeLeft";
+        }
+
+        // Overlay shown if a still-locked guardian is clicked - separate popup, own close button.
+        public static class LockedGuardianLoc
+        {
+            private const string Root = MenusLoc.Root + "/popups/LockedGuardian";
+
+            public const string CloseBtn = Root + "/bg/closeButton";
         }
 
         public static class GuildShopLoc

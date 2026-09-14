@@ -39,6 +39,8 @@ public static partial class Paths
             public const string EngineerBtn = Root + "/Engineer";
 
             public const string ExpeditionsBtn = Root + "/Expeditions";
+
+            public const string GuardianTrainingBtn = Root + "/GuardianTraining";
         }
 
         public static class RightSideUILoc

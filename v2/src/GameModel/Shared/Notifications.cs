@@ -27,4 +27,7 @@ public static class Notifications
 
     public static IEnumerator Expeditions =>
         new GameNotificationButton(Paths.BattleLoc.NotificationsLoc.ExpeditionsBtn).Click();
+
+    public static IEnumerator GuardianTraining =>
+        new GameNotificationButton(Paths.BattleLoc.NotificationsLoc.GuardianTrainingBtn).Click();
 }

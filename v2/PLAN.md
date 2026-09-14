@@ -52,7 +52,7 @@ Cambia (le due cose che davvero pesano su CPU/RAM con tanti bot):
 | 5 | **Free Pickaxes** | Esiste | Fatto. A differenza della v1, aggiunta anche la navigazione manuale esplicita (rightSideUI/guildButton → TownGuild/guildShop → GuildShop/supplies), non presente né in v1 né nella prima porting: prima c'era solo il path via notifica. Nessun NotificationPath, di proposito: il claim è a soglia (`pickaxe_claim_threshold`), quindi il badge attivo non garantisce che ci sia abbastanza da riscattare — stessa scelta della v1. |
 | 6 | **Engineer** | Esiste | Fatto. Porting + stessa aggiunta del Task 5: navigazione manuale esplicita (rightSideUI/townButton → TownIrongard/townBg/parent/engineer), non presente in v1 (solo notifica). NotificationPath presente: claim singolo a cooldown fisso, badge affidabile (a differenza di Free Pickaxes che è a soglia). |
 | 7 | **Expeditions** | Esiste (rinominato meglio: v1 lo aveva in un file con nome sbagliato) | Fatto. Porting + stessa aggiunta dei task precedenti: navigazione manuale esplicita (rightSideUI/guildButton → TownGuild/expeditions), non presente in v1. NotificationPath mantenuto dalla v1 nonostante il claim+start combinati (comportamento già live-testato, non modificato). |
-| 8 | **Guardian Training** (Magic Quarters) | Esiste | Porting diretto. |
+| 8 | **Guardian Training** (Magic Quarters) | Esiste | Fatto. Porting + navigazione manuale esplicita (rightSideUI/townButton → TownIrongard/townBg/parent/magicQuarters), non presente in v1. Logica di selezione guardiano e "strange dust" invariata dalla v1. |
 | 9 | **Oracle Rituals** | Esiste | Porting diretto. |
 | 10 | **Experiments** (Alchemist) | Esiste | Porting, con opzione risorsa come in v1. |
 | 11 | **Map Missions + Warfront Campaign Loot** | Esistono entrambi | Porting, due task correlati. |
@@ -76,7 +76,7 @@ rapida che compili, poi passo al successivo solo dopo conferma.
 - [x] Task 5: Free Pickaxes
 - [x] Task 6: Engineer
 - [x] Task 7: Expeditions
-- [ ] Task 8: Guardian Training
+- [x] Task 8: Guardian Training
 - [ ] Task 9: Oracle Rituals
 - [ ] Task 10: Experiments
 - [ ] Task 11: Map Missions + Warfront Campaign Loot
