@@ -68,6 +68,24 @@ public static partial class Paths
             }
         }
 
+        public static class GuildShopLoc
+        {
+            private const string Root = MenusLoc.Root + "/menus/GuildShop";
+
+            public const string CloseBtn = Root + "/closeButton";
+
+            public static class FreePickaxeLoc
+            {
+                private const string Root = GuildShopLoc.Root + "/bg/submenus/supplies/items/freePickaxe";
+
+                public const string ClaimBtn = Root;
+
+                public const string QuantityTxt = Root + "/claimBg/itemBg/itemQuantity";
+
+                public const string NextRunTimeTxt = Root + "/nextFreeObj/progressBarBg/timeLeftText";
+            }
+        }
+
         public static class OracleStoreLoc
         {
             private const string Root = MenusLoc.Root + "/menus/OracleStore";

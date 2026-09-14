@@ -33,6 +33,8 @@ public static partial class Paths
             public const string MysteryBoxBtn = Root + "/MysteryBox";
 
             public const string QuestsBtn = Root + "/Quests";
+
+            public const string FreePickaxesBtn = Root + "/FreePickaxes";
         }
 
         public static class RightSideUILoc

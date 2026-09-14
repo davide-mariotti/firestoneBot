@@ -49,7 +49,7 @@ Cambia (le due cose che davvero pesano su CPU/RAM con tanti bot):
 | 2 | **Oracle's Gift** (claim giornaliero) | Path già noto, mai un task dedicato | Singolo bottone, notification-driven — primo task nuovo, prova del pattern BotTask "claim semplice". |
 | 3 | **Daily Rewards + Value Bundle giornaliero** | DailyRewards esiste, i due bottoni (`grid/dailyRewardsButton`, `grid/valueBundleDailyButton`) sono nuovi | Fatto. Il claim nel tab "Pacchetti Giornalieri" è solo la mysteryBox gratuita (`freeText`) — gli slot numerati `valueBundle (0)/(1)/(2)` accanto sono acquisti veri, mai toccati. |
 | 4 | **Quest giornaliere** (claim `quest (N)/claimedText`) | Non esiste | Fatto. Screen `Character` → tab Missioni → sotto-tab Giornaliere, 9 slot fissi (`quest (0)`-`(8)`), click su tutti i `claimButton` (no-op sicuro su quelli non completi). Root path di `Character` non verificato dal vivo (nessun corrispettivo v1) — inferito per coerenza con Store/OracleStore. |
-| 5 | **Free Pickaxes** | Esiste | Porting diretto. |
+| 5 | **Free Pickaxes** | Esiste | Fatto. Porting diretto (path GuildShop confermati identici alla v1). Nessun NotificationPath, di proposito: il claim è a soglia (`pickaxe_claim_threshold`), quindi il badge attivo non garantisce che ci sia abbastanza da riscattare — stessa scelta della v1. |
 | 6 | **Engineer** | Esiste | Porting diretto. |
 | 7 | **Expeditions** | Esiste (rinominato meglio: v1 lo aveva in un file con nome sbagliato) | Porting diretto. |
 | 8 | **Guardian Training** (Magic Quarters) | Esiste | Porting diretto. |
@@ -73,7 +73,7 @@ rapida che compili, poi passo al successivo solo dopo conferma.
 - [x] Task 2: Oracle's Gift
 - [x] Task 3: Daily Rewards + Value Bundle
 - [x] Task 4: Quest giornaliere
-- [ ] Task 5: Free Pickaxes
+- [x] Task 5: Free Pickaxes
 - [ ] Task 6: Engineer
 - [ ] Task 7: Expeditions
 - [ ] Task 8: Guardian Training

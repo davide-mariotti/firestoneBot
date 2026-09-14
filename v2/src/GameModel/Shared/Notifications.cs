@@ -18,4 +18,7 @@ public static class Notifications
 
     public static IEnumerator Quests =>
         new GameNotificationButton(Paths.BattleLoc.NotificationsLoc.QuestsBtn).Click();
+
+    public static IEnumerator FreePickaxes =>
+        new GameNotificationButton(Paths.BattleLoc.NotificationsLoc.FreePickaxesBtn).Click();
 }
