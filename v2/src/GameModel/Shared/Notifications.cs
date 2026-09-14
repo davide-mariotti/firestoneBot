@@ -9,4 +9,13 @@ public static class Notifications
 {
     public static IEnumerator OraclesGift =>
         new GameNotificationButton(Paths.BattleLoc.NotificationsLoc.OraclesGiftBtn).Click();
+
+    public static IEnumerator CheckIn =>
+        new GameNotificationButton(Paths.BattleLoc.NotificationsLoc.CheckInBtn).Click();
+
+    public static IEnumerator MysteryBox =>
+        new GameNotificationButton(Paths.BattleLoc.NotificationsLoc.MysteryBoxBtn).Click();
+
+    public static IEnumerator Quests =>
+        new GameNotificationButton(Paths.BattleLoc.NotificationsLoc.QuestsBtn).Click();
 }

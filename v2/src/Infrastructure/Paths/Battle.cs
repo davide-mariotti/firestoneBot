@@ -27,6 +27,12 @@ public static partial class Paths
             private const string Root = BattleLoc.Root + "/leftSideUINew/notifications/Viewport/grid";
 
             public const string OraclesGiftBtn = Root + "/OraclesGift";
+
+            public const string CheckInBtn = Root + "/CheckIn";
+
+            public const string MysteryBoxBtn = Root + "/MysteryBox";
+
+            public const string QuestsBtn = Root + "/Quests";
         }
 
         public static class RightSideUILoc
