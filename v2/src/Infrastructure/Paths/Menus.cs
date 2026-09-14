@@ -118,6 +118,54 @@ public static partial class Paths
             public const string AlchemistBtn = Root + "/townBg/parent/alchemist";
 
             public const string LibraryBtn = Root + "/townBg/parent/library";
+
+            public const string TempleOfEternalsBtn = Root + "/townBg/parent/templeOfEternals";
+        }
+
+        public static class TempleOfEternalsLoc
+        {
+            private const string Root = MenusLoc.Root + "/menus/TempleOfEternals";
+
+            private const string PrestigeSubmenuRoot = Root + "/submenus/bgNew/prestigeSubmenu";
+
+            public const string CloseBtn = Root + "/closeButton";
+
+            public const string EmpowerBtn = PrestigeSubmenuRoot + "/adventureInfo/openEmpowerButton";
+
+            public const string AdventureTimePlayedTxt = PrestigeSubmenuRoot + "/adventureInfo/adventureTimePlayed";
+
+            public const string FirestonesFoundTxt = PrestigeSubmenuRoot + "/adventureInfo/firestonesFound";
+
+            public const string FirestonesYouOwnTxt =
+                PrestigeSubmenuRoot + "/progress/firestonesYouOwnBg/firestonesYouOwn";
+        }
+
+        // Confirmation popup opened by TempleOfEternalsLoc.EmpowerBtn.
+        public static class EmpowerPopupLoc
+        {
+            private const string Root = MenusLoc.Root + "/popups/EmpowerPopup";
+
+            public const string CloseBtn = Root + "/bg/closeButton";
+
+            public const string EmpowerBtn = Root + "/bg/empowerBg/empowerButton";
+        }
+
+        // Generic "this costs something, confirm?" gate - only used by the Empower flow so far.
+        public static class ActionRequiredLoc
+        {
+            private const string Root = MenusLoc.Root + "/popups/ActionRequired";
+
+            public const string ConfirmBtn = Root + "/bg/confirmButton";
+
+            public const string CancelBtn = Root + "/bg/cancelButton";
+        }
+
+        // "Temple Of Eternals Prestige Complete" - dismissal popup shown right after a successful empower.
+        public static class TOEPrestigeCompleteLoc
+        {
+            private const string Root = MenusLoc.Root + "/popups/TOEPrestigeComplete";
+
+            public const string ConfirmBtn = Root + "/bg/confirmButton";
         }
 
         public static class EngineerLoc

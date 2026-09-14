@@ -45,4 +45,9 @@ public static class Notifications
 
     public static IEnumerator FirestoneResearch =>
         new GameNotificationButton(Paths.BattleLoc.NotificationsLoc.FirestoneResearchBtn).Click();
+
+    // Unverified against v1 (see Battle.cs comment on TemplePrestigeBtn) - v1 never used a
+    // notification for this feature at all.
+    public static IEnumerator TemplePrestige =>
+        new GameNotificationButton(Paths.BattleLoc.NotificationsLoc.TemplePrestigeBtn).Click();
 }

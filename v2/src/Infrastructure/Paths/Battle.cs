@@ -51,6 +51,13 @@ public static partial class Paths
             public const string MapMissionsBtn = Root + "/MapMissions";
 
             public const string FirestoneResearchBtn = Root + "/FirestoneResearch";
+
+            // Unlike every other entry above, this one has NO v1 precedent to cross-check against -
+            // v1's TempleOfEternalsTask never used a notification at all, only the manual chain below.
+            // Sourced only from the static doc scan (docs/path.firestone.html, "TemplePrestige...
+            // probabile alias di Temple of Eternals") - lowest-trust tier per the path-verification
+            // convention. Flag for live verification before relying on it.
+            public const string TemplePrestigeBtn = Root + "/TemplePrestige";
         }
 
         public static class RightSideUILoc
