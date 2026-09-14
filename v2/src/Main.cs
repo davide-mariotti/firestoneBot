@@ -1,20 +1,22 @@
-using Firebot2.Core;
+using Firebot.Core;
 using MelonLoader;
 using UnityEngine;
-using Logger = Firebot2.Core.Logger;
-using Main = Firebot2.Main;
+using Logger = Firebot.Core.Logger;
+using Main = Firebot.Main;
 
-[assembly: MelonInfo(typeof(Main), "Firebot2", "0.1.0", "davide-mariotti", "https://github.com/davide-mariotti/firestoneBot")]
+[assembly: MelonInfo(typeof(Main), "Firebot", "0.1.0", "davide-mariotti", "https://github.com/davide-mariotti/firestoneBot")]
 [assembly: MelonGame]
 
 [assembly: MelonColor(255, 255, 0, 255)]
 [assembly: MelonAuthorColor(255, 0, 255, 0)]
 
-namespace Firebot2;
+namespace Firebot;
 
 /// <summary>
-///     Rewrite of Firebot, meant to eventually replace it (see v2/PLAN.md). Not meant to run
-///     alongside the original mod on the same account - both would click the same things twice.
+///     Rewrite of Firebot, meant to replace it once done (see v2/PLAN.md). Same mod name/hotkey/cfg
+///     as v1 on purpose - it's a replacement, not a side-by-side variant. The build does NOT deploy
+///     to the game's live Mods folder (see Directory.Build.props) so working on it can't silently
+///     overwrite the v1 dll that's actually running - copy it over manually when it's ready to test.
 /// </summary>
 public class Main : MelonMod
 {
@@ -25,7 +27,7 @@ public class Main : MelonMod
         BotSettings.Initialize();
         BotManager.Initialize();
 
-        Logger.Info("Firebot2 System Initialized.");
+        Logger.Info("Firebot System Initialized.");
     }
 
     public override void OnSceneWasLoaded(int buildIndex, string sceneName)

@@ -1,16 +1,16 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Firebot2.Core;
-using Firebot2.GameModel.Base;
-using Firebot2.GameModel.Primitives;
-using Firebot2.Infrastructure;
-using Firebot2.Utilities;
+using Firebot.Core;
+using Firebot.GameModel.Base;
+using Firebot.GameModel.Primitives;
+using Firebot.Infrastructure;
+using Firebot.Utilities;
 using MelonLoader;
 using UnityEngine;
-using Logger = Firebot2.Core.Logger;
+using Logger = Firebot.Core.Logger;
 
-namespace Firebot2.BotActions;
+namespace Firebot.BotActions;
 
 /// <summary>
 ///     Upgrades the leader and every hero slot during battle. Same behavior as v1's AutoUpgrade, with

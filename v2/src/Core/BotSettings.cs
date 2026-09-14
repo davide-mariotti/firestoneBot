@@ -3,7 +3,7 @@ using System.IO;
 using MelonLoader;
 using UnityEngine;
 
-namespace Firebot2.Core;
+namespace Firebot.Core;
 
 public static class BotSettings
 {
@@ -22,7 +22,7 @@ public static class BotSettings
     {
         get
         {
-            if (string.IsNullOrEmpty(_configPath)) _configPath = Path.Combine("UserData", "Firebot2Preferences.cfg");
+            if (string.IsNullOrEmpty(_configPath)) _configPath = Path.Combine("UserData", "FirebotPreferences.cfg");
             return _configPath;
         }
     }
@@ -37,11 +37,11 @@ public static class BotSettings
     public static KeyCode ShortcutKey =>
         Enum.IsDefined(typeof(KeyCode), _shortcutKey.Value) && _shortcutKey.Value != KeyCode.None
             ? _shortcutKey.Value
-            : KeyCode.F9;
+            : KeyCode.F7;
 
     public static void Initialize()
     {
-        _category = MelonPreferences.CreateCategory("firebot2_settings", "Firebot2 Settings");
+        _category = MelonPreferences.CreateCategory("firebot_settings", "Firebot Settings");
         _category.SetFilePath(ConfigPath);
 
         _autoStart = _category.CreateEntry("auto_start", false, "Auto Start",
@@ -66,9 +66,8 @@ public static class BotSettings
         _debugMode = _category.CreateEntry("debug_mode", false, "Enable Debug Mode",
             "Enables verbose logging and StackTrace display in the console for easier bug identification.");
 
-        _shortcutKey = _category.CreateEntry("shortcut_key", KeyCode.F9, "Shortcut Key",
-            "The physical key used to manually toggle the bot's execution state during gameplay." +
-            "\nDefault F9 (different from v1's F7) so both mods can be tested on the same machine without clashing hotkeys.");
+        _shortcutKey = _category.CreateEntry("shortcut_key", KeyCode.F7, "Shortcut Key",
+            "The physical key used to manually toggle the bot's execution state during gameplay.");
 
         _category.SaveToFile();
         Logger.Info($"System Initialized. Configuration: {ConfigPath}");

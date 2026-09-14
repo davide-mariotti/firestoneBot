@@ -1,11 +1,11 @@
 using MelonLoader;
 using MelonLoader.Logging;
 
-namespace Firebot2.Core;
+namespace Firebot.Core;
 
 public static class Logger
 {
-    private static readonly MelonLogger.Instance Melon = new("Firebot2", ColorARGB.Cyan);
+    private static readonly MelonLogger.Instance Melon = new("Firebot", ColorARGB.Cyan);
 
     public static void Info(string message) => Melon.Msg($"{message}");
 

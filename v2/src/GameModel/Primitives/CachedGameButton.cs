@@ -1,11 +1,11 @@
 using System;
 using System.Collections;
-using Firebot2.GameModel.Base;
+using Firebot.GameModel.Base;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-namespace Firebot2.GameModel.Primitives;
+namespace Firebot.GameModel.Primitives;
 
 /// <summary>
 ///     Like GameButton, but resolves its Transform once and reuses it for the life of the instance

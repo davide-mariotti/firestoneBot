@@ -1,10 +1,25 @@
 # Firebot v2 — piano di lavoro
 
 Riscrittura del mod, pensata per girare in tanti bot in parallelo (più CPU/RAM sensibile della v1).
-Vive in `v2/` finché non è pronta a sostituire `src/`. Namespace `Firebot2`, dll `firebot2.dll`,
-cfg `UserData/Firebot2Preferences.cfg` — così può convivere/essere testata senza toccare il mod
-attuale funzionante (**non vanno mai attivati entrambi insieme sullo stesso account**: farebbero
-doppio click sulle stesse cose).
+Vive in `v2/` finché non è pronta a sostituire `src/`. Stesso nome/namespace/hotkey/cfg della v1
+(`Firebot`, `firebot.dll`, `F7`, `FirebotPreferences.cfg`) — non serve conviverci fianco a fianco,
+sostituirà la v1 quando è pronta. L'unica cautela: **la build non si copia da sola nella cartella
+Mods del gioco** (`v2/src/Directory.Build.props` punta a `v2/dist/` locale) — altrimenti ogni build
+di v2, finché è incompleta, sovrascriverebbe silenziosamente il firebot.dll v1 che sta girando
+davvero. Quando è pronta a sostituirla per davvero, si copia `v2/dist/firebot.dll` in
+`Firestone/Mods/` a mano (o lo faccio io su richiesta).
+
+## Terminale di stato e file di configurazione (già presenti, portati dalla v1)
+
+- **Tabella di stato task** (`Next Run` / `Time Left` / `Task` / `Status` / `Last Run`): stampata nel
+  log dopo ogni esecuzione, identica alla v1 — è `BotManager.PrintTasksStatusTable()`, già portata.
+  Compare per ogni `BotTask` (i task "commissione" dalla 2 in poi). `Hero Upgrade` non ci compare
+  perché non è un task schedulato ma un'azione continua in background (gira sempre, non ha un
+  "prossimo controllo" — come l'AutoUpgrade/AutoSkill della v1).
+- **File di configurazione per abilitare/disabilitare i singoli task**: già presente, stesso
+  meccanismo della v1 — `UserData/FirebotPreferences.cfg`, una sezione `[nome_task]` con `enabled =
+  true/false` per ognuno, generata automaticamente al primo avvio (via MelonPreferences, non va
+  scritta a mano).
 
 ## Cosa cambia rispetto alla v1 (e cosa NON cambia)
 

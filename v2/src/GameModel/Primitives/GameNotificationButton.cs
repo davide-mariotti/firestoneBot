@@ -1,12 +1,12 @@
 using System;
 using System.Collections;
-using Firebot2.GameModel.Base;
+using Firebot.GameModel.Base;
 using Il2Cpp;
 using UnityEngine;
 using UnityEngine.UI;
-using static Firebot2.Core.BotSettings;
+using static Firebot.Core.BotSettings;
 
-namespace Firebot2.GameModel.Primitives;
+namespace Firebot.GameModel.Primitives;
 
 public class GameNotificationButton : GameButton
 {

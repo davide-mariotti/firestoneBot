@@ -9,7 +9,11 @@
         <MelonLoaderDir>$(GameRoot)\MelonLoader</MelonLoaderDir>
         <MelonLoaderNetDir>$(MelonLoaderDir)\net6</MelonLoaderNetDir>
         <Il2CppAssembliesDir>$(MelonLoaderDir)\Il2CppAssemblies</Il2CppAssembliesDir>
-        <ModsDir>$(GameRoot)\Mods</ModsDir>
+        <!-- Deliberately NOT $(GameRoot)\Mods: same dll/mod name as v1, so auto-deploying there on
+             every build would silently overwrite the working v1 mod with whatever's done so far.
+             Builds land in v2/dist/ instead; copy to the game's Mods folder by hand when it's
+             actually ready to test in place of v1. -->
+        <ModsDir>$(MSBuildThisFileDirectory)..\dist</ModsDir>
     </PropertyGroup>
 
     <PropertyGroup>

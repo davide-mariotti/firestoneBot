@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
-using Firebot2.Core;
+using Firebot.Core;
 
-namespace Firebot2.Utilities;
+namespace Firebot.Utilities;
 
 /// <summary>
 ///     Utility to parse time expressions like "6d 12:30:15", "12:30", "9:28" or "6d".

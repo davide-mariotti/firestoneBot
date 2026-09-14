@@ -3,14 +3,14 @@ using System.Collections;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
-using Firebot2.BotActions;
-using Firebot2.Core.Tasks;
-using Firebot2.Utilities;
+using Firebot.BotActions;
+using Firebot.Core.Tasks;
+using Firebot.Utilities;
 using MelonLoader;
 using UnityEngine;
-using static Firebot2.Core.BotSettings;
+using static Firebot.Core.BotSettings;
 
-namespace Firebot2.Core;
+namespace Firebot.Core;
 
 public static class BotManager
 {
@@ -26,7 +26,7 @@ public static class BotManager
 
     public static void Initialize()
     {
-        const string targetNamespace = "Firebot2.Tasks";
+        const string targetNamespace = "Firebot.Tasks";
         Tasks.Clear();
 
         var assembly = Assembly.GetExecutingAssembly();

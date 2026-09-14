@@ -1,4 +1,4 @@
-namespace Firebot2.Infrastructure;
+namespace Firebot.Infrastructure;
 
 /// <summary>
 ///     Split by screen (Battle.cs, Town.cs, ...) instead of one monolithic file like v1 - grown one

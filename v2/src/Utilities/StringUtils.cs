@@ -1,7 +1,7 @@
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace Firebot2.Utilities;
+namespace Firebot.Utilities;
 
 public abstract class StringUtils
 {

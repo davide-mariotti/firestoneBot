@@ -1,11 +1,11 @@
 using System;
 using System.Collections;
 using System.Runtime.CompilerServices;
-using Firebot2.GameModel.Base;
+using Firebot.GameModel.Base;
 using MelonLoader;
-using static Firebot2.Utilities.StringUtils;
+using static Firebot.Utilities.StringUtils;
 
-namespace Firebot2.Core.Tasks;
+namespace Firebot.Core.Tasks;
 
 public abstract class BotTask
 {

@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using UnityEngine;
-using Logger = Firebot2.Core.Logger;
+using Logger = Firebot.Core.Logger;
 
-namespace Firebot2.GameModel.Base;
+namespace Firebot.GameModel.Base;
 
 public class GameElement
 {

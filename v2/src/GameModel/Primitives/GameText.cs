@@ -1,11 +1,11 @@
 using System;
 using System.Globalization;
-using Firebot2.GameModel.Base;
-using Firebot2.Utilities;
+using Firebot.GameModel.Base;
+using Firebot.Utilities;
 using Il2CppTMPro;
 using UnityEngine;
 
-namespace Firebot2.GameModel.Primitives;
+namespace Firebot.GameModel.Primitives;
 
 public class GameText : GameElement
 {
