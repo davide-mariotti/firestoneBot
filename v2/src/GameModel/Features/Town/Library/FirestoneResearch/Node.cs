@@ -45,4 +45,8 @@ public class Node : GameElement
 
         yield return new GameButton(parent: child).Click();
     }
+
+    public IEnumerator NextTree => new GameButton(Paths.MenusLoc.LibraryLoc.NodeLoc.NextTreeBtn).Click();
+
+    public IEnumerator PreviousTree => new GameButton(Paths.MenusLoc.LibraryLoc.NodeLoc.PreviousTreeBtn).Click();
 }

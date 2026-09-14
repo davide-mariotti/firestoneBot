@@ -58,6 +58,11 @@ public static partial class Paths
             // probabile alias di Temple of Eternals") - lowest-trust tier per the path-verification
             // convention. Flag for live verification before relying on it.
             public const string TemplePrestigeBtn = Root + "/TemplePrestige";
+
+            // Same situation as TemplePrestigeBtn above - v1 never implemented Meteorite Research at
+            // all (docs/path.firestone.html explicitly notes this badge as "Rimossa dal bot, feature
+            // mai raggiunta"), so there's no live-tested precedent. Flag for live verification.
+            public const string MeteoriteResearchBtn = Root + "/MeteoriteResearch";
         }
 
         public static class RightSideUILoc

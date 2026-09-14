@@ -13,6 +13,7 @@ namespace Firebot.Tasks.Town;
 public class FirestoneResearchTask : BotTask
 {
     private const int NodeCount = 16;
+    private const int TreeCount = 3;
 
     protected override string NotificationPath => Paths.BattleLoc.NotificationsLoc.FirestoneResearchBtn;
 
@@ -51,10 +52,11 @@ public class FirestoneResearchTask : BotTask
     }
 
     /// <summary>
-    ///     Picks the next talent to research by levelling every node in "waves": among all currently
-    ///     researchable nodes, it always picks one at the lowest current level first (so nothing gets
-    ///     rushed to max while others are still at 0), breaking ties by whichever takes the least time.
-    ///     This scans and compares all 16 nodes every time a slot frees up.
+    ///     Picks the next talent to research purely by shortest time-to-complete, across all 3 trees.
+    ///     Rushing one talent to a high level over many days while the rest of the tree sits at 0 is a
+    ///     worse use of time than spreading the same total time across many cheaper talents - so the
+    ///     fastest currently-researchable option wins, full stop, no level-based tie-break. Re-scans and
+    ///     compares every node in every tree each time a slot frees up.
     /// </summary>
     private IEnumerator RunSelection()
     {
@@ -63,32 +65,42 @@ public class FirestoneResearchTask : BotTask
         while (ResearchPanel.HasEmptySlot)
         {
             int? bestIndex = null;
-            var bestLevel = int.MaxValue;
+            int? bestTreeOffset = null;
             var bestTime = TimeSpan.MaxValue;
 
-            for (var index = 1; index <= NodeCount; index++)
+            for (var treeOffset = 0; treeOffset < TreeCount; treeOffset++)
             {
-                yield return node.Select(index);
-
-                if (Preview.IsUnlocked && !Preview.IsMaxed)
+                for (var index = 1; index <= NodeCount; index++)
                 {
-                    var level = Preview.CurrentLevel;
-                    var time = Preview.TimeRequired;
+                    yield return node.Select(index);
 
-                    if (level < bestLevel || (level == bestLevel && time < bestTime))
+                    if (Preview.IsUnlocked && !Preview.IsMaxed)
                     {
-                        bestLevel = level;
-                        bestTime = time;
-                        bestIndex = index;
+                        var time = Preview.TimeRequired;
+
+                        if (time < bestTime)
+                        {
+                            bestTime = time;
+                            bestIndex = index;
+                            bestTreeOffset = treeOffset;
+                        }
                     }
+
+                    yield return Preview.Close;
                 }
 
-                yield return Preview.Close;
+                if (treeOffset < TreeCount - 1) yield return node.NextTree;
             }
 
             if (bestIndex == null) yield break;
 
-            Debug($"[INFO] Selected talent #{bestIndex} (level {bestLevel}, {bestTime} to complete).");
+            // The scan above ends on the last tree - step back to the tree with the cheapest pick.
+            // Works regardless of whether the tree carousel wraps around or clamps at the ends, since
+            // we only ever move backward from a known position toward a lower one.
+            for (var back = TreeCount - 1; back > bestTreeOffset; back--)
+                yield return node.PreviousTree;
+
+            Debug($"[INFO] Selected talent #{bestIndex} on tree offset {bestTreeOffset} ({bestTime} to complete).");
 
             yield return node.Select(bestIndex.Value);
             if (Preview.IsUnlocked && !Preview.IsMaxed) yield return Preview.Start;

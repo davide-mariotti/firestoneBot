@@ -50,4 +50,9 @@ public static class Notifications
     // notification for this feature at all.
     public static IEnumerator TemplePrestige =>
         new GameNotificationButton(Paths.BattleLoc.NotificationsLoc.TemplePrestigeBtn).Click();
+
+    // Unverified against v1 (see Battle.cs comment on MeteoriteResearchBtn) - v1 never implemented
+    // this feature at all.
+    public static IEnumerator MeteoriteResearch =>
+        new GameNotificationButton(Paths.BattleLoc.NotificationsLoc.MeteoriteResearchBtn).Click();
 }

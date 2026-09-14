@@ -284,6 +284,8 @@ public static partial class Paths
             // must be clicked explicitly, same as every other multi-tab screen in this codebase.
             public const string FirestoneResearchTabBtn = Root + "/submenuButtons/firestoneResearch";
 
+            public const string MeteoriteResearchTabBtn = Root + "/submenuButtons/meteoriteResearch";
+
             public static class ResearchPanelLoc
             {
                 public const string Root = LibraryLoc.Root + "/submenus/firestoneResearch/researchPanel";
@@ -303,14 +305,43 @@ public static partial class Paths
 
             public static class NodeLoc
             {
-                public const string Root =
-                    LibraryLoc.Root + "/submenus/firestoneResearch/researchScrollView/viewport/content/submenus";
+                private const string SubmenuRoot = LibraryLoc.Root + "/submenus/firestoneResearch";
+
+                public const string Root = SubmenuRoot + "/researchScrollView/viewport/content/submenus";
 
                 public const string Glow = "/glow";
 
                 public const string ProgressBar = "/progressBarBg";
 
                 public const string CompletedTxt = "/genericText";
+
+                // 3 trees total, one visible/active at a time - same carousel pattern as
+                // MeteoriteResearchLoc below, confirmed against the raw prefab dump (both submenus
+                // have their own navigation/goBackTree+goForthTree, not just a single scroll view).
+                public const string NextTreeBtn = SubmenuRoot + "/navigation/goForthTree";
+
+                public const string PreviousTreeBtn = SubmenuRoot + "/navigation/goBackTree";
+            }
+
+            // Meteorite Research tab: 5 trees x 13 nodes (research0..12), carousel navigation like
+            // NodeLoc above. Unlike firestoneResearch nodes (which show level/progress/time inline),
+            // these only show an icon + level - clicking one always opens MeteoriteResearchPreviewLoc
+            // to see cost/unlock state, confirmed via a fresh UnityPy scan (docs/screens/Library.html
+            // didn't capture this popup, same static-analysis gap hit before with Empower's popups).
+            public static class MeteoriteResearchLoc
+            {
+                private const string SubmenuRoot = LibraryLoc.Root + "/submenus/meteoriteResearch";
+
+                private const string NavigationRoot = SubmenuRoot + "/navigation";
+
+                public const string NextTreeBtn = NavigationRoot + "/goForthTree";
+
+                public const string PreviousTreeBtn = NavigationRoot + "/goBackTree";
+
+                // Each tree's children are researchPath0..12 (13 decorative connector lines) FOLLOWED
+                // by research0..12 (13 real node buttons) - confirmed via UnityPy child-order dump, so
+                // GetChild(13 + index) reaches research{index} for index 0..12.
+                public const string TreesRoot = SubmenuRoot + "/submenus";
             }
         }
 
@@ -330,6 +361,30 @@ public static partial class Paths
             public const string RealTimeTxt = UnlockedTxt + "/researchPending/realTime";
 
             public const string ActivateBtn = UnlockedTxt + "/buttonHolder/researchActivateButton";
+        }
+
+        // Popup shown when a meteorite research node is clicked. Found via a fresh UnityPy scan (not
+        // in docs/screens/Library.html, which only captured the node grid itself) - no v1 precedent
+        // either (v1 never implemented this feature at all). Root path inferred from the same
+        // popups/<Name> convention every other popup in this file already uses and that v1's
+        // live-tested code confirms for FirestoneResearchPreview/EmpowerPopup/etc - flag for live
+        // verification since this specific instance has no direct cross-check.
+        public static class MeteoriteResearchPreviewLoc
+        {
+            private const string Root = MenusLoc.Root + "/popups/MeteoriteResearchPreview";
+
+            public const string CloseBtn = Root + "/bg/closeButton";
+
+            public const string LevelTxt = Root + "/bg/innerBg/level";
+
+            // Shown only when the node's prerequisites are met (sibling to "locked", which shows
+            // requirement info instead when they're not) - same on/off pattern as
+            // FirestoneResearchPreviewLoc.UnlockedTxt above.
+            public const string UnlockedRoot = Root + "/bg/innerBg/unlocked";
+
+            public const string ResearchBtn = UnlockedRoot + "/researchButton";
+
+            public const string CostTxt = ResearchBtn + "/cost";
         }
 
         public static class OracleStoreLoc
