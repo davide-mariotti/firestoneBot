@@ -49,6 +49,8 @@ public static partial class Paths
             public const string WarfrontCampaignBtn = Root + "/WarfrontCampaign";
 
             public const string MapMissionsBtn = Root + "/MapMissions";
+
+            public const string FirestoneResearchBtn = Root + "/FirestoneResearch";
         }
 
         public static class RightSideUILoc

@@ -42,4 +42,7 @@ public static class Notifications
 
     public static IEnumerator MapMissions =>
         new GameNotificationButton(Paths.BattleLoc.NotificationsLoc.MapMissionsBtn).Click();
+
+    public static IEnumerator FirestoneResearch =>
+        new GameNotificationButton(Paths.BattleLoc.NotificationsLoc.FirestoneResearchBtn).Click();
 }

@@ -1,0 +1,96 @@
+using System;
+using System.Collections;
+using Firebot.Core.Tasks;
+using Firebot.GameModel.Features.Town.Library.FirestoneResearch;
+using Firebot.GameModel.Primitives;
+using Firebot.GameModel.Shared;
+using Firebot.Infrastructure;
+using Library = Firebot.GameModel.Features.Town.Library.Library;
+using TownScreen = Firebot.GameModel.Features.Town.Town;
+
+namespace Firebot.Tasks.Town;
+
+public class FirestoneResearchTask : BotTask
+{
+    private const int NodeCount = 16;
+
+    protected override string NotificationPath => Paths.BattleLoc.NotificationsLoc.FirestoneResearchBtn;
+
+    public override IEnumerator Execute()
+    {
+        // Fast path: the notification (when up) opens the Library directly. Safe no-op otherwise.
+        yield return Notifications.FirestoneResearch;
+
+        // Guaranteed path regardless of the notification - same reasoning as the previous tasks:
+        // don't rely on the screen already being open.
+        yield return TownScreen.Open;
+        yield return TownScreen.OpenLibrary;
+
+        var panel = new ResearchPanel();
+        yield return panel.Claim();
+
+        // Buy a new concurrent research slot whenever affordable - the button itself is disabled
+        // (a safe no-op click) once there's nothing left to unlock or not enough meteorites.
+        yield return new GameButton(Paths.MenusLoc.LibraryLoc.ResearchPanelLoc.UnlockSlotBtn).Click();
+
+        if (!ResearchPanel.HasEmptySlot)
+        {
+            Debug("[INFO] No empty slots. Scheduling next run.");
+            NextRunTime = panel.NextRunTime();
+            yield return Library.Close;
+            yield return TownScreen.Close;
+            yield break;
+        }
+
+        yield return RunSelection();
+        NextRunTime = panel.NextRunTime();
+
+        yield return Library.Close;
+        yield return TownScreen.Close;
+    }
+
+    /// <summary>
+    ///     Picks the next talent to research by levelling every node in "waves": among all currently
+    ///     researchable nodes, it always picks one at the lowest current level first (so nothing gets
+    ///     rushed to max while others are still at 0), breaking ties by whichever takes the least time.
+    ///     This scans and compares all 16 nodes every time a slot frees up.
+    /// </summary>
+    private IEnumerator RunSelection()
+    {
+        var node = new Node();
+
+        while (ResearchPanel.HasEmptySlot)
+        {
+            int? bestIndex = null;
+            var bestLevel = int.MaxValue;
+            var bestTime = TimeSpan.MaxValue;
+
+            for (var index = 1; index <= NodeCount; index++)
+            {
+                yield return node.Select(index);
+
+                if (Preview.IsUnlocked && !Preview.IsMaxed)
+                {
+                    var level = Preview.CurrentLevel;
+                    var time = Preview.TimeRequired;
+
+                    if (level < bestLevel || (level == bestLevel && time < bestTime))
+                    {
+                        bestLevel = level;
+                        bestTime = time;
+                        bestIndex = index;
+                    }
+                }
+
+                yield return Preview.Close;
+            }
+
+            if (bestIndex == null) yield break;
+
+            Debug($"[INFO] Selected talent #{bestIndex} (level {bestLevel}, {bestTime} to complete).");
+
+            yield return node.Select(bestIndex.Value);
+            if (Preview.IsUnlocked && !Preview.IsMaxed) yield return Preview.Start;
+        }
+    }
+}

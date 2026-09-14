@@ -116,6 +116,8 @@ public static partial class Paths
             public const string OracleBtn = Root + "/townBg/parent/oracle";
 
             public const string AlchemistBtn = Root + "/townBg/parent/alchemist";
+
+            public const string LibraryBtn = Root + "/townBg/parent/library";
         }
 
         public static class EngineerLoc
@@ -221,6 +223,60 @@ public static partial class Paths
 
                 public const string SpeedupFinishDesc = SpeedupBtn + "/finishDesc";
             }
+        }
+
+        public static class LibraryLoc
+        {
+            private const string Root = MenusLoc.Root + "/menus/Library";
+
+            public const string CloseBtn = Root + "/closeButton";
+
+            public static class ResearchPanelLoc
+            {
+                public const string Root = LibraryLoc.Root + "/submenus/firestoneResearch/researchPanel";
+
+                public const string SelectResearchTable = Root + "/selectResearchTable";
+
+                public const string UnlockSlotBtn = Root + "/unlockResearchSlot/confirmButton";
+
+                public const string ClaimBtn = "/container/claimButton";
+
+                public const string NextRunTimeTxt = "/container/researchInfo/progressBarBg/timeLeftText";
+
+                public const string SpeedupBtn = "/container/speedUpButton";
+
+                public const string SpeedupFinishDesc = SpeedupBtn + "/finishDesc";
+            }
+
+            public static class NodeLoc
+            {
+                public const string Root =
+                    LibraryLoc.Root + "/submenus/firestoneResearch/researchScrollView/viewport/content/submenus";
+
+                public const string Glow = "/glow";
+
+                public const string ProgressBar = "/progressBarBg";
+
+                public const string CompletedTxt = "/genericText";
+            }
+        }
+
+        // Popup shown when a research node is clicked - lives under menuCanvas/popups, not menus/Library.
+        public static class FirestoneResearchPreviewLoc
+        {
+            private const string Root = MenusLoc.Root + "/popups/FirestoneResearchPreview";
+
+            public const string CloseBtn = Root + "/bg/closeButton";
+
+            public const string LevelTxt = Root + "/bg/innerBg/researchLevelText";
+
+            public const string UnlockedTxt = Root + "/bg/innerBg/unlocked";
+
+            public const string MaxedTxt = Root + "/bg/innerBg/maxed";
+
+            public const string RealTimeTxt = UnlockedTxt + "/researchPending/realTime";
+
+            public const string ActivateBtn = UnlockedTxt + "/buttonHolder/researchActivateButton";
         }
 
         public static class OracleStoreLoc
