@@ -37,6 +37,8 @@ public static partial class Paths
             public const string FreePickaxesBtn = Root + "/FreePickaxes";
 
             public const string EngineerBtn = Root + "/Engineer";
+
+            public const string ExpeditionsBtn = Root + "/Expeditions";
         }
 
         public static class RightSideUILoc

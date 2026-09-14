@@ -75,6 +75,32 @@ public static partial class Paths
             public const string CloseBtn = Root + "/closeButton";
 
             public const string GuildShopBtn = Root + "/guildShop";
+
+            public const string ExpeditionsBtn = Root + "/expeditions";
+        }
+
+        // Unlike the "menus" screens above, Expeditions lives under menuCanvas/popups - same root
+        // convention as v1's PopupsLoc (event-triggered overlay rather than a permanent hub screen).
+        public static class ExpeditionsLoc
+        {
+            private const string Root = MenusLoc.Root + "/popups/Expeditions";
+
+            public const string CloseBtn = Root + "/bg/closeButton";
+
+            public const string NextRunTimeTxt = Root + "/bg/timeLeftBg/timeLeftText";
+
+            private const string ActiveExpeditionRoot =
+                Root + "/bg/expeditionsParent/activeExpeditionParent/activeExpedition";
+
+            public const string ActiveExpedition = ActiveExpeditionRoot;
+
+            public const string ClaimBtn = ActiveExpeditionRoot + "/claimButton";
+
+            public const string CurrentRunTimeTxt = ActiveExpeditionRoot + "/expeditionProgressBg/timeLeftText";
+
+            public const string StartBtn =
+                Root +
+                "/bg/expeditionsParent/pendingExpeditionsParent/expeditionsScroll/Viewport/grid/expeditionPending0/startButton";
         }
 
         public static class TownIrongardLoc

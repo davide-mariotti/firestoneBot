@@ -24,4 +24,7 @@ public static class Notifications
 
     public static IEnumerator Engineer =>
         new GameNotificationButton(Paths.BattleLoc.NotificationsLoc.EngineerBtn).Click();
+
+    public static IEnumerator Expeditions =>
+        new GameNotificationButton(Paths.BattleLoc.NotificationsLoc.ExpeditionsBtn).Click();
 }
