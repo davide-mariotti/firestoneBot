@@ -70,7 +70,7 @@ rapida che compili, poi passo al successivo solo dopo conferma.
 
 - [x] Scheletro progetto (csproj, Directory.Build.props, Main.cs, core infra)
 - [x] Task 1: Hero Upgrade
-- [ ] Task 2: Oracle's Gift
+- [x] Task 2: Oracle's Gift
 - [ ] Task 3: Daily Rewards + Value Bundle
 - [ ] Task 4: Quest giornaliere
 - [ ] Task 5: Free Pickaxes

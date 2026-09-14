@@ -10,6 +10,24 @@ public static partial class Paths
     {
         private const string Root = "battleRoot/battleMain/battleCanvas/SafeArea";
 
+        public static class PlayerAvatarLoc
+        {
+            private const string Root = BattleLoc.Root + "/topLeftSideUI/playerAvatar";
+
+            public const string CharacterLevel = Root + "/characterLevelBg/characterLevel";
+        }
+
+        public static class NotificationsLoc
+        {
+            // "leftSideUINew", not "leftSideUI" - confirmed against v1's already-live-tested path.
+            // The static doc scan (docs/path.firestone.html) picked the wrong one of two near-
+            // identical prefab variants here, same ambiguity flagged there for bottomSideUINew vs
+            // bottomSideUIDesktop - worth fixing in the docs too, but v1's proven path wins here.
+            private const string Root = BattleLoc.Root + "/leftSideUINew/notifications/Viewport/grid";
+
+            public const string OraclesGiftBtn = Root + "/OraclesGift";
+        }
+
         public static class BottomSideUINewLoc
         {
             private const string Root = BattleLoc.Root + "/bottomSideUINew/bgBlack";
