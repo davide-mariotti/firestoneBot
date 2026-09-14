@@ -1,13 +1,13 @@
 namespace Firebot.Infrastructure;
 
 /// <summary>
-///     Scarab Game (a Chaos Rift-linked mini-game) and its shop. No v1 precedent at all. Unlike
-///     every other feature in this codebase, no Town/Guild building icon leads here - the only known
-///     entry point is the battle-screen notification rail (both ScarabGame and
-///     ScarabGameShopFreeToken are confirmed there via a fresh UnityPy scan). Flag for live
-///     verification: it's unclear whether the ScarabGame icon is a permanent HUD element (gated only
-///     by unlock/account level, like Store/Guild) or genuinely only appears when the rail badge is
-///     lit (unlike every other rail entry, which all have a separate always-there manual path).
+///     Scarab's Game (a slot-machine minigame) and its shop. No v1 precedent at all. Corrected after
+///     initially assuming there was no permanent manual entry point (only the battle-screen
+///     notification badges) - the user pointed out and the wiki confirms
+///     (firestone-idle-rpg.fandom.com/wiki/Tavern) it's reached via Town/townButton -&gt; Tavern
+///     (TavernLoc in Menus.cs) -&gt; Tavern's own "shop" action button, same guaranteed-navigation
+///     pattern as every other task. Unlocks at character level 60 per the wiki (Tavern itself
+///     unlocks earlier, at level 15).
 /// </summary>
 public static partial class Paths
 {

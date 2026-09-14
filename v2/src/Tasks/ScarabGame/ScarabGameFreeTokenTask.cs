@@ -5,6 +5,8 @@ using Firebot.GameModel.Shared;
 using Firebot.Infrastructure;
 using ScarabGameScreen = Firebot.GameModel.Features.ScarabGame.ScarabGame;
 using ScarabGameShopScreen = Firebot.GameModel.Features.ScarabGame.ScarabGameShop;
+using TavernScreen = Firebot.GameModel.Features.Town.Tavern;
+using TownScreen = Firebot.GameModel.Features.Town.Town;
 
 namespace Firebot.Tasks.ScarabGame;
 
@@ -12,33 +14,46 @@ namespace Firebot.Tasks.ScarabGame;
 ///     Claims the free daily gift in ScarabGameShop's "Saldi" tab (named "purchaseButton" but
 ///     confirmed genuinely free via a sibling "freeText" label - same pattern as Task 3's mystery
 ///     box). No v1 precedent at all - Scarab Game never existed in v1.
-///     Unlike every other feature in this codebase, no Town/Guild building icon leads here - the
-///     only known entry points are two battle-screen notification badges (ScarabGame, which opens
-///     the mini-game screen, and ScarabGameShopFreeToken, presumed to open the shop directly like
-///     OraclesGift bypasses Store). Both confirmed present on the live rail via a fresh UnityPy scan,
-///     but whether either icon is a permanent HUD element or only appears when something's claimable
-///     is unverified - flag for live testing.
+///     Reached via Town -&gt; Tavern -&gt; Tavern's own "shop" action button (confirmed against the wiki,
+///     firestone-idle-rpg.fandom.com/wiki/Tavern: "The scarab's game is a part of the Tavern") -
+///     corrected after initially assuming there was no permanent manual entry point at all, only the
+///     battle-screen notification badges (still used as a fast path below).
+///     Level-gated like OraclesGiftTask: the wiki's Scarab's Game infobox lists "unlock = Level 60".
 /// </summary>
 public class ScarabGameFreeTokenTask : BotTask
 {
+    private const int MinimumCharacterLevel = 60;
+    private static readonly TimeSpan RecheckDelayBelowLevel = TimeSpan.FromHours(1);
     private static readonly TimeSpan FallbackRetryDelay = TimeSpan.FromHours(6);
 
     protected override string NotificationPath => Paths.BattleLoc.NotificationsLoc.ScarabGameShopFreeTokenBtn;
 
     public override IEnumerator Execute()
     {
+        if (PlayerAvatar.CharacterLevel < MinimumCharacterLevel)
+        {
+            // Feature doesn't exist yet below the unlock level - nothing to open, just recheck later
+            // as the character levels up instead of retrying every scan cycle.
+            NextRunTime = DateTime.Now + RecheckDelayBelowLevel;
+            yield break;
+        }
+
         // Fast paths: either badge (when up) may already open the shop directly. Safe no-ops otherwise.
         yield return Notifications.ScarabGameShopFreeToken;
         yield return Notifications.ScarabGame;
 
-        // Best-effort manual path - see class doc: this is the only known entry point, and it may
-        // itself depend on the ScarabGame badge being lit rather than being a permanent icon.
+        // Guaranteed path regardless of the notification - same reasoning as every other task.
+        yield return TownScreen.Open;
+        yield return TownScreen.OpenTavern;
+        yield return TavernScreen.OpenScarabGame;
         yield return ScarabGameScreen.OpenShop;
         yield return ScarabGameShopScreen.OpenSaleTab;
         yield return ScarabGameShopScreen.ClaimFreeToken;
 
         yield return ScarabGameShopScreen.Close;
         yield return ScarabGameScreen.Close;
+        yield return TavernScreen.Close;
+        yield return TownScreen.Close;
 
         NextRunTime = DateTime.Now + FallbackRetryDelay;
     }

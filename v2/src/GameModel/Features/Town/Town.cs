@@ -22,5 +22,7 @@ public static class Town
     public static IEnumerator OpenTempleOfEternals =>
         new GameButton(Paths.MenusLoc.TownIrongardLoc.TempleOfEternalsBtn).Click();
 
+    public static IEnumerator OpenTavern => new GameButton(Paths.MenusLoc.TownIrongardLoc.TavernBtn).Click();
+
     public static IEnumerator Close => new GameButton(Paths.MenusLoc.TownIrongardLoc.CloseBtn).Click();
 }

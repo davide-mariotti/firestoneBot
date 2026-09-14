@@ -126,6 +126,21 @@ public static partial class Paths
             public const string LibraryBtn = Root + "/townBg/parent/library";
 
             public const string TempleOfEternalsBtn = Root + "/townBg/parent/templeOfEternals";
+
+            public const string TavernBtn = Root + "/townBg/parent/tavern";
+        }
+
+        // The Tavern's own card-flip minigame screen. Its "shop" action button is the real gateway
+        // to Scarab's Game (see ScarabGame.cs comment) - confirmed via the wiki
+        // (firestone-idle-rpg.fandom.com/wiki/Tavern: "The scarab's game is a part of the Tavern"),
+        // corrected after initially assuming Scarab's Game had no permanent manual entry point at all.
+        public static class TavernLoc
+        {
+            private const string Root = MenusLoc.Root + "/menus/Tavern";
+
+            public const string CloseBtn = Root + "/closeButton";
+
+            public const string OpenScarabGameBtn = Root + "/helpCanvas/actionButtons/shop";
         }
 
         public static class TempleOfEternalsLoc
