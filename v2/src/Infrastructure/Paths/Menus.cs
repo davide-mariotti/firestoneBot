@@ -231,6 +231,11 @@ public static partial class Paths
 
             public const string CloseBtn = Root + "/closeButton";
 
+            // Library has two tabs (meteoriteResearch, firestoneResearch) and firestoneResearch is
+            // NOT selected by default when the screen opens (docs/screens/Library.html line 95) -
+            // must be clicked explicitly, same as every other multi-tab screen in this codebase.
+            public const string FirestoneResearchTabBtn = Root + "/submenuButtons/firestoneResearch";
+
             public static class ResearchPanelLoc
             {
                 public const string Root = LibraryLoc.Root + "/submenus/firestoneResearch/researchPanel";

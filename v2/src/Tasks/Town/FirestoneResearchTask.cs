@@ -25,6 +25,7 @@ public class FirestoneResearchTask : BotTask
         // don't rely on the screen already being open.
         yield return TownScreen.Open;
         yield return TownScreen.OpenLibrary;
+        yield return Library.OpenFirestoneResearchTab;
 
         var panel = new ResearchPanel();
         yield return panel.Claim();
