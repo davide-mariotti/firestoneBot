@@ -78,6 +78,15 @@ public static partial class Paths
             public const string MapBtn = Root + "/mapButton";
         }
 
+        public static class StageProgressionLoc
+        {
+            private const string Root = BattleLoc.Root + "/topSideUI/stageProgression";
+
+            public const string CurrentStageNumTxt = Root + "/currentStage/stageNum";
+
+            public const string GoBackBtn = Root + "/goBackStage";
+        }
+
         public static class BottomSideUINewLoc
         {
             private const string Root = BattleLoc.Root + "/bottomSideUINew/bgBlack";

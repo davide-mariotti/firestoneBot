@@ -1,3 +1,4 @@
+using Firebot.BotActions;
 using Firebot.Core;
 using MelonLoader;
 using UnityEngine;
@@ -26,6 +27,8 @@ public class Main : MelonMod
     {
         BotSettings.Initialize();
         BotManager.Initialize();
+        HeroUpgrade.Initialize();
+        AutoRetreat.Initialize();
 
         Logger.Info("Firebot System Initialized.");
     }

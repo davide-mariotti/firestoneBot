@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using Firebot.BotActions;
 using Firebot.Core.Tasks;
 using Firebot.GameModel.Primitives;
 using Firebot.GameModel.Shared;
@@ -90,9 +91,7 @@ public class EmpowerTask : BotTask
             yield return new GameButton(Paths.MenusLoc.ActionRequiredLoc.ConfirmBtn).Click();
             yield return new GameButton(Paths.MenusLoc.TOEPrestigeCompleteLoc.ConfirmBtn).Click();
 
-            // v1 calls AutoRetreat.OnAdventureReset() here to re-arm its stall detection after a
-            // reset. AutoRetreat itself hasn't been ported to v2 (out of scope for this task), so
-            // there's nothing to re-arm yet - revisit if/when AutoRetreat is ported.
+            AutoRetreat.OnAdventureReset();
 
             NextRunTime = DateTime.Now + RetryDelay;
         }

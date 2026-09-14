@@ -58,6 +58,7 @@ public static class BotManager
         IsRunning = true;
         _botRoutineHandle = MelonCoroutines.Start(BotSchedulerLoop());
         HeroUpgrade.Start();
+        AutoRetreat.Start();
         Logger.Info($"Started. Tasks loaded: {Tasks.Count(t => t.IsEnabled)}");
     }
 
@@ -68,6 +69,7 @@ public static class BotManager
         IsTaskExecuting = false;
         if (_botRoutineHandle != null) MelonCoroutines.Stop(_botRoutineHandle);
         HeroUpgrade.Stop();
+        AutoRetreat.Stop();
         Logger.Info("Stopped.");
     }
 
@@ -103,6 +105,8 @@ public static class BotManager
                 IsTaskExecuting = true;
                 try
                 {
+                    yield return RunSafe(Watchdog.ForceClearAll(), $"Watchdog cleanup before {readyTask.SectionTitle}");
+
                     var stopwatch = Stopwatch.StartNew();
 
                     yield return RunSafe(readyTask.Execute(), $"Task {readyTask.SectionTitle}");
@@ -115,6 +119,8 @@ public static class BotManager
                     Logger.Info(
                         $"[Task] {readyTask.SectionTitle} finished in {stopwatch.Elapsed.TotalSeconds:0.###}s | Next: {readyTask.NextRunTime:MM/dd/yyyy HH:mm:ss}");
                     PrintTasksStatusTable();
+
+                    yield return RunSafe(Watchdog.ForceClearAll(), $"Watchdog cleanup after {readyTask.SectionTitle}");
                 }
                 finally
                 {
