@@ -45,6 +45,29 @@ public static partial class Paths
             }
         }
 
+        public static class CharacterLoc
+        {
+            private const string Root = MenusLoc.Root + "/menus/Character";
+
+            // Root path convention not independently live-verified for this screen (new in v2, no
+            // v1 code to cross-check against) - inferred from every other menu screen checked so far
+            // (Store, OracleStore) consistently using menusRoot/.../menus/<Name>.
+            public const string CloseBtn = Root + "/bg/closeButton";
+
+            public const string QuestsTabBtn = Root + "/bg/submenuButtons/quests";
+
+            public static class QuestsLoc
+            {
+                private const string Root = CharacterLoc.Root + "/bg/submenus/quests";
+
+                public const string DailyTabBtn = Root + "/bg/submenuButtons/dailyButton";
+
+                public const string DailyQuestsGridRoot = Root + "/bg/submenus/dailyQuestsScroll/Viewport/grid";
+
+                public const string RenewTxt = Root + "/questsRenewBg/questsRenewText";
+            }
+        }
+
         public static class OracleStoreLoc
         {
             private const string Root = MenusLoc.Root + "/menus/OracleStore";

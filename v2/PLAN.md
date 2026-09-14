@@ -48,7 +48,7 @@ Cambia (le due cose che davvero pesano su CPU/RAM con tanti bot):
 | 1 | **Hero Upgrade** (in battaglia) | Esiste (AutoUpgrade) | Porting + fix performance sopra. **Prossimo/fatto per primo.** |
 | 2 | **Oracle's Gift** (claim giornaliero) | Path già noto, mai un task dedicato | Singolo bottone, notification-driven — primo task nuovo, prova del pattern BotTask "claim semplice". |
 | 3 | **Daily Rewards + Value Bundle giornaliero** | DailyRewards esiste, i due bottoni (`grid/dailyRewardsButton`, `grid/valueBundleDailyButton`) sono nuovi | Fatto. Il claim nel tab "Pacchetti Giornalieri" è solo la mysteryBox gratuita (`freeText`) — gli slot numerati `valueBundle (0)/(1)/(2)` accanto sono acquisti veri, mai toccati. |
-| 4 | **Quest giornaliere** (claim `quest (N)/claimedText`) | Non esiste | Da individuare schermata (probabile `Character` → tab Missioni, già mappata) e iterare gli slot come per le hero slot. |
+| 4 | **Quest giornaliere** (claim `quest (N)/claimedText`) | Non esiste | Fatto. Screen `Character` → tab Missioni → sotto-tab Giornaliere, 9 slot fissi (`quest (0)`-`(8)`), click su tutti i `claimButton` (no-op sicuro su quelli non completi). Root path di `Character` non verificato dal vivo (nessun corrispettivo v1) — inferito per coerenza con Store/OracleStore. |
 | 5 | **Free Pickaxes** | Esiste | Porting diretto. |
 | 6 | **Engineer** | Esiste | Porting diretto. |
 | 7 | **Expeditions** | Esiste (rinominato meglio: v1 lo aveva in un file con nome sbagliato) | Porting diretto. |
@@ -72,7 +72,7 @@ rapida che compili, poi passo al successivo solo dopo conferma.
 - [x] Task 1: Hero Upgrade
 - [x] Task 2: Oracle's Gift
 - [x] Task 3: Daily Rewards + Value Bundle
-- [ ] Task 4: Quest giornaliere
+- [x] Task 4: Quest giornaliere
 - [ ] Task 5: Free Pickaxes
 - [ ] Task 6: Engineer
 - [ ] Task 7: Expeditions

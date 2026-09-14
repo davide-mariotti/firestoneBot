@@ -12,9 +12,10 @@ public static partial class Paths
 
         public static class PlayerAvatarLoc
         {
-            private const string Root = BattleLoc.Root + "/topLeftSideUI/playerAvatar";
+            // The avatar itself is the button that opens the Character screen.
+            public const string OpenBtn = BattleLoc.Root + "/topLeftSideUI/playerAvatar";
 
-            public const string CharacterLevel = Root + "/characterLevelBg/characterLevel";
+            public const string CharacterLevel = OpenBtn + "/characterLevelBg/characterLevel";
         }
 
         public static class NotificationsLoc
