@@ -68,11 +68,22 @@ public static partial class Paths
             }
         }
 
+        public static class TownGuildLoc
+        {
+            private const string Root = MenusLoc.Root + "/menus/TownGuild";
+
+            public const string CloseBtn = Root + "/closeButton";
+
+            public const string GuildShopBtn = Root + "/guildShop";
+        }
+
         public static class GuildShopLoc
         {
             private const string Root = MenusLoc.Root + "/menus/GuildShop";
 
             public const string CloseBtn = Root + "/closeButton";
+
+            public const string SuppliesTabBtn = Root + "/bg/submenuButtons/supplies/button";
 
             public static class FreePickaxeLoc
             {

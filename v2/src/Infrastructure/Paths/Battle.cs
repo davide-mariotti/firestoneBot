@@ -42,6 +42,8 @@ public static partial class Paths
             private const string Root = BattleLoc.Root + "/rightSideUI/menuButtons";
 
             public const string StoreBtn = Root + "/storeButton";
+
+            public const string GuildBtn = Root + "/guildButton";
         }
 
         public static class BottomSideUINewLoc

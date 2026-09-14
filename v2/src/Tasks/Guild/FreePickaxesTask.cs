@@ -1,6 +1,7 @@
 using System.Collections;
 using Firebot.Core.Tasks;
 using Firebot.GameModel.Features.Guild.Shop;
+using Firebot.GameModel.Features.Town;
 using Firebot.GameModel.Shared;
 using MelonLoader;
 
@@ -30,12 +31,23 @@ public class FreePickaxesTask : BotTask
     // necessarily mean there's anything worth claiming yet (same reasoning as v1).
     public override IEnumerator Execute()
     {
+        // Fast path: the notification (when up) opens GuildShop directly on the right tab. Falls
+        // through safely if it's not visible.
         yield return Notifications.FreePickaxes;
+
+        // Guaranteed path regardless of the notification, same reasoning as the Store tabs: don't
+        // rely on the shop already being open/on the right tab. Every click below is a safe no-op
+        // if that step already happened via the notification.
+        yield return TownGuild.Open;
+        yield return TownGuild.OpenGuildShop;
+        yield return GuildShop.OpenSuppliesTab;
 
         if (FreePickaxes.Quantity >= PickaxeClaimThreshold)
             yield return FreePickaxes.Claim;
 
         NextRunTime = FreePickaxes.NextRunTime;
+
         yield return GuildShop.Close;
+        yield return TownGuild.Close;
     }
 }
