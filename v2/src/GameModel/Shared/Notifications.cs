@@ -30,4 +30,7 @@ public static class Notifications
 
     public static IEnumerator GuardianTraining =>
         new GameNotificationButton(Paths.BattleLoc.NotificationsLoc.GuardianTrainingBtn).Click();
+
+    public static IEnumerator OracleRituals =>
+        new GameNotificationButton(Paths.BattleLoc.NotificationsLoc.OracleRitualsBtn).Click();
 }

@@ -112,6 +112,8 @@ public static partial class Paths
             public const string EngineerBtn = Root + "/townBg/parent/engineer";
 
             public const string MagicQuartersBtn = Root + "/townBg/parent/magicQuarters";
+
+            public const string OracleBtn = Root + "/townBg/parent/oracle";
         }
 
         public static class EngineerLoc
@@ -170,6 +172,30 @@ public static partial class Paths
                 public const string QuantityTxt = Root + "/claimBg/itemBg/itemQuantity";
 
                 public const string NextRunTimeTxt = Root + "/nextFreeObj/progressBarBg/timeLeftText";
+            }
+        }
+
+        // The "Oracle" building/screen (rituals) - distinct from OracleStoreLoc below (the value-bundle
+        // shop opened via the OraclesGift notification, Task 2).
+        public static class OracleLoc
+        {
+            private const string Root = MenusLoc.Root + "/menus/Oracle";
+
+            public const string CloseBtn = Root + "/closeButton";
+
+            public static class RitualLoc
+            {
+                private const string Root = OracleLoc.Root + "/submenus/bg/ritualSubmenu";
+
+                public const string Rituals = Root + "/ritualsGrid";
+
+                public const string ClaimBtn = "/claimButton";
+
+                public const string CurrentRunTimeTxt = "/ritualProgressBg/timeLeftText";
+
+                public const string StartBtn = "/startButton";
+
+                public const string NextRunTimeTxt = Root + "/timeBg/timeLeft";
             }
         }
 
