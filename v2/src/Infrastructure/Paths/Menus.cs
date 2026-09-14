@@ -398,5 +398,35 @@ public static partial class Paths
 
             public const string OraclesGiftRenewTxt = OraclesGiftBtn + "/Graphics/renewText";
         }
+
+        // Battle Pass ("Path of Glory"). No v1 precedent at all - v1 never touched this feature.
+        // Paths confirmed via a fresh UnityPy scan of the live game assets (docs/screens/BattlePass.html
+        // abbreviated some intermediate decorative nodes - "goldenPassBg/.../rewardRoot", the exact
+        // "..." was found by dumping a real pathOfGloryTier node directly).
+        public static class BattlePassLoc
+        {
+            private const string Root = MenusLoc.Root + "/menus/BattlePass";
+
+            public const string CloseBtn = Root + "/bg/closeButton";
+
+            // Confirmed active by default on open (docs/screens/BattlePass.html), but clicked
+            // unconditionally anyway per the usual "never trust the default tab" rule.
+            public const string RewardsTabBtn = Root + "/bg/submenuButtons/rewards";
+
+            public static class RewardsLoc
+            {
+                public const string TrackRoot =
+                    BattlePassLoc.Root + "/bg/submenus/rewards/bg/scrollView/viewport/content/layout";
+
+                // Both relative to a pathOfGloryTier (N) child. Free needs no ownership; Golden
+                // requires owning the premium pass (purchased separately via getGoldenPassButton,
+                // never auto-clicked) - but claiming an already-unlocked Golden reward isn't itself a
+                // purchase, and the button is inactive/non-interactable (safe no-op) when locked or
+                // not yet reached, same convention as every other claim button in this codebase.
+                public const string FreeClaimBtn = "/freeBg/glowOutlineFree/rewardRoot/claimButton";
+
+                public const string GoldenClaimBtn = "/goldenPassBg/glowOutlineGolden/rewardRoot/claimButton";
+            }
+        }
     }
 }

@@ -87,6 +87,24 @@ public static partial class Paths
             public const string GoBackBtn = Root + "/goBackStage";
         }
 
+        // A DIFFERENT battle-screen HUD region from BottomSideUINewLoc below - both show
+        // active:true in the static prefab dump, but only BottomSideUINewLoc has a v1 precedent
+        // (Hero Upgrade, live-tested for months). This one ("Desktop" - likely a platform-specific
+        // layout variant) has never been touched by any proven code, so its exact on-screen
+        // visibility is unverified. Sourced from a fresh UnityPy scan, not just the docs (which
+        // already flagged this exact ambiguity in path.firestone.html without resolving it).
+        public static class BottomSideUIDesktopLoc
+        {
+            private const string Root = BattleLoc.Root + "/bottomSideUIDesktop";
+
+            public const string PathOfGloryBtn = Root + "/pathOfGloryButton";
+
+            // Sub-element on the button itself, not a separate leftSideUINew rail entry - Battle
+            // Pass has no badge on that rail at all (confirmed against the full 48-badge notification
+            // list in docs/path.firestone.html). The button doubles as its own notification.
+            public const string PathOfGloryNotification = PathOfGloryBtn + "/notification";
+        }
+
         public static class BottomSideUINewLoc
         {
             private const string Root = BattleLoc.Root + "/bottomSideUINew/bgBlack";
