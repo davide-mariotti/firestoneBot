@@ -55,7 +55,7 @@ Cambia (le due cose che davvero pesano su CPU/RAM con tanti bot):
 | 8 | **Guardian Training** (Magic Quarters) | Esiste | Fatto. Porting + navigazione manuale esplicita (rightSideUI/townButton → TownIrongard/townBg/parent/magicQuarters), non presente in v1. Logica di selezione guardiano e "strange dust" invariata dalla v1. |
 | 9 | **Oracle Rituals** | Esiste | Fatto. Porting + navigazione manuale esplicita (rightSideUI/townButton → TownIrongard/townBg/parent/oracle), non presente in v1. Schermata "Oracle" (rituali) distinta da "OracleStore" (Task 2, negozio regali). |
 | 10 | **Experiments** (Alchemist) | Esiste | Fatto. Porting + navigazione manuale esplicita (rightSideUI/townButton → TownIrongard/townBg/parent/alchemist). Comportamento di default invariato dalla v1: se `resource_type` non è configurato, non claima/avvia nulla (sono risorse limitate reali - Dragon blood/Strange dust/Exotic coin - richiede opt-in esplicito, stesso principio del Task 3 sugli acquisti). Aggiunto `BotSettings.FreeSpeedupSeconds` (mancava in v2, usato anche dai task futuri 11/12). |
-| 11 | **Map Missions + Warfront Campaign Loot** | Esistono entrambi | Porting, due task correlati. |
+| 11 | **Map Missions + Warfront Campaign Loot** | Esistono entrambi | Fatto. Portati come 2 task separati (stessa granularità della v1: MapMissions è badge-driven con `NotificationPath`, WarfrontCampaignLoot è a solo cooldown, girano su schedule indipendenti quindi unirli non avrebbe risparmiato click). Aggiunta navigazione manuale esplicita comune (rightSideUI/mapButton → WorldMap, poi il tab giusto: submenuButtons/mapMissionsButton o /warfrontCampaignButton), non presente in v1. Path dei pin missione (`menusRoot/mapRoot/mapElements/missions`) confermati dalla v1: vivono fuori da menuCanvas, sulla mappa di sfondo sempre visibile, non dentro il tab. |
 | 12 | **Firestone Research** | Esiste | Il più complesso (logica priorità talenti) — ultimo. |
 
 Eventuali aggiunte oltre questa lista (l'utente ha detto "forse anche qualcosa in più"): da valutare
@@ -79,5 +79,5 @@ rapida che compili, poi passo al successivo solo dopo conferma.
 - [x] Task 8: Guardian Training
 - [x] Task 9: Oracle Rituals
 - [x] Task 10: Experiments
-- [ ] Task 11: Map Missions + Warfront Campaign Loot
+- [x] Task 11: Map Missions + Warfront Campaign Loot
 - [ ] Task 12: Firestone Research

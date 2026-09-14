@@ -36,4 +36,10 @@ public static class Notifications
 
     public static IEnumerator Experiments =>
         new GameNotificationButton(Paths.BattleLoc.NotificationsLoc.ExperimentsBtn).Click();
+
+    public static IEnumerator WarfrontCampaign =>
+        new GameNotificationButton(Paths.BattleLoc.NotificationsLoc.WarfrontCampaignBtn).Click();
+
+    public static IEnumerator MapMissions =>
+        new GameNotificationButton(Paths.BattleLoc.NotificationsLoc.MapMissionsBtn).Click();
 }

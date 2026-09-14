@@ -45,6 +45,10 @@ public static partial class Paths
             public const string OracleRitualsBtn = Root + "/OracleRituals";
 
             public const string ExperimentsBtn = Root + "/Experiments";
+
+            public const string WarfrontCampaignBtn = Root + "/WarfrontCampaign";
+
+            public const string MapMissionsBtn = Root + "/MapMissions";
         }
 
         public static class RightSideUILoc
@@ -56,6 +60,8 @@ public static partial class Paths
             public const string GuildBtn = Root + "/guildButton";
 
             public const string TownBtn = Root + "/townButton";
+
+            public const string MapBtn = Root + "/mapButton";
         }
 
         public static class BottomSideUINewLoc

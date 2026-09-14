@@ -5,7 +5,7 @@ public static partial class Paths
 {
     public static class MenusLoc
     {
-        private const string Root = "menusRoot/menuCanvasParent/SafeArea/menuCanvas";
+        internal const string Root = "menusRoot/menuCanvasParent/SafeArea/menuCanvas";
 
         public static class StoreLoc
         {
