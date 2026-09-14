@@ -28,6 +28,13 @@ public static partial class Paths
             public const string OraclesGiftBtn = Root + "/OraclesGift";
         }
 
+        public static class RightSideUILoc
+        {
+            private const string Root = BattleLoc.Root + "/rightSideUI/menuButtons";
+
+            public const string StoreBtn = Root + "/storeButton";
+        }
+
         public static class BottomSideUINewLoc
         {
             private const string Root = BattleLoc.Root + "/bottomSideUINew/bgBlack";

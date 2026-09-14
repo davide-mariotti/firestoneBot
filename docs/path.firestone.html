@@ -69,6 +69,9 @@
   il gioco alterna le due in base alla finestra. Le ho documentate entrambe: quando tocca automatizzare questi bottoni,
   va controllato quale risulta effettivamente attiva in quel momento (<code>GameElement.IsVisible()</code> lo fa già
   automaticamente per il bot).
+  <br><br>
+  <b>Aggiornamento:</b> lo stesso tipo di ambiguità è stato trovato (e risolto) anche per la barra
+  notifiche — vedi la nota nella sezione <a href="#notifiche" style="color:inherit">Notifiche</a> qui sotto.
 </div>
 
 <nav class="toc">
@@ -208,7 +211,8 @@
 
 <section id="notifiche">
   <h2>🔔 Notifiche (badge attività disponibili)</h2>
-  <p class="region-path">Radice: <code>battleRoot/battleMain/battleCanvas/SafeArea/leftSideUI/notifications/Viewport/grid</code></p>
+  <p class="region-path">Radice: <code>battleRoot/battleMain/battleCanvas/SafeArea/leftSideUINew/notifications/Viewport/grid</code></p>
+  <p class="desc">Corretto: la scansione statica aveva trovato <code>leftSideUI</code> (senza "New") — esistono entrambi negli asset del gioco con contenuto quasi identico, ma solo <code>leftSideUINew</code> è quello davvero usato in gioco (confermato dal codice v1 già testato dal vivo, che lo usa con successo da mesi per 13 di queste notifiche).</p>
   <p class="desc">
     Ogni voce è un bottone che appare solo quando l'attività ha qualcosa da reclamare/fare (badge). <span class="already">Il bot ne usa già 14 tramite <code>Notifications.cs</code> / <code>Paths.NotificationsLoc</code></span>
     (Engineer, WarfrontCampaign, FreePickaxes, Expeditions, Quests, GuardianTraining, FirestoneResearch, Experiments, OracleRituals, MapMissions, OraclesGift, MysteryBox, CheckIn). Il prefab ne contiene <b>48 in totale</b> — molte non ancora automatizzate:

@@ -47,7 +47,7 @@ Cambia (le due cose che davvero pesano su CPU/RAM con tanti bot):
 |---|------|-------------|------|
 | 1 | **Hero Upgrade** (in battaglia) | Esiste (AutoUpgrade) | Porting + fix performance sopra. **Prossimo/fatto per primo.** |
 | 2 | **Oracle's Gift** (claim giornaliero) | Path già noto, mai un task dedicato | Singolo bottone, notification-driven — primo task nuovo, prova del pattern BotTask "claim semplice". |
-| 3 | **Daily Rewards + Value Bundle giornaliero** | DailyRewards esiste, i due bottoni (`grid/dailyRewardsButton`, `grid/valueBundleDailyButton`) sono nuovi | Da individuare la schermata esatta (Store) e il path completo. |
+| 3 | **Daily Rewards + Value Bundle giornaliero** | DailyRewards esiste, i due bottoni (`grid/dailyRewardsButton`, `grid/valueBundleDailyButton`) sono nuovi | Fatto. Il claim nel tab "Pacchetti Giornalieri" è solo la mysteryBox gratuita (`freeText`) — gli slot numerati `valueBundle (0)/(1)/(2)` accanto sono acquisti veri, mai toccati. |
 | 4 | **Quest giornaliere** (claim `quest (N)/claimedText`) | Non esiste | Da individuare schermata (probabile `Character` → tab Missioni, già mappata) e iterare gli slot come per le hero slot. |
 | 5 | **Free Pickaxes** | Esiste | Porting diretto. |
 | 6 | **Engineer** | Esiste | Porting diretto. |
@@ -71,7 +71,7 @@ rapida che compili, poi passo al successivo solo dopo conferma.
 - [x] Scheletro progetto (csproj, Directory.Build.props, Main.cs, core infra)
 - [x] Task 1: Hero Upgrade
 - [x] Task 2: Oracle's Gift
-- [ ] Task 3: Daily Rewards + Value Bundle
+- [x] Task 3: Daily Rewards + Value Bundle
 - [ ] Task 4: Quest giornaliere
 - [ ] Task 5: Free Pickaxes
 - [ ] Task 6: Engineer
