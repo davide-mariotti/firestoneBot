@@ -35,6 +35,8 @@ public static partial class Paths
             public const string QuestsBtn = Root + "/Quests";
 
             public const string FreePickaxesBtn = Root + "/FreePickaxes";
+
+            public const string EngineerBtn = Root + "/Engineer";
         }
 
         public static class RightSideUILoc
@@ -44,6 +46,8 @@ public static partial class Paths
             public const string StoreBtn = Root + "/storeButton";
 
             public const string GuildBtn = Root + "/guildButton";
+
+            public const string TownBtn = Root + "/townButton";
         }
 
         public static class BottomSideUINewLoc

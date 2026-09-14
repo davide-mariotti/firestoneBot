@@ -50,7 +50,7 @@ Cambia (le due cose che davvero pesano su CPU/RAM con tanti bot):
 | 3 | **Daily Rewards + Value Bundle giornaliero** | DailyRewards esiste, i due bottoni (`grid/dailyRewardsButton`, `grid/valueBundleDailyButton`) sono nuovi | Fatto. Il claim nel tab "Pacchetti Giornalieri" è solo la mysteryBox gratuita (`freeText`) — gli slot numerati `valueBundle (0)/(1)/(2)` accanto sono acquisti veri, mai toccati. |
 | 4 | **Quest giornaliere** (claim `quest (N)/claimedText`) | Non esiste | Fatto. Screen `Character` → tab Missioni → sotto-tab Giornaliere, 9 slot fissi (`quest (0)`-`(8)`), click su tutti i `claimButton` (no-op sicuro su quelli non completi). Root path di `Character` non verificato dal vivo (nessun corrispettivo v1) — inferito per coerenza con Store/OracleStore. |
 | 5 | **Free Pickaxes** | Esiste | Fatto. A differenza della v1, aggiunta anche la navigazione manuale esplicita (rightSideUI/guildButton → TownGuild/guildShop → GuildShop/supplies), non presente né in v1 né nella prima porting: prima c'era solo il path via notifica. Nessun NotificationPath, di proposito: il claim è a soglia (`pickaxe_claim_threshold`), quindi il badge attivo non garantisce che ci sia abbastanza da riscattare — stessa scelta della v1. |
-| 6 | **Engineer** | Esiste | Porting diretto. |
+| 6 | **Engineer** | Esiste | Fatto. Porting + stessa aggiunta del Task 5: navigazione manuale esplicita (rightSideUI/townButton → TownIrongard/townBg/parent/engineer), non presente in v1 (solo notifica). NotificationPath presente: claim singolo a cooldown fisso, badge affidabile (a differenza di Free Pickaxes che è a soglia). |
 | 7 | **Expeditions** | Esiste (rinominato meglio: v1 lo aveva in un file con nome sbagliato) | Porting diretto. |
 | 8 | **Guardian Training** (Magic Quarters) | Esiste | Porting diretto. |
 | 9 | **Oracle Rituals** | Esiste | Porting diretto. |
@@ -74,7 +74,7 @@ rapida che compili, poi passo al successivo solo dopo conferma.
 - [x] Task 3: Daily Rewards + Value Bundle
 - [x] Task 4: Quest giornaliere
 - [x] Task 5: Free Pickaxes
-- [ ] Task 6: Engineer
+- [x] Task 6: Engineer
 - [ ] Task 7: Expeditions
 - [ ] Task 8: Guardian Training
 - [ ] Task 9: Oracle Rituals

@@ -21,4 +21,7 @@ public static class Notifications
 
     public static IEnumerator FreePickaxes =>
         new GameNotificationButton(Paths.BattleLoc.NotificationsLoc.FreePickaxesBtn).Click();
+
+    public static IEnumerator Engineer =>
+        new GameNotificationButton(Paths.BattleLoc.NotificationsLoc.EngineerBtn).Click();
 }

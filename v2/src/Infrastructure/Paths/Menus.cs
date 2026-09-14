@@ -77,6 +77,26 @@ public static partial class Paths
             public const string GuildShopBtn = Root + "/guildShop";
         }
 
+        public static class TownIrongardLoc
+        {
+            private const string Root = MenusLoc.Root + "/menus/TownIrongard";
+
+            public const string CloseBtn = Root + "/closeButton";
+
+            public const string EngineerBtn = Root + "/townBg/parent/engineer";
+        }
+
+        public static class EngineerLoc
+        {
+            private const string Root = MenusLoc.Root + "/menus/Engineer";
+
+            public const string CloseBtn = Root + "/closeButton";
+
+            public const string ClaimBtn = Root + "/submenus/bg/engineerSubmenu/toolsProductionSection/claimToolsButton";
+
+            public const string NextRunTimeTxt = ClaimBtn + "/cooldownOn/cooldownTimeLeft";
+        }
+
         public static class GuildShopLoc
         {
             private const string Root = MenusLoc.Root + "/menus/GuildShop";
