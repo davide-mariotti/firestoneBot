@@ -62,8 +62,14 @@ public static partial class Paths
 
                 public const string DailyTabBtn = Root + "/bg/submenuButtons/dailyButton";
 
+                public const string WeeklyTabBtn = Root + "/bg/submenuButtons/weeklyButton";
+
                 public const string DailyQuestsGridRoot = Root + "/bg/submenus/dailyQuestsScroll/Viewport/grid";
 
+                public const string WeeklyQuestsGridRoot = Root + "/bg/submenus/weeklyQuestsScroll/Viewport/grid";
+
+                // Shared between both tabs - shows whichever tab's countdown is currently selected
+                // (docs/screens/Character.html: "rinnovo delle missioni (giornaliere/settimanali)").
                 public const string RenewTxt = Root + "/questsRenewBg/questsRenewText";
             }
         }

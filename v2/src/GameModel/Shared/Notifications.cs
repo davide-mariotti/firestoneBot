@@ -55,4 +55,14 @@ public static class Notifications
     // this feature at all.
     public static IEnumerator MeteoriteResearch =>
         new GameNotificationButton(Paths.BattleLoc.NotificationsLoc.MeteoriteResearchBtn).Click();
+
+    // No v1 precedent (Scarab Game never existed in v1), but both confirmed present on the live
+    // rail via UnityPy (see Battle.cs). ScarabGame opens the mini-game screen; ScarabGameShopFreeToken
+    // is presumed to open ScarabGameShop directly (same "notification skips straight to the target"
+    // pattern as OraclesGift bypassing Store) - unverified, flagged in the task itself.
+    public static IEnumerator ScarabGame =>
+        new GameNotificationButton(Paths.BattleLoc.NotificationsLoc.ScarabGameBtn).Click();
+
+    public static IEnumerator ScarabGameShopFreeToken =>
+        new GameNotificationButton(Paths.BattleLoc.NotificationsLoc.ScarabGameShopFreeTokenBtn).Click();
 }

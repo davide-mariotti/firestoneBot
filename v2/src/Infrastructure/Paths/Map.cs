@@ -24,12 +24,48 @@ public static partial class Paths
 
         public static class WarfrontLoc
         {
-            private const string LootBtn = WorldMapLoc.Root + "/submenus/warfrontCampaignSubmenu/loot";
+            private const string SubmenuRoot = WorldMapLoc.Root + "/submenus/warfrontCampaignSubmenu";
+
+            private const string LootBtn = SubmenuRoot + "/loot";
 
             public const string NextRunTimeTxt = LootBtn + "/nextLootTimeLeft";
 
             public const string ClaimBtn = LootBtn + "/claimButton";
+
+            // v1 had this path defined but never wired any task to it - see WFDailyMissionsLoc/
+            // WFLiberationMissionsLoc below for the popups it opens.
+            public const string DailyMissionsBtn = SubmenuRoot + "/dailyMissionsButton";
+
+            public const string DailyMissionsNotification = DailyMissionsBtn + "/notification";
         }
+    }
+
+    // Hub popup opened by WarfrontLoc.DailyMissionsBtn - has two categories (liberationMissions,
+    // dungeonMissions), only the first of which v1 ever defined a path for. dungeonMissions found
+    // via a fresh UnityPy scan but not yet wired to anything - out of scope for now.
+    public static class WFDailyMissionsLoc
+    {
+        private const string Root = MenusLoc.Root + "/popups/WFDailyMissions";
+
+        public const string CloseBtn = Root + "/bg/closeButton";
+
+        public const string OpenLiberationMissionsBtn = Root + "/bg/liberationMissions/openButton";
+
+        public const string NextRunTimeTxt = Root + "/bg/timeLeftMain/timeLeftText";
+    }
+
+    // Opened by WFDailyMissionsLoc.OpenLiberationMissionsBtn - a grid of 10 fight-for-reward
+    // missions, no currency/cost involved anywhere in this popup (confirmed via UnityPy scan).
+    public static class WFLiberationMissionsLoc
+    {
+        private const string Root = MenusLoc.Root + "/popups/WFLiberationMissions";
+
+        public const string CloseBtn = Root + "/bg/closeButton";
+
+        public const string MissionsGridRoot = Root + "/bg/missionsScrollView/Viewport/missionGrid";
+
+        // Relative to a liberationMission (N) child - safe no-op via IsClickable() if locked/already won.
+        public const string FightBtn = "/fightButton";
     }
 
     // Popup shown when a mission pin is clicked - lives under menuCanvas/popups, not menus/WorldMap.

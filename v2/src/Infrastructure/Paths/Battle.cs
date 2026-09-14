@@ -63,6 +63,13 @@ public static partial class Paths
             // all (docs/path.firestone.html explicitly notes this badge as "Rimossa dal bot, feature
             // mai raggiunta"), so there's no live-tested precedent. Flag for live verification.
             public const string MeteoriteResearchBtn = Root + "/MeteoriteResearch";
+
+            // Confirmed present (unlike TemplePrestige/MeteoriteResearch above, these were directly
+            // verified via UnityPy, not just the static doc scan) - but still no v1 precedent, since
+            // v1 never implemented Scarab Game at all.
+            public const string ScarabGameBtn = Root + "/ScarabGame";
+
+            public const string ScarabGameShopFreeTokenBtn = Root + "/ScarabGameShopFreeToken";
         }
 
         public static class RightSideUILoc
