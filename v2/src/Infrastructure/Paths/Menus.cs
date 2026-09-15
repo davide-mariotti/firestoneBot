@@ -90,6 +90,8 @@ public static partial class Paths
             public const string ExpeditionsBtn = Root + "/expeditions";
 
             public const string ArcaneCrystalBtn = Root + "/arcaneCrystal";
+
+            public const string TreeOfLifeBtn = Root + "/treeOfLife";
         }
 
         // Unlike the "menus" screens above, Expeditions lives under menuCanvas/popups - same root

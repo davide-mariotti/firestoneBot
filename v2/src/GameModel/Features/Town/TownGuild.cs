@@ -15,5 +15,7 @@ public static class TownGuild
     public static IEnumerator OpenArcaneCrystal =>
         new GameButton(Paths.MenusLoc.TownGuildLoc.ArcaneCrystalBtn).Click();
 
+    public static IEnumerator OpenTreeOfLife => new GameButton(Paths.MenusLoc.TownGuildLoc.TreeOfLifeBtn).Click();
+
     public static IEnumerator Close => new GameButton(Paths.MenusLoc.TownGuildLoc.CloseBtn).Click();
 }
