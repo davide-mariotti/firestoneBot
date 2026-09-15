@@ -1,4 +1,4 @@
-﻿using Firebot.GameModel.Base;
+using Firebot.GameModel.Base;
 using Firebot.GameModel.Primitives;
 using Firebot.Infrastructure;
 using UnityEngine;
@@ -11,8 +11,7 @@ public class Guardian : GameElement
         : base(path, parent, transform) { }
 
     public bool IsUnlocked =>
-        new GameElement(Paths.MenusLoc.CanvasLoc.TownLoc.MagicQuarters.GuardianStarsIcon, this).IsVisible();
+        new GameElement(Paths.MenusLoc.MagicQuartersLoc.GuardianStarsIcon, this).IsVisible();
 
-    public static GameButton EnlightenmentBtn =>
-        new(Paths.MenusLoc.CanvasLoc.TownLoc.MagicQuarters.EnlightenmentBtn);
+    public static GameButton EnlightenmentBtn => new(Paths.MenusLoc.MagicQuartersLoc.EnlightenmentBtn);
 }

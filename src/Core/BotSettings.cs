@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using MelonLoader;
 using UnityEngine;
@@ -29,7 +29,6 @@ public static class BotSettings
         }
     }
 
-    // Safe Properties
     public static bool AutoStart => _autoStart?.Value ?? false;
     public static float StartBotDelay => Mathf.Clamp(_startBotDelay.Value, 10.0f, 120.0f);
     public static float ScanInterval => Mathf.Clamp(_scanInterval.Value, 5.0f, 3600.0f);
@@ -52,18 +51,16 @@ public static class BotSettings
 
         _startBotDelay = _category.CreateEntry("start_bot_delay", 10.0f, "Start Bot Delay",
             "The initial cooldown (in seconds) before the bot begins execution." +
-            "\nUseful for preventing conflicts while Unity is still loading the initial scene." +
             "\nClamped between 10.0 and 120.0 seconds.");
 
         _scanInterval = _category.CreateEntry("scan_interval", 5.0f, "Scan Interval",
             "The interval (in seconds) between each BotManager verification cycle." +
-            "\nLower values make the bot more responsive but may impact FPS performance." +
             "\nClamped between 5.0 and 3600.0 seconds.");
 
         _interactionDelay = _category.CreateEntry("interaction_delay", 1.0f, "Interaction Delay",
             "The delay (in seconds) between individual UI interactions (clicks, transitions)." +
-            "\nEnsures the game processes the command before the next action is taken. " +
             "\nClamped between 0.5 and 5.0 seconds.");
+
         _maxTaskRuntime = _category.CreateEntry("max_task_runtime", 120.0f, "Max Task Runtime",
             "Maximum time (in seconds) a single task is allowed to run before it is aborted." +
             "\nClamped between 10.0 and 3600.0 seconds.");
@@ -85,6 +82,7 @@ public static class BotSettings
             "Affects firestone researches, missions, experiments, and map reset timers. " +
             "If the remaining time is less than or equal to this value, the speedup is free (no gems required)."
         );
+
         _category.SaveToFile();
         Logger.Info($"System Initialized. Configuration: {ConfigPath}");
     }

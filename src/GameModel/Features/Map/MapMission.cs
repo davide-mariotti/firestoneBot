@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections;
+using System;
 using Firebot.GameModel.Primitives;
 using Firebot.Infrastructure;
 
@@ -7,8 +6,5 @@ namespace Firebot.GameModel.Features.Map;
 
 public static class MapMission
 {
-    public static DateTime NextRunTime => new GameText(Paths.MenusLoc.CanvasLoc.MapLoc.NextRunTimeTxt).Time;
-
-    public static IEnumerator Close =>
-        new GameButton(Paths.MenusLoc.CanvasLoc.MapLoc.CloseBtn).Click();
+    public static DateTime NextRunTime => new GameText(Paths.WorldMapLoc.MapMissionsLoc.NextRunTimeTxt).Time;
 }

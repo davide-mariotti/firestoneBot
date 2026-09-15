@@ -12,7 +12,9 @@ namespace Firebot.BotActions;
 /// <summary>
 ///     Watches the battle stage counter. When it stops advancing for a while (a difficulty wall the
 ///     current team can't clear), steps back a few stages so the bot farms an easier, fast-clearing
-///     stage instead of idling against the wall until the next Temple of Eternals reset/empower.
+///     stage instead of idling against the wall until the next Empower (Temple of Eternals reset).
+///     Direct port of the original AutoRetreat - no performance changes needed, it already only polls every
+///     30s and does nothing while a scheduled BotTask is executing.
 /// </summary>
 public static class AutoRetreat
 {
@@ -31,8 +33,8 @@ public static class AutoRetreat
     private static int _lastSeenStage = -1;
     private static DateTime _lastProgressTime = DateTime.MinValue;
 
-    // Once a retreat happens, stay put until the next Temple of Eternals reset/empower instead of
-    // re-checking every poll and retreating further and further down.
+    // Once a retreat happens, stay put until the next Empower instead of re-checking every poll and
+    // retreating further and further down.
     private static bool _suppressedUntilReset;
 
     private static bool IsEnabled => _isEnabled?.Value ?? false;
@@ -56,8 +58,8 @@ public static class AutoRetreat
             "Enables or disables AutoRetreat. Starts and stops together with the main bot (shortcut_key in [firebot_settings])." +
             "\nWhen the current stage stops advancing for `stall_minutes` (a difficulty wall), clicks the in-battle" +
             "\n'go back stage' arrow `retreat_stages` times to drop to an easier stage that clears quickly. After that it" +
-            "\nstays put (no further checks) until the next Temple of Eternals reset/empower, instead of retreating" +
-            "\nfurther and further down every time the stall threshold passes. Default: false."
+            "\nstays put (no further checks) until the next Empower, instead of retreating further and further down" +
+            "\nevery time the stall threshold passes. Default: false."
         );
 
         _stallMinutes = section.CreateEntry(
@@ -99,7 +101,7 @@ public static class AutoRetreat
         Logger.Info("AutoRetreat stopped.");
     }
 
-    /// <summary>Called by TempleOfEternalsTask right after a successful empower so stall detection re-arms.</summary>
+    /// <summary>Called by EmpowerTask right after a successful empower so stall detection re-arms.</summary>
     public static void OnAdventureReset()
     {
         if (!_suppressedUntilReset) return;

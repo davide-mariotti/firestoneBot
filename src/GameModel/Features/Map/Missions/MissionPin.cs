@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using Firebot.GameModel.Base;
 using Firebot.GameModel.Primitives;
@@ -15,14 +15,11 @@ public class MissionPin : GameElement
     public MissionPin(string path = null, GameElement parent = null, Transform transform = null)
         : base(path, parent, transform) { }
 
-    public DateTime TimeRequired =>
-        new GameText(Paths.MenusLoc.CanvasLoc.MapLoc.MissionsLoc.PinLoc.TimeReq, this).Time;
+    public DateTime TimeRequired => new GameText(Paths.MissionPinLoc.TimeReq, this).Time;
 
-    public bool IsActive =>
-        new GameElement(Paths.MenusLoc.CanvasLoc.MapLoc.MissionsLoc.PinLoc.ActiveIcon, this).IsVisible();
+    public bool IsActive => new GameElement(Paths.MissionPinLoc.ActiveIcon, this).IsVisible();
 
-    public bool IsCompleted =>
-        new GameElement(Paths.MenusLoc.CanvasLoc.MapLoc.MissionsLoc.PinLoc.Tick, this).IsVisible();
+    public bool IsCompleted => new GameElement(Paths.MissionPinLoc.Tick, this).IsVisible();
 
     public IEnumerator Select()
     {

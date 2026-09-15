@@ -1,0 +1,55 @@
+using System;
+using System.Collections;
+using Firebot.Core.Tasks;
+using Firebot.GameModel.Features.Guild;
+using Firebot.GameModel.Features.Town;
+
+namespace Firebot.Tasks.Guild;
+
+/// <summary>
+///     Spends Arcane Crystals on Awakening (Guild -&gt; Awakening) - claimed via the Mailbox task
+///     (SystemMailTask) since the wiki lists Arcane Crystal rewards as mail deliveries, then spent
+///     here. Level 50 gate per the wiki. This whole feature is new, requested by
+///     the user.
+///     No selection logic needed at all: per the wiki, the awakened hero is chosen randomly by the
+///     game itself, weighted toward heroes with a lower awakening level (catch-up mechanism similar
+///     to Sacred Cards) - nothing for this task to decide there.
+///     Per the user ("cercando di usare il moltiplicatore il più possibile"): always re-selects the
+///     biggest currently-usable multiplier (x160 down to x1, x1 always available) before every single
+///     awaken, not just once at the start - the multiplier only affects cost/xp proportionally (no
+///     actual efficiency gain per the wiki), so this is purely about spending crystals in as few
+///     clicks as possible, and re-picking each time naturally steps down to a smaller multiplier once
+///     the bigger one is no longer affordable instead of stalling out early.
+/// </summary>
+public class AwakeningTask : BotTask
+{
+    internal override TaskGroup Group => TaskGroup.Guild;
+    protected override int MinimumCharacterLevel => 50;
+
+    private static readonly TimeSpan RecheckDelay = TimeSpan.FromHours(6);
+
+    // Safety bound only, matching the pattern used everywhere else in this codebase for a "keep
+    // going until nothing's left to do" loop.
+    private const int MaxIterations = 200;
+
+    public override IEnumerator Execute()
+    {
+        yield return TownGuild.Open;
+        yield return TownGuild.OpenAwakening;
+
+        for (var i = 0; i < MaxIterations; i++)
+        {
+            yield return Awakening.SelectBestMultiplier();
+
+            var awakenBtn = Awakening.AwakenBtn;
+            if (!awakenBtn.IsClickable()) break;
+
+            yield return awakenBtn.Click();
+        }
+
+        yield return Awakening.Close;
+        yield return TownGuild.Close;
+
+        NextRunTime = DateTime.Now + RecheckDelay;
+    }
+}

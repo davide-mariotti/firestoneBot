@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using Firebot.GameModel.Base;
 using Firebot.GameModel.Primitives;
@@ -8,16 +8,13 @@ namespace Firebot.GameModel.Features.Town.MagicQuarters;
 
 public static class MagicQuarters
 {
-    public static IEnumerator Close =>
-        new GameButton(Paths.MenusLoc.CanvasLoc.TownLoc.MagicQuarters.CloseBtn).Click();
+    public static IEnumerator Close => new GameButton(Paths.MenusLoc.MagicQuartersLoc.CloseBtn).Click();
 
-    public static GameButton TrainBtn => new(Paths.MenusLoc.CanvasLoc.TownLoc.MagicQuarters.TrainBtn);
+    public static GameButton TrainBtn => new(Paths.MenusLoc.MagicQuartersLoc.TrainBtn);
 
-    public static DateTime NextRunTime =>
-        new GameText(Paths.MenusLoc.CanvasLoc.TownLoc.MagicQuarters.NextRunTimeTxt).Time;
+    public static DateTime NextRunTime => new GameText(Paths.MenusLoc.MagicQuartersLoc.NextRunTimeTxt).Time;
 
-    public static IEnumerator CloseLockedPopup =>
-        new GameButton(Paths.MenusLoc.CanvasLoc.TownLoc.MagicQuarters.LockedGuardianLoc.CloseBtn).Click();
+    public static IEnumerator CloseLockedPopup => new GameButton(Paths.MenusLoc.LockedGuardianLoc.CloseBtn).Click();
 
-    public static GameElement Guardians => new(Paths.MenusLoc.CanvasLoc.TownLoc.MagicQuarters.Guardoians);
+    public static GameElement Guardians => new(Paths.MenusLoc.MagicQuartersLoc.GuardiansRoot);
 }

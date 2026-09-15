@@ -1,4 +1,4 @@
-﻿using MelonLoader;
+using MelonLoader;
 using MelonLoader.Logging;
 
 namespace Firebot.Core;

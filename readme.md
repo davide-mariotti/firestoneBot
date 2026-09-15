@@ -29,21 +29,54 @@ Firebot **is not a cheat**. It does not modify game resources, grant unfair adva
 
 ## Features
 
+Every automation below runs on its own schedule once enabled, is individually configurable, and shows up as its own section in `FirebotPreferences.cfg` - see [Configuration](#configuration).
+
 - **Easy Start/Stop**: Turn the bot on or off during gameplay with a hotkey (default `F7`, `shortcut_key`). You can also auto-start and adjust bot timings with `auto_start`, `start_bot_delay`, `scan_interval`, `interaction_delay`, and `max_task_runtime`.
-- **Automatic Daily Rewards**: Collects daily rewards for you when they are available.
-- **Engineer Collection**: Picks up ready Engineer tools automatically (unlocks at character level 50).
-- **Warfront Rewards**: Collects available Warfront campaign scroll rewards.
-- **Map Missions on Auto**: Collects finished missions and starts new ones with available squads. You can choose mission order with `mission_time_order` (`asc` or `desc`).
-- **Expeditions on Auto**: Finishes and restarts expeditions automatically.
-- **Library Research Automation**: Starts and collects Firestone research, with optional priority order using `research_priority`.
-- **Oracle Automation**: Collects completed rituals and starts new ones when possible (unlocks at character level 200).
-- **Guardian Training Automation**: Starts training in Magic Quarters automatically. You can choose the guardian with `guardian_index` and enable strange dust usage with `use_strange_dust`.
-- **Alchemist Automation**: Runs alchemist experiments and can focus on specific resources using `resource_type` (unlocks at character level 120).
-- **Free Pickaxe Claiming**: Claims free pickaxes automatically based on your preferred quantity with `pickaxe_claim_threshold`.
-- **AutoSkill Mode**: Uses leader skills automatically, with its own key (`[auto_skill].shortcut_key`) and combo setup (`combo_sequence`).
-- **AutoUpgrade Mode**: Upgrades heroes/skills automatically, with its own key (`[auto_upgrade].shortcut_key`) and optional slot selection (`upgrade_target_slots`).
-- **Free Speedups**: Uses free speedups (no gems) whenever a timer is close enough to finish, based on `free_speedup_seconds`.
-- **AutoRetreat**: When the current battle stage stops advancing for `stall_minutes` (a difficulty wall), steps back `retreat_stages` stages to keep farming quickly until the next Temple of Eternals reset/empower.
+- **Free Speedups**: Uses free speedups (no gems) whenever a timer is close enough to finish, based on `free_speedup_seconds` - applies across research, missions, experiments, and map reset timers.
+
+**In battle**
+
+- **Hero Upgrade**: Upgrades the leader and every hero slot during battle. Starts and stops together with the main bot; optionally target only specific slots.
+- **AutoRetreat**: When the current battle stage stops advancing for a while (a difficulty wall), steps back a few stages to keep farming quickly until the next Temple of Eternals reset/empower.
+
+**Daily quests** (6 of the 9 in-game daily quests, automated end to end)
+
+- **Collector**: Opens chests (gear/jewel/celestial), keeping a configurable reserve of common ones.
+- **Gamer**: Plays Tavern card draws with Game Tokens, topping up from Beer automatically when running low.
+- **Merchant**: Sells eligible items and upgrades at the Exotic Merchant.
+- **Miner**: Hits the Arcane Crystal at the Guild.
+- **Liberator**: Fights and waits out real Warfront liberation battles.
+- Daily/weekly quest reward claiming for every completed quest, including the 3 quests (Trainer/Conqueror/Expeditioner) that complete themselves via the automations below.
+
+**Town buildings**
+
+- **Daily Rewards & Value Bundles**: Collects daily login rewards and the free daily mystery box.
+- **Engineer**: Collects ready tools, and levels up every owned War Machine in the Workshop.
+- **Guardian Training**: Starts training in Magic Quarters, with guardian selection and optional Strange Dust usage.
+- **Alchemist**: Runs experiments, optionally focused on specific resources.
+- **Oracle Rituals**: Collects completed rituals and starts new ones.
+- **Library Research**: Starts and collects both Firestone and Meteorite research, always prioritizing "Raining Gold" when it's an available option.
+- **Temple of Eternals (Empower)**: Resets/prestiges once your Firestone find ratio and adventure time both clear their configured thresholds.
+- **Free Pickaxes**: Claims free pickaxes once your preferred quantity is banked.
+- **Scarab's Game**: Claims the daily free shop gift, spins the slot with free Noble Tokens, and opens Pharaoh's Vault once enough Ancient Coins are banked.
+- **Hall of Heroes**: For every hero, unlocks gear tiers and enchants gear/jewels - gear tier 2/3 and all jewels for every hero (their bonuses are account-wide), gear tier 1 only for heroes in your active battle formation (it only benefits the hero wearing it).
+
+**Map & Warfront**
+
+- **Map Missions**: Collects finished missions and starts new ones, in your preferred time order (`asc`/`desc`).
+- **Warfront Campaign & Daily Missions**: Collects campaign loot and fights daily/liberation missions.
+- **Arena of Kings**: Fights the weakest of the opponents shown each reroll, widening its power tolerance the longer a token goes unused so it's never wasted.
+
+**Guild**
+
+- **Expeditions**: Finishes and restarts expeditions automatically.
+- **Tree of Life (Personal)**: Buys Personal Tree upgrades, prioritizing Raining Gold / Firestone Finder / Firestone Effect.
+- **Awakening**: Spends Arcane Crystals on hero leveling, always using the biggest multiplier you can currently afford.
+
+**Character**
+
+- **Talents**: Spends talent points following a curated investment order.
+- **Path of Glory (Battle Pass)**: Claims both free and (if owned) Golden track rewards.
 
 ---
 
@@ -167,9 +200,9 @@ For the safe editing workflow (close game -> edit -> reopen), follow section `5)
 
 For now, all configuration must be done directly in this file. A graphical configuration interface will be implemented in the future.
 
-Here is a list of the current configuration options (and their default values):
+The file is generated the first time Firebot runs, then grows automatically as new features are added - no need to write it by hand. It's organized as one section per feature (e.g. `[map_missions]`, `[hero_upgrade]`), each with its own `enabled` toggle plus whatever settings that feature exposes (a time order, a resource filter, a claim threshold, and so on). Every setting is documented with a comment directly above it in the generated file, including its default value and valid range - that's the authoritative reference, since it's always in sync with the version of Firebot you're running.
 
----
+Top-level settings that apply to the whole bot, always under `[firebot_settings]`:
 
 ```toml
 [firebot_settings]
@@ -196,128 +229,9 @@ debug_mode = false
 shortcut_key = "F7"
 # Some timers in the game can be sped up for free if the remaining time is below this threshold (default: 170 seconds = 2 minutes and 50 seconds). The maximum allowed value is 180 seconds (3 minutes). Set to 0 to disable free speedup. Adjust this value to account for lag or future game changes. Affects firestone researches, missions, experiments, and map reset timers. If the remaining time is less than or equal to this value, the speedup is free (no gems required).
 free_speedup_seconds = 170.0
-
-[alchemist]
-# Enables or disables the Alchemist automation task.
-# When disabled, this task will be ignored during the execution loop.
-enabled = false
-# ALCHEMIST EXPERIMENT RESOURCE CONFIGURATION. 
-# This setting controls which experiment resources are used. 
-# Valid IDs: 0=Dragon blood, 1=Strange dust, 2=Exotic coin. 
-# Enter comma-separated IDs (e.g. '0,1,2'). 
-# Any value other than 0, 1, or 2 will be ignored. 
-# Default: empty (no resources, bot selects any available resource). 
-# EXAMPLES: '0,1' = Use Dragon blood and Strange dust. '2' = Only use Exotic coin.
-resource_type = ""
-
-[daily_rewards]
-# Enables or disables the Daily Rewards automation task.
-# When disabled, this task will be ignored during the execution loop.
-enabled = false
-
-[engineer_tools]
-# Enables or disables the Engineer Tools automation task.
-# When disabled, this task will be ignored during the execution loop.
-enabled = false
-
-[firestone_research]
-# Enables or disables the Firestone Research automation task.
-# When disabled, this task will be ignored during the execution loop.
-enabled = false
-# FIRESTONE RESEARCH TALENT TREE PRIORITY CONFIGURATION. 
-# This setting controls which talents are researched first based on their tree position. 
-# TALENT IDs ARE ASSIGNED BY INDEX (ordered top to bottom, left to right within each tree screen). 
-# Valid IDs for user input range from 1 to 16. 
-# You may specify any combination of IDs from 1 to 16, in any order you prefer. The bot will follow the exact order you provide. 
-# TREE I EXAMPLE - ID 1=Attribute damage, ID 2=Attribute health, ID 3=Attribute armor, ID 4=Fist fight, ID 5=Guardian power, ID 6=Projectiles, 
-# ID 7=Raining gold, ID 8=Critical loot Bonus, ID 9=Critical loot Chance, ID 10=Weaklings, ID 11=Expose Weakness, 
-# ID 12=Medal of honor, ID 13=Firestone Finder, ID 14=Trainer Skills, ID 15=Skip wave, ID 16=Expeditioner. 
-# HOW TO USE: Enter comma-separated IDs in priority order (integers between 1-16). The bot will research talents in the exact sequence provided. 
-# If a priority talent is unavailable (locked/completed), the bot will try the next priority. 
-# If all priorities are unavailable or if this field is empty, the bot will select any available talent automatically. 
-# EXAMPLES: '2,1,4' = Research Attribute health first, then Attribute damage, then Fist fight. 
-# '7,8,9' = Research Raining gold first, then Critical loot Bonus, then Critical loot Chance. 
-# '13' = Only research Firestone Finder, fallback to any available if completed. 
-# '5,12,1,16,3,8,10,2,14,7,4,15,6,13,9,11' = Example using all 16 IDs in a random order, each ID only once. 
-# Default: empty (no priority, bot selects any available talent)
-research_priority = ""
-
-[magic_quarters]
-# Enables or disables the Magic Quarters automation task.
-# When disabled, this task will be ignored during the execution loop.
-enabled = false
-# Select guardian index for training. Use 0-3. Default is 0.
-# 0=Vermilion, 1=Grace, 2=Ankaa, 3=Azhar
-guardian_index = 0
-# Use 'Strange Dust' for training. Default is false.
-use_strange_dust = false
-
-[oracle]
-# Enables or disables the Oracle automation task.
-# When disabled, this task will be ignored during the execution loop.
-enabled = false
-
-[map_missions]
-# Enables or disables the Map Missions automation task.
-# When disabled, this task will be ignored during the execution loop.
-enabled = false
-# Sort missions by time required. Use 'asc' (shorter first) or 'desc' (longer first).
-mission_time_order = "desc"
-
-[warfront_campaign_loot]
-# Enables or disables the Warfront Campaign Loot automation task.
-# When disabled, this task will be ignored during the execution loop.
-enabled = false
-
-[expedition]
-# Enables or disables the Expedition automation task.
-# When disabled, this task will be ignored during the execution loop.
-enabled = false
-
-[free_pickaxes]
-# Enables or disables the Free Pickaxes automation task.
-# When disabled, this task will be ignored during the execution loop.
-enabled = false
-# Minimum number of free pickaxes required before claiming. Set to 1 to claim as soon as available, or up to 30 to wait for maximum. Default is 30 (wait for maximum).
-pickaxe_claim_threshold = 30
-
-[auto_skill]
-# The physical key used to manually toggle the AutoSkill execution state during gameplay. Default: F8.
-shortcut_key = "F8"
-# Enables or disables the AutoSkill automation task. When disabled, this task will be ignored during the execution loop. Default: false.
-enabled = false
-# Combo sequence as comma-separated numbers. Example: '1' will spam hotkey 1, '2,1,2' will execute hotkey 2, then 1, then 2, and repeat. Only values 1, 2, or 3 are valid. Default: 1.
-combo_sequence = "1"
-
-[auto_upgrade]
-# The physical key used to manually toggle the AutoUpgrade execution state during gameplay. Default: F6.
-shortcut_key = "F6"
-# Enables or disables the AutoUpgrade automation task. When disabled, this task will be ignored during the execution loop. Default: false.
-enabled = false
-# AUTOUPGRADE TARGET SLOT CONFIGURATION. 
-# This setting controls which upgrade slots (heroes/skills) will be upgraded. 
-# SLOT IDs ARE ZERO-BASED and range from 0 to 6. 
-# ORIENTATION: Slot numbering follows the list from top to bottom. 
-# SLOT MAP: 0 = Base upgrade, 1 = Guardian, 2 to 6 = Heroes. 
-# TASK PRIORITY: Main bot tasks always have priority over AutoUpgrade. 
-# AUTO PAUSE/RESUME: When a main task is approaching, AutoUpgrade pauses about 30 seconds before that task runs, allows the task to execute, and then resumes automatically. 
-# HOW TO USE: Enter comma-separated slot IDs to select the targets to upgrade. 
-# EXAMPLES: '0,6' = only slots 0 and 6 will be upgraded. '3,1,5' = only slots 3, 1 and 5. 
-# If empty, AutoUpgrade will upgrade all visible slots. 
-# Invalid values are ignored.
-upgrade_target_slots = ""
-
-[auto_retreat]
-# Enables or disables AutoRetreat. Starts and stops together with the main bot (shortcut_key in [firebot_settings]).
-# When the current stage stops advancing for `stall_minutes` (a difficulty wall), clicks the in-battle
-# 'go back stage' arrow `retreat_stages` times to drop to an easier stage that clears quickly. After that it
-# stays put (no further checks) until the next Temple of Eternals reset/empower. Default: false.
-enabled = false
-# How long the current stage number must stay unchanged before it's treated as a wall. Clamped between 1 and 180 minutes. Default: 3.
-stall_minutes = 3.0
-# How many stages to step back (one click each) once a wall is detected. Clamped between 1 and 50. Default: 5.
-retreat_stages = 5
 ```
+
+Every other feature is disabled by default (`enabled = false`) until you turn it on in its own section.
 
 ---
 
@@ -352,7 +266,7 @@ retreat_stages = 5
           ```
 
 4. Build the project using your preferred method (e.g., Visual Studio, `dotnet build src/firebot.csproj -c Debug`).
-    - On a successful build, `firebot.dll` is copied automatically into `<GameRoot>\Mods`. The game must be closed for this last step to succeed (the file is locked while Firestone is running).
+    - On a successful build, `firebot.dll` is copied automatically into `dist/` at the repo root - never directly into `<GameRoot>\Mods`, so an in-progress build can't silently replace whatever's currently running live. Copy `dist/firebot.dll` into `<GameRoot>\Mods` by hand once you're ready to run it.
 
 ---
 

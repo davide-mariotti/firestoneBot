@@ -1,4 +1,4 @@
-﻿namespace System.Runtime.CompilerServices;
+namespace System.Runtime.CompilerServices;
 
 [AttributeUsage(
     AttributeTargets.Class | AttributeTargets.Property | AttributeTargets.Field | AttributeTargets.Event |

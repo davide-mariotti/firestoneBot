@@ -23,8 +23,5 @@ global.json
 # Ignore analysis and reports directory
 Reports/
 
-## --- v2 local build output (never the game's live Mods folder, see v2/src/Directory.Build.props) ---
-v2/dist/
-
-## --- Source Files (No Modifications) ---
-src/Utilities/Polyfills.cs
+## --- Local build output (never the game's live Mods folder, see src/Directory.Build.props) ---
+dist/

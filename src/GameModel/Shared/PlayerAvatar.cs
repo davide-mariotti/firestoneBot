@@ -1,4 +1,4 @@
-﻿using Firebot.GameModel.Primitives;
+using Firebot.GameModel.Primitives;
 using Firebot.Infrastructure;
 
 namespace Firebot.GameModel.Shared;

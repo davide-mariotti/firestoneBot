@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using Firebot.GameModel.Base;
 using Firebot.GameModel.Primitives;
@@ -8,20 +8,15 @@ namespace Firebot.GameModel.Features.Map.Missions;
 
 public static class MissionPreview
 {
-    public static IEnumerator Close =>
-        new GameButton(Paths.MenusLoc.CanvasLoc.MapLoc.MissionsLoc.PreviewLoc.CloseBtn).Click();
+    public static IEnumerator Close => new GameButton(Paths.PreviewMissionLoc.CloseBtn).Click();
 
-    public static IEnumerator StartMission =>
-        new GameButton(Paths.MenusLoc.CanvasLoc.MapLoc.MissionsLoc.PreviewLoc.StartBtn).Click();
+    public static IEnumerator StartMission => new GameButton(Paths.PreviewMissionLoc.StartBtn).Click();
 
-    public static GameButton SpeedupBtn => new(Paths.MenusLoc.CanvasLoc.MapLoc.MissionsLoc.PreviewLoc.SpeedupBtn);
+    public static GameButton SpeedupBtn => new(Paths.PreviewMissionLoc.SpeedupBtn);
 
-    public static bool CanSpeedup =>
-        !new GameElement(Paths.MenusLoc.CanvasLoc.MapLoc.MissionsLoc.PreviewLoc.SpeedupFinishDesc).IsVisible();
+    public static bool CanSpeedup => !new GameElement(Paths.PreviewMissionLoc.SpeedupFinishDesc).IsVisible();
 
-    public static bool IsNotEnoughSquads =>
-        new GameElement(Paths.MenusLoc.CanvasLoc.MapLoc.MissionsLoc.PreviewLoc.NotEnoughSquadsTxt).IsVisible();
+    public static bool IsNotEnoughSquads => new GameElement(Paths.PreviewMissionLoc.NotEnoughSquadsTxt).IsVisible();
 
-    public static DateTime NextRunTime =>
-        new GameText(Paths.MenusLoc.CanvasLoc.MapLoc.MissionsLoc.PreviewLoc.NextRunTimeTxt).Time;
+    public static DateTime NextRunTime => new GameText(Paths.PreviewMissionLoc.NextRunTimeTxt).Time;
 }

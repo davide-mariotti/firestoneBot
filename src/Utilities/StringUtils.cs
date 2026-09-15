@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace Firebot.Utilities;
@@ -32,13 +32,10 @@ public abstract class StringUtils
         if (string.IsNullOrWhiteSpace(input))
             return input;
 
-        // 1. Remove the suffix if the string ends with it
         var cleaned = input.EndsWith(suffixToRemove)
             ? input.Substring(0, input.Length - suffixToRemove.Length)
             : input;
 
-        // 2. Insert spaces before each capital letter (except the first one)
-        // Regex pattern: Lookbehind for "not start of line", Lookahead for "uppercase letter"
         return Regex.Replace(cleaned, @"(?<!^)(?=[A-Z])", " ").Trim();
     }
 

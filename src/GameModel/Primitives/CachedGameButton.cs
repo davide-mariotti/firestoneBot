@@ -7,6 +7,12 @@ using UnityEngine.UI;
 
 namespace Firebot.GameModel.Primitives;
 
+/// <summary>
+///     Like GameButton, but resolves its Transform once and reuses it for the life of the instance
+///     instead of re-walking the hierarchy on every check. Meant to be constructed once and reused
+///     across many polls (e.g. a background loop that revisits the same button every few seconds) -
+///     the caching only pays off if the same instance survives across calls.
+/// </summary>
 public class CachedGameButton : GameButton
 {
     private Transform _cachedRoot;

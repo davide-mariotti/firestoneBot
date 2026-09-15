@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Linq;
 using Firebot.GameModel.Base;
 using Firebot.GameModel.Primitives;
@@ -8,18 +8,18 @@ namespace Firebot.GameModel.Features.Town.Library.FirestoneResearch;
 
 public class Node : GameElement
 {
-    public Node() : base(Paths.MenusLoc.CanvasLoc.TownLoc.LibraryLoc.NodeLoc.Root) { }
+    public Node() : base(Paths.MenusLoc.LibraryLoc.NodeLoc.Root) { }
 
     private GameElement GetTree() => GetChildren().First(tree => tree.IsVisible());
 
     private static GameElement GetGrow(GameElement gameElement) =>
-        new(Paths.MenusLoc.CanvasLoc.TownLoc.LibraryLoc.NodeLoc.Glow, gameElement);
+        new(Paths.MenusLoc.LibraryLoc.NodeLoc.Glow, gameElement);
 
     private static GameText GetCompletedTxt(GameElement gameElement) =>
-        new(Paths.MenusLoc.CanvasLoc.TownLoc.LibraryLoc.NodeLoc.CompletedTxt, gameElement);
+        new(Paths.MenusLoc.LibraryLoc.NodeLoc.CompletedTxt, gameElement);
 
     private static GameElement GetProgressBar(GameElement gameElement) =>
-        new(Paths.MenusLoc.CanvasLoc.TownLoc.LibraryLoc.NodeLoc.ProgressBar, gameElement);
+        new(Paths.MenusLoc.LibraryLoc.NodeLoc.ProgressBar, gameElement);
 
     private static bool IsActiveNode(GameElement child)
     {
@@ -45,4 +45,8 @@ public class Node : GameElement
 
         yield return new GameButton(parent: child).Click();
     }
+
+    public IEnumerator NextTree => new GameButton(Paths.MenusLoc.LibraryLoc.NodeLoc.NextTreeBtn).Click();
+
+    public IEnumerator PreviousTree => new GameButton(Paths.MenusLoc.LibraryLoc.NodeLoc.PreviousTreeBtn).Click();
 }
