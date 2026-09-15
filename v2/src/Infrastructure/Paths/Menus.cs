@@ -130,6 +130,8 @@ public static partial class Paths
             public const string TempleOfEternalsBtn = Root + "/townBg/parent/templeOfEternals";
 
             public const string TavernBtn = Root + "/townBg/parent/tavern";
+
+            public const string ExoticMerchantBtn = Root + "/townBg/parent/exoticMerchant";
         }
 
         // The Tavern's own card-flip minigame screen. Its "shop" action button is the real gateway
