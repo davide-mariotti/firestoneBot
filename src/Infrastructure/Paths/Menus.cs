@@ -283,7 +283,12 @@ public static partial class Paths
             {
                 private const string Root = GuildShopLoc.Root + "/bg/submenus/supplies/items/freePickaxe";
 
-                public const string ClaimBtn = Root;
+                // Bug found via live testing: the whole "freePickaxe" row/container has no Button
+                // component at all (confirmed via UnityPy - zero components on that GameObject), so
+                // this was always a silent no-op. The real click target is the nested "purchaseButton"
+                // (labeled "Gratis"/free via its own "freeText" child) - same pattern as the Task 3
+                // mystery box and Task 18 Scarab Game free gift.
+                public const string ClaimBtn = Root + "/claimBg/purchaseButton";
 
                 public const string QuantityTxt = Root + "/claimBg/itemBg/itemQuantity";
 
