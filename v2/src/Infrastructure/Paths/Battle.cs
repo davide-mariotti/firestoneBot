@@ -18,6 +18,21 @@ public static partial class Paths
             public const string CharacterLevel = OpenBtn + "/characterLevelBg/characterLevel";
         }
 
+        // Direct children of leftSideUINew itself, not the notifications/Viewport/grid badge list
+        // below (NotificationsLoc) - same root region, different sub-path.
+        public static class LeftSideUINewLoc
+        {
+            private const string Root = BattleLoc.Root + "/leftSideUINew";
+
+            // Confirmed via UnityPy, with its own notification bell (mail/notification/bell/
+            // amountTMP) - same "mail" button also exists under a second HUD region
+            // (bottomLeftSideUI/mail, structurally identical), same unresolved ambiguity as
+            // BottomSideUIDesktopLoc vs BottomSideUINewLoc below - this one picked as primary since
+            // leftSideUINew (this region) is the one with a proven v1 precedent (see NotificationsLoc
+            // just below), unlike bottomLeftSideUI which has none.
+            public const string MailBtn = Root + "/mail";
+        }
+
         public static class NotificationsLoc
         {
             // "leftSideUINew", not "leftSideUI" - confirmed against v1's already-live-tested path.
