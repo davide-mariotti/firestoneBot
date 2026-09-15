@@ -17,5 +17,7 @@ public static class TownGuild
 
     public static IEnumerator OpenTreeOfLife => new GameButton(Paths.MenusLoc.TownGuildLoc.TreeOfLifeBtn).Click();
 
+    public static IEnumerator OpenAwakening => new GameButton(Paths.MenusLoc.TownGuildLoc.AwakeningBtn).Click();
+
     public static IEnumerator Close => new GameButton(Paths.MenusLoc.TownGuildLoc.CloseBtn).Click();
 }
