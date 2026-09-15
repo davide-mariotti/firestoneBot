@@ -70,6 +70,10 @@ public static partial class Paths
             public const string ScarabGameBtn = Root + "/ScarabGame";
 
             public const string ScarabGameShopFreeTokenBtn = Root + "/ScarabGameShopFreeToken";
+
+            // Sourced from the static doc scan only (docs/path.firestone.html), not independently
+            // verified via UnityPy - unlike ScarabGame above. No v1 precedent either.
+            public const string ArcaneCrystalBtn = Root + "/ArcaneCrystal";
         }
 
         public static class RightSideUILoc

@@ -83,6 +83,8 @@ public static partial class Paths
             public const string GuildShopBtn = Root + "/guildShop";
 
             public const string ExpeditionsBtn = Root + "/expeditions";
+
+            public const string ArcaneCrystalBtn = Root + "/arcaneCrystal";
         }
 
         // Unlike the "menus" screens above, Expeditions lives under menuCanvas/popups - same root

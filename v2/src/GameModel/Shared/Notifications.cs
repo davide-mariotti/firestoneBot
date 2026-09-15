@@ -65,4 +65,9 @@ public static class Notifications
 
     public static IEnumerator ScarabGameShopFreeToken =>
         new GameNotificationButton(Paths.BattleLoc.NotificationsLoc.ScarabGameShopFreeTokenBtn).Click();
+
+    // Sourced only from the static doc scan (see Battle.cs) - no v1 precedent, not independently
+    // verified via UnityPy.
+    public static IEnumerator ArcaneCrystal =>
+        new GameNotificationButton(Paths.BattleLoc.NotificationsLoc.ArcaneCrystalBtn).Click();
 }

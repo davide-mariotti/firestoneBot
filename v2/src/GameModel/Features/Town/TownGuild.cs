@@ -12,5 +12,8 @@ public static class TownGuild
 
     public static IEnumerator OpenExpeditions => new GameButton(Paths.MenusLoc.TownGuildLoc.ExpeditionsBtn).Click();
 
+    public static IEnumerator OpenArcaneCrystal =>
+        new GameButton(Paths.MenusLoc.TownGuildLoc.ArcaneCrystalBtn).Click();
+
     public static IEnumerator Close => new GameButton(Paths.MenusLoc.TownGuildLoc.CloseBtn).Click();
 }
