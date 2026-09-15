@@ -395,6 +395,10 @@ public static partial class Paths
 
             public const string CloseBtn = Root + "/bg/closeButton";
 
+            // Confirmed via UnityPy. Used to prioritize "Raining Gold" over other unlocked talents,
+            // per the user (matches an external tips guide's advice - see FirestoneResearchTask).
+            public const string NameTxt = Root + "/bg/innerBg/researchName";
+
             public const string LevelTxt = Root + "/bg/innerBg/researchLevelText";
 
             public const string UnlockedTxt = Root + "/bg/innerBg/unlocked";
@@ -417,6 +421,10 @@ public static partial class Paths
             private const string Root = MenusLoc.Root + "/popups/MeteoriteResearchPreview";
 
             public const string CloseBtn = Root + "/bg/closeButton";
+
+            // Confirmed via UnityPy. Used to prioritize "Raining Gold" over other unlocked talents,
+            // per the user (matches an external tips guide's advice - see MeteoriteResearchTask).
+            public const string NameTxt = Root + "/bg/innerBg/researchName";
 
             public const string LevelTxt = Root + "/bg/innerBg/level";
 

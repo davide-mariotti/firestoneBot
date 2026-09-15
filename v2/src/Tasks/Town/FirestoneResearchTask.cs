@@ -55,8 +55,11 @@ public class FirestoneResearchTask : BotTask
     ///     Picks the next talent to research purely by shortest time-to-complete, across all 3 trees.
     ///     Rushing one talent to a high level over many days while the rest of the tree sits at 0 is a
     ///     worse use of time than spreading the same total time across many cheaper talents - so the
-    ///     fastest currently-researchable option wins, full stop, no level-based tie-break. Re-scans and
-    ///     compares every node in every tree each time a slot frees up.
+    ///     fastest currently-researchable option wins, EXCEPT "Raining Gold" always wins over
+    ///     everything else when it's an unlocked option (an external tips guide the user found rates
+    ///     it top priority - "Raining Gold ★★★★★" - and the user asked to prioritize it here; among
+    ///     multiple unlocked Raining Gold instances across the 3 trees, still picks the fastest one).
+    ///     Re-scans and compares every node in every tree each time a slot frees up.
     /// </summary>
     private IEnumerator RunSelection()
     {
@@ -67,6 +70,7 @@ public class FirestoneResearchTask : BotTask
             int? bestIndex = null;
             int? bestTreeOffset = null;
             var bestTime = TimeSpan.MaxValue;
+            var bestIsGold = false;
 
             for (var treeOffset = 0; treeOffset < TreeCount; treeOffset++)
             {
@@ -76,13 +80,19 @@ public class FirestoneResearchTask : BotTask
 
                     if (Preview.IsUnlocked && !Preview.IsMaxed)
                     {
+                        var isGold = Preview.Name.Contains("Raining Gold", StringComparison.OrdinalIgnoreCase);
                         var time = Preview.TimeRequired;
 
-                        if (time < bestTime)
+                        // A gold candidate always beats a non-gold one, regardless of time; among two
+                        // candidates of the same gold-ness, the faster one wins.
+                        var better = isGold != bestIsGold ? isGold : time < bestTime;
+
+                        if (better)
                         {
                             bestTime = time;
                             bestIndex = index;
                             bestTreeOffset = treeOffset;
+                            bestIsGold = isGold;
                         }
                     }
 

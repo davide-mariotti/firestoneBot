@@ -7,6 +7,8 @@ namespace Firebot.GameModel.Features.Town.Library.MeteoriteResearch;
 
 public static class MeteoriteResearchPreview
 {
+    public static string Name => new GameText(Paths.MenusLoc.MeteoriteResearchPreviewLoc.NameTxt).GetParsedText();
+
     public static bool IsUnlocked => new GameElement(Paths.MenusLoc.MeteoriteResearchPreviewLoc.UnlockedRoot).IsVisible();
 
     // 0 both when parsing fails and when the field is genuinely absent (e.g. a maxed-out node might

@@ -8,6 +8,8 @@ namespace Firebot.GameModel.Features.Town.Library.FirestoneResearch;
 
 public static class Preview
 {
+    public static string Name => new GameText(Paths.MenusLoc.FirestoneResearchPreviewLoc.NameTxt).GetParsedText();
+
     public static bool IsUnlocked => new GameText(Paths.MenusLoc.FirestoneResearchPreviewLoc.UnlockedTxt).IsVisible();
 
     public static bool IsMaxed => new GameText(Paths.MenusLoc.FirestoneResearchPreviewLoc.MaxedTxt).IsVisible();

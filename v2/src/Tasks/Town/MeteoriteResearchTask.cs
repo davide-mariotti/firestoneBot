@@ -16,8 +16,10 @@ namespace Firebot.Tasks.Town;
 ///     Firestone Research runs continuously (always start the next talent the moment a slot frees
 ///     up), while Meteorite Research is gated by a currency (meteorite stones) spent per node - there
 ///     is nothing to do until enough has accumulated. Same "many at medium level beats one maxed"
-///     principle as Firestone Research: always targets whichever unlocked node is currently cheapest,
-///     never chases a single expensive one.
+///     principle as Firestone Research: among unlocked nodes, targets whichever is cheapest, never
+///     chases a single expensive one - EXCEPT "Raining Gold" always wins when it's an unlocked
+///     option, same override and reasoning as FirestoneResearchTask (an external tips guide the user
+///     found rates it top priority - prioritize it first, then cheapest as before).
 ///     No v1 precedent at all - v1 never implemented this tab (docs/path.firestone.html marks its
 ///     notification badge "Rimossa dal bot, feature mai raggiunta"). Paths sourced from a fresh
 ///     UnityPy scan of the live game assets, not just the docs (which didn't capture the preview
@@ -75,6 +77,7 @@ public class MeteoriteResearchTask : BotTask
         int? bestIndex = null;
         int? bestTreeOffset = null;
         var bestCost = double.MaxValue;
+        var bestIsGold = false;
 
         for (var treeOffset = 0; treeOffset < TreeCount; treeOffset++)
         {
@@ -88,11 +91,22 @@ public class MeteoriteResearchTask : BotTask
 
                     // cost <= 0 covers both "failed to parse" and "no cost shown" (e.g. an already
                     // maxed node) - either way, not a real candidate.
-                    if (cost > 0 && cost < bestCost)
+                    if (cost > 0)
                     {
-                        bestCost = cost;
-                        bestIndex = index;
-                        bestTreeOffset = treeOffset;
+                        var isGold = MeteoriteResearchPreview.Name.Contains(
+                            "Raining Gold", StringComparison.OrdinalIgnoreCase);
+
+                        // A gold candidate always beats a non-gold one regardless of cost; among two
+                        // candidates of the same gold-ness, the cheaper one wins.
+                        var better = isGold != bestIsGold ? isGold : cost < bestCost;
+
+                        if (better)
+                        {
+                            bestCost = cost;
+                            bestIndex = index;
+                            bestTreeOffset = treeOffset;
+                            bestIsGold = isGold;
+                        }
                     }
                 }
 
