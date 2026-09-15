@@ -25,12 +25,15 @@ public static partial class Paths
         // Content list, not individually confirmed. See CollectorQuestTask for how this gap is handled.
         public const string CommonChestSlot = "/commonChestbox";
 
-        // Confirmed non-gear-chest slot names sharing this same Content list - excluded when scanning
-        // for "any other gear chest rarity" so the task doesn't touch jewel/celestial chests or
-        // unrelated items (Collector only counts Gear Chests per the wiki).
-        public static readonly string[] KnownNonGearChestSlots =
+        // Confirmed non-chest slot names sharing this same Content list - excluded when scanning for
+        // "any other openable chest", since these aren't chests at all (mystery box/gift claims,
+        // stat-boost consumables). jewelChest/celestialChest were excluded here too until the user
+        // asked to open those as well (they pile up unopened from Pharaoh's Vault rewards) - simplest
+        // to fold into Collector's existing generic scan rather than a separate task, at the cost of
+        // Collector now opening more than just the "Collector" quest's gear chests.
+        public static readonly string[] KnownNonChestSlots =
         {
-            "jewelChest", "celestialChest", "mysteryBox", "oraclesGift", "midasTouch", "StrangeDust", "Speed"
+            "mysteryBox", "oraclesGift", "midasTouch", "StrangeDust", "Speed"
         };
     }
 
