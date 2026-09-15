@@ -22,7 +22,7 @@ namespace Firebot.Tasks.Map;
 /// </summary>
 public class WarfrontDailyMissionsTask : BotTask
 {
-    internal override TaskGroup Group => TaskGroup.Map;
+    internal override TaskGroup Group => TaskGroup.Warfront;
     protected override int MinimumCharacterLevel => 50;
 
     private static readonly WaitForSeconds BattlePollWait = new(2f);

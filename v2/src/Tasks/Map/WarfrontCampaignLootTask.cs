@@ -12,7 +12,7 @@ namespace Firebot.Tasks.Map;
 // clicking opportunistically below but not worth promoting to notification-priority scheduling.
 public class WarfrontCampaignLootTask : BotTask
 {
-    internal override TaskGroup Group => TaskGroup.Map;
+    internal override TaskGroup Group => TaskGroup.Warfront;
     protected override int MinimumCharacterLevel => 50;
 
     public override IEnumerator Execute()

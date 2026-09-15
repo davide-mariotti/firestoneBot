@@ -105,7 +105,12 @@ comparsa nel file di config e nella tabella di stato a terminale era quello — 
 dalla reflection su `assembly.GetTypes()`, e la tabella di stato era per giunta ordinata per
 `NextRunTime`, quindi le righe saltavano di posizione ad ogni stampa. Aggiunto:
 
-- **`TaskGroup`** (enum in `Core/Tasks/BotTask.cs`): `Quests, Town, Guild, Map, Character, ScarabGame`
+- **`TaskGroup`** (enum in `Core/Tasks/BotTask.cs`): `Quests, Town, Guild, Map, Warfront, Character, ScarabGame`
+  — `Map` e `Warfront` separati su segnalazione dell'utente: si raggiungono dalla stessa schermata
+  `WorldMap` (due tab), ma sono funzionalmente due feature diverse — Map Missions è sbloccata da subito
+  e dispone le missioni in ordine di tempo (v1 le ordinava, comportamento portato identico), Warfront
+  Campaign è un sotto-sistema slegato (war machines) sbloccato a livello 50. Raggrupparle insieme
+  avrebbe nascosto che non c'entrano l'una con l'altra oltre a condividere la schermata.
   — ordine di dichiarazione = ordine di comparsa ovunque. Ogni `BotTask` deve dichiarare
   `internal override TaskGroup Group => TaskGroup.X;` (proprietà astratta, quindi il compilatore
   obbliga a classificare ogni task nuovo, non è possibile dimenticarselo). `Quests` raggruppa le 6

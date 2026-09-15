@@ -15,6 +15,11 @@ namespace Firebot.Core.Tasks;
 ///     sort by this first). "Quests" groups the 6 tasks that drive/claim the 9 daily quests together
 ///     regardless of which in-game screen they each actually use, since that's what's relevant when
 ///     scanning for them - not the underlying screen a Town/Guild/Map/etc. grouping would imply.
+///     "Map" and "Warfront" are both reached from the same WorldMap screen (its two tabs) but kept
+///     separate per the user: Map Missions is unlocked from the start and dispatches missions in
+///     ascending/descending time order (v1 behavior, ported as-is), while Warfront Campaign is an
+///     unrelated level-50 sub-feature (war machines) with its own loot/daily-mission tasks - grouping
+///     them together would hide that they're functionally unrelated beyond sharing a screen.
 /// </summary>
 public enum TaskGroup
 {
@@ -22,6 +27,7 @@ public enum TaskGroup
     Town,
     Guild,
     Map,
+    Warfront,
     Character,
     ScarabGame
 }
