@@ -110,6 +110,11 @@ public static partial class Paths
             // Pass has no badge on that rail at all (confirmed against the full 48-badge notification
             // list in docs/path.firestone.html). The button doubles as its own notification.
             public const string PathOfGloryNotification = PathOfGloryBtn + "/notification";
+
+            // Confirmed by the user directly (independent of the ambiguity note above) as the real
+            // way to open the bag/Inventory screen - a second independent confirmation that this HUD
+            // region is actually live, alongside pathOfGloryButton.
+            public const string InventoryBtn = Root + "/menuButtons/inventoryButtonUI";
         }
 
         public static class BottomSideUINewLoc
