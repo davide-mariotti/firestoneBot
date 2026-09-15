@@ -280,6 +280,7 @@ Contributions are welcome! Please submit a pull request or open an issue for sug
 - **Chaos Rift**: not automated yet - the Guild entry icon is mapped, but the actual attack screen hasn't been identified.
 - **Soulstones** (Hall of Heroes, unlocks at character level 200): tier-unlock and enchanting are structurally present in the game but intentionally out of scope for now.
 - **War Machines bulk multiplier**: leveling always uses single clicks; the screen's bulk-quantity button exists but isn't wired up yet, so leveling several times takes more clicks than strictly necessary.
+- **Flying bonuses** (beer-carrying dragon, meteorite hunter): confirmed present in the game's current assets, not automated - unlike every other feature above, these appear to be objects that cross the battle screen dynamically rather than a menu/button, so they need dedicated investigation before they can be wired up.
 
 ---
 

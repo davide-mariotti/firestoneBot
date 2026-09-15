@@ -124,10 +124,14 @@ Questi due non hanno una sezione "un task alla volta" nello stesso senso - parto
 - Hall of Heroes che potenzia il gear T1 su un eroe che *non* è nella formazione attiva.
 - Qualunque click su un bottone di acquisto reale (a pagamento) invece che su un claim gratuito.
 
-## Trovato durante la preparazione dei test, da decidere
+## Bonus volanti: confermati nel gioco, non ancora implementati
 
-Il file di configurazione live su questa macchina ha una sezione `[flying_bonus_hunter]`
-("Taps the flying dragon-with-beer and meteorite-hunter bonuses when they cross the screen") che
-non esiste nel codice attuale - non era stata individuata durante l'audit delle funzionalità da
-riportare. Non è stata portata qui; se la vuoi anche nella versione attuale, va progettata e
-implementata come le altre feature.
+Il vecchio file di configurazione su questa macchina aveva una sezione `[flying_bonus_hunter]`
+("Taps the flying dragon-with-beer and meteorite-hunter bonuses when they cross the screen") assente
+dal codice attuale. Verificato direttamente sugli asset del gioco (non fidandosi del vecchio
+riferimento): la feature esiste davvero, non è un residuo - `DragonWithBeer`, `FemaleDragonWithBeer` e
+`MeteoriteHunter` sono tutti presenti, con mesh/renderer 3D propri (non UI a bottoni come il resto).
+Non implementata: a differenza di ogni altro task, questi sembrano oggetti che attraversano la
+schermata di battaglia dinamicamente, non un menu con un bottone - il meccanismo di spawn/click
+richiede un'indagine dedicata (vedi `PLAN.md`, sezione "Punti aperti"). Non c'è nulla da testare per
+questa feature nel giro attuale.

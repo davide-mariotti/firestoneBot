@@ -96,6 +96,15 @@ Cose non ancora implementate, concrete:
   click singoli. Il bottone che cicla la quantità esiste ma non è collegato — il formato dell'etichetta
   del valore massimo non è confermato dal vivo. Nessuna lacuna funzionale, solo più click del
   necessario per livellare più volte in un colpo solo.
+- **Bonus volanti** (drago con la birra, cacciatore di meteoriti): feature reale, confermata via
+  UnityPy sugli asset attuali del gioco (non un residuo della vecchia versione) — esistono
+  `DragonWithBeer`, `FemaleDragonWithBeer` e `MeteoriteHunter`, ognuno con mesh/renderer 3D propri
+  (drago con `beerDrop` che cade dietro, cacciatore con `bagDrop` e ombra) e 3 script custom non
+  ancora risolti per nome. A differenza di ogni altro task di questa sessione (tutti "apri schermata
+  → clicca bottone UI"), questi sembrano oggetti che attraversano la schermata di battaglia in modo
+  dinamico — dove/quando spawnano e il meccanismo di click esatto richiedono un'indagine dedicata,
+  probabilmente serve osservarli dal vivo in gioco. Non implementato, lasciato apposta come punto
+  aperto.
 
 ## BotActions portate dalla versione precedente (audit su richiesta dell'utente, non nella lista task originale)
 
