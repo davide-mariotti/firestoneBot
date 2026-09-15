@@ -75,7 +75,7 @@ public class MapMissionsTask : BotTask
 
         _timeOrder = category.CreateEntry(
             "mission_time_order",
-            "desc",
+            "asc",
             "Mission Time Order",
             "Sort missions by time required. Use 'asc' (shorter first) or 'desc' (longer first)."
         );
@@ -119,12 +119,12 @@ public class MapMissionsTask : BotTask
     private bool IsAscending()
     {
         var value = _timeOrder?.Value?.Trim();
-        if (string.IsNullOrEmpty(value)) return false;
+        if (string.IsNullOrEmpty(value)) return true;
 
         if (string.Equals(value, "asc", StringComparison.OrdinalIgnoreCase)) return true;
         if (string.Equals(value, "desc", StringComparison.OrdinalIgnoreCase)) return false;
 
-        Debug($"[FAILED] Invalid mission_time_order '{value}'. Using default 'desc'.");
-        return false;
+        Debug($"[FAILED] Invalid mission_time_order '{value}'. Using default 'asc'.");
+        return true;
     }
 }
