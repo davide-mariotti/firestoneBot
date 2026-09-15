@@ -23,6 +23,16 @@ namespace Firebot.Tasks.Character;
 ///     so a later re-visit to the same talent (the plan revisits several - see Talents.Plan) always
 ///     reads back a real committed rank instead of needing to know whether the preview's rank display
 ///     reflects an unsaved pending change.
+///     Works fine on an account that already diverged from the guide's exact order before the bot
+///     ever ran it, without needing to know its history: every entry only ever compares the node's
+///     CURRENT live rank against that entry's target, so a talent the account already pushed ahead of
+///     plan reads as "nothing to invest" and is skipped (targetRank - currentRank comes out
+///     negative/zero, the invest loop just doesn't run), while one that's behind gets topped up
+///     toward the same target it would have reached by following the guide from empty. The one case
+///     this can't route around: a guide-covered talent whose OWN direct prerequisite (a specific
+///     earlier talent in its branch, not just the tree's cumulative point total - see the wiki) never
+///     got a single point from the account's real history stays locked no matter how many points are
+///     available - skipped for this run (see IsPreviewLocked below) rather than guessed at.
 /// </summary>
 public class TalentsTask : BotTask
 {
@@ -48,11 +58,13 @@ public class TalentsTask : BotTask
 
                 if (Talents.IsPreviewLocked)
                 {
-                    // Shouldn't normally happen - the guide's own order should already respect
-                    // real prerequisites (validated by hand against the wiki's per-tier costs
-                    // while building the catalog). Stop rather than skip past it out of order.
+                    // Shouldn't happen on an account that only ever invested through this same
+                    // plan, in order - but a divergent account's real history might never have put
+                    // a point in this branch's specific predecessor (see the class doc). Skip just
+                    // this one entry rather than giving up on the whole run: a later entry may
+                    // still be perfectly investable.
                     yield return Talents.ClosePreview;
-                    break;
+                    continue;
                 }
 
                 var currentRank = Talents.PreviewCurrentRank;
