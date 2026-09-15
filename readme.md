@@ -83,7 +83,7 @@ Every automation below runs on its own schedule once enabled, is individually co
 ## Downloads
 
 - **MelonLoader**: <https://github.com/LavaGang/MelonLoader/releases/latest>
-- **Latest Firebot Release**: <https://github.com/danilogmoura/firestone-bot/releases/latest>
+- **Latest Firebot Release**: <https://github.com/davide-mariotti/firestoneBot/releases/latest>
 
 ---
 
@@ -112,7 +112,7 @@ Quick check: after installation, the game folder should contain MelonLoader-rela
 
 ### 2) Install Firebot Files (Required)
 
-1. Download the latest Firebot package from [Releases](https://github.com/danilogmoura/firestone-bot/releases/latest) (example: `v0.2.7-alpha.zip`).
+1. Download the latest Firebot package from [Releases](https://github.com/davide-mariotti/firestoneBot/releases/latest) (example: `v0.2.7-alpha.zip`).
 2. Extract the zip contents into the Firestone root folder (same folder as `Firestone.exe`).
 3. Allow overwrite if Windows asks.
 
@@ -129,7 +129,7 @@ The zip already includes the correct structure (`Mods`, `UserData`).
 When a new Firebot version is released, you do not need to reinstall everything.
 
 1. **Close the game completely**.
-2. Download the new release package from [Releases](https://github.com/danilogmoura/firestone-bot/releases/latest).
+2. Download the new release package from [Releases](https://github.com/davide-mariotti/firestoneBot/releases/latest).
 3. Replace only this file in your game folder: `Mods/firebot.dll`.
 4. Start the game once so Firebot can load the new version.
 
@@ -198,7 +198,7 @@ Configuration reference file: `Firestone/UserData/FirebotPreferences.cfg`.
 
 For the safe editing workflow (close game -> edit -> reopen), follow section `5) Configure Firebot correctly`.
 
-For now, all configuration must be done directly in this file. A graphical configuration interface will be implemented in the future.
+All configuration is done directly in this file (no in-game UI yet - see [Open Points](#open-points)).
 
 The file is generated the first time Firebot runs, then grows automatically as new features are added - no need to write it by hand. It's organized as one section per feature (e.g. `[map_missions]`, `[hero_upgrade]`), each with its own `enabled` toggle plus whatever settings that feature exposes (a time order, a resource filter, a claim threshold, and so on). Every setting is documented with a comment directly above it in the generated file, including its default value and valid range - that's the authoritative reference, since it's always in sync with the version of Firebot you're running.
 
@@ -274,11 +274,12 @@ Every other feature is disabled by default (`enabled = false`) until you turn it
 
 Contributions are welcome! Please submit a pull request or open an issue for suggestions or improvements.
 
-## Roadmap & Next Steps
+## Open Points
 
-### Future Plans (v0.3.0+)
-
-- [ ] **UI:** Full in-game configuration interface (No more `.cfg` files needed).
+- **In-game configuration UI**: all settings are edited directly in `FirebotPreferences.cfg` today; a graphical, in-game configuration screen (no `.cfg` editing needed) is not built yet.
+- **Chaos Rift**: not automated yet - the Guild entry icon is mapped, but the actual attack screen hasn't been identified.
+- **Soulstones** (Hall of Heroes, unlocks at character level 200): tier-unlock and enchanting are structurally present in the game but intentionally out of scope for now.
+- **War Machines bulk multiplier**: leveling always uses single clicks; the screen's bulk-quantity button exists but isn't wired up yet, so leveling several times takes more clicks than strictly necessary.
 
 ---
 
@@ -292,7 +293,7 @@ Found a bug or have an idea for a new feature? Please open a ticket on our GitHu
 2. Ensure you are using the latest version of Firebot.
 3. Attach your **MelonLoader Log** file (`MelonLoader/Latest.log`) if the game crashed or the bot failed.
 
-[**Open a New Issue**](https://github.com/danilogmoura/firebot/issues/new/choose)
+[**Open a New Issue**](https://github.com/davide-mariotti/firestoneBot/issues/new/choose)
 
 ---
 
