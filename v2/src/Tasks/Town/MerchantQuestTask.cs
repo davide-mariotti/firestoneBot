@@ -18,7 +18,12 @@ namespace Firebot.Tasks.Town;
 ///        these convert to meteorites and should never be sold (per the user).
 ///     2. Sells one of every other sellable item (scrolls + inventory items) - always the single x1
 ///        sell action each item offers, easily clears the 10-item requirement given how many
-///        sellable types typically exist.
+///        sellable types typically exist. Checked against the wiki's full Exotic Merchant sell list
+///        (Scroll of Speed/Damage/Health, Midas' Touch, War Banner, Dragon Armor, Guardian's Rune,
+///        Totem of Agony/Annihilation, plus the gold items above): every one of them is a timed
+///        combat buff/debuff or the already-excluded gold conversion items, never permanent Gold
+///        Gain equipment (that's the separate "Gear" system per the wiki's own category listing,
+///        which this screen never sells) - selling everything else here is safe as-is.
 ///     3. Spends the resulting exotic coins on one upgrade - whichever is cheapest/first affordable
 ///        in the currently-displayed tree (not scanning across all ~25 trees for the globally
 ///        cheapest - the user confirmed picking the first available is fine, and Exotic Upgrades
