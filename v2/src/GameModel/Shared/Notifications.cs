@@ -70,4 +70,8 @@ public static class Notifications
     // verified via UnityPy.
     public static IEnumerator ArcaneCrystal =>
         new GameNotificationButton(Paths.BattleLoc.NotificationsLoc.ArcaneCrystalBtn).Click();
+
+    // Confirmed present via UnityPy (see Battle.cs). No v1 precedent.
+    public static IEnumerator BeerExchange =>
+        new GameNotificationButton(Paths.BattleLoc.NotificationsLoc.BeerExchangeBtn).Click();
 }

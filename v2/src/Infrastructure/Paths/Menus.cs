@@ -145,6 +145,19 @@ public static partial class Paths
             public const string CloseBtn = Root + "/closeButton";
 
             public const string OpenScarabGameBtn = Root + "/helpCanvas/actionButtons/shop";
+
+            // Opens TavernMarket - "Stormy, the tavern keeper" per the wiki's Tavern Market section.
+            public const string OpenMarketBtn = Root + "/helpCanvas/stormyButton";
+
+            // Draws one card, costing game tokens (confirmed via wiki: "Card draws require Game
+            // Tokens") - the button's own costText shows the exact amount, read live rather than
+            // hardcoded.
+            public const string PlayBtn = Root + "/helpCanvas/bottomUI/playButton";
+
+            // Generic pooled currency counter (see path-verification-hierarchy memory) - assumed to
+            // show the game token balance while on this screen, since that's this screen's primary
+            // spendable resource. Not independently confirmed which currency it's bound to.
+            public const string GameTokenCountTxt = Root + "/helpCanvas/counters/counterInteraction/quantity";
         }
 
         public static class TempleOfEternalsLoc

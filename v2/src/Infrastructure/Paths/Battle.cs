@@ -74,6 +74,10 @@ public static partial class Paths
             // Sourced from the static doc scan only (docs/path.firestone.html), not independently
             // verified via UnityPy - unlike ScarabGame above. No v1 precedent either.
             public const string ArcaneCrystalBtn = Root + "/ArcaneCrystal";
+
+            // User-suggested, confirmed present via UnityPy (like ScarabGame above). No v1 precedent.
+            // Fires when accumulated beer can be exchanged for Tavern Market game tokens.
+            public const string BeerExchangeBtn = Root + "/BeerExchange";
         }
 
         public static class RightSideUILoc
