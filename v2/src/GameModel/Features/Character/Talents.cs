@@ -120,9 +120,10 @@ public static class Talents
     // reset costs 100 real gems, see TalentsLoc.ResetTreeBtnDoNotUse).
     //
     // Two entries renamed from the source guide's wording to match the catalog's wiki-confirmed
-    // names, inferred by position - NOT verified live: "Leader - Auto Abilities" -> "Heroes Auto
-    // Abilities" and "Party - Auto Abilities" -> "Guardian Auto Attack" (the only two 1-point/max-rank
-    // "auto" talents in the whole tree, in the same relative order the guide lists them).
+    // names - inferred by position (the only two 1-point/max-rank "auto" talents in the whole tree,
+    // in the same relative order the guide lists them), then confirmed correct by the user: "Leader -
+    // Auto Abilities" -> "Heroes Auto Abilities" (tier 3) and "Party - Auto Abilities" -> "Guardian
+    // Auto Attack" (tier 5).
     //
     // The "free choice" entry (levels 341-350, "Critical damage / Critical chance", 11 pts) is
     // resolved to Critical damage - an arbitrary pick, the guide itself leaves it open.

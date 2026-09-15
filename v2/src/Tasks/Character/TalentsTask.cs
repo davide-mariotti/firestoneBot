@@ -15,9 +15,14 @@ namespace Firebot.Tasks.Character;
 ///     until it finds the first one still below its planned target rank, invests there, and continues
 ///     until either points run out or the plan is fully satisfied - it never persists "where it left
 ///     off" between runs. Per the user's explicit choice, once every planned entry is satisfied but
-///     more points remain (the guide covers only the tree's first ~448 of 2037 total points), the task
+///     more points remain (the guide covers only the tree's first ~420 of 2037 total points), the task
 ///     stops and leaves the rest unspent rather than guessing - a wrong guess isn't free (a full tree
 ///     reset costs 100 gems per the wiki).
+///     Confirmed by the user: upgradeTalentButton only stages a point, real investment happens on
+///     talentsSaveButton. Saved after every single node visited (not batched across the whole plan)
+///     so a later re-visit to the same talent (the plan revisits several - see Talents.Plan) always
+///     reads back a real committed rank instead of needing to know whether the preview's rank display
+///     reflects an unsaved pending change.
 /// </summary>
 public class TalentsTask : BotTask
 {
@@ -52,19 +57,21 @@ public class TalentsTask : BotTask
 
                 var currentRank = Talents.PreviewCurrentRank;
                 var toInvest = Math.Min(targetRank - currentRank, availablePoints);
+                var invested = 0;
 
                 for (var i = 0; i < toInvest && Talents.UpgradeButton.IsClickable(); i++)
                 {
                     yield return Talents.UpgradeButton.Click();
                     availablePoints--;
+                    invested++;
                 }
 
                 yield return Talents.ClosePreview;
 
+                if (invested > 0) yield return Talents.Save;
+
                 if (availablePoints <= 0) break;
             }
-
-            yield return Talents.Save;
         }
 
         yield return CharacterScreen.Close;

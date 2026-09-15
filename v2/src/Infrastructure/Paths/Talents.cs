@@ -20,9 +20,7 @@ public static partial class Paths
 
         public const string PointsLeftTxt = Root + "/bg/talentPoints/container/pointInfo/talentsTextBg/talentsText";
 
-        // Clicked defensively after every batch of upgrades in case investments are staged rather
-        // than committed instantly on each upgradeTalentButton click - which behavior this game
-        // actually uses is not verified live. Safe no-op either way if nothing is pending.
+        // Confirmed by the user: upgradeTalentButton only stages a point, this actually commits it.
         public const string SaveBtn = Root + "/bg/talentsSaveButton";
 
         // NEVER click: resets the ENTIRE talent tree for 100 gems (confirmed via the wiki), refunding
