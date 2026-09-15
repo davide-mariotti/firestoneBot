@@ -15,6 +15,8 @@ public static class CharacterScreen
 
     public static IEnumerator OpenQuestsTab => new GameButton(Paths.MenusLoc.CharacterLoc.QuestsTabBtn).Click();
 
+    public static IEnumerator OpenTalentsTab => new GameButton(Paths.MenusLoc.CharacterLoc.TalentsTabBtn).Click();
+
     public static IEnumerator OpenDailyQuestsSubTab =>
         new GameButton(Paths.MenusLoc.CharacterLoc.QuestsLoc.DailyTabBtn).Click();
 

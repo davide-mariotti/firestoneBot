@@ -56,6 +56,11 @@ public static partial class Paths
 
             public const string QuestsTabBtn = Root + "/bg/submenuButtons/quests";
 
+            // Confirmed via a targeted UnityPy scan (Character/bg/submenuButtons/talents), including
+            // its own notification bell (text/lock/notification/bell/amountTMP) - see
+            // Talents.cs for the full 89-node tree behind this tab.
+            public const string TalentsTabBtn = Root + "/bg/submenuButtons/talents";
+
             public static class QuestsLoc
             {
                 private const string Root = CharacterLoc.Root + "/bg/submenus/quests";

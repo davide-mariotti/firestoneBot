@@ -78,6 +78,10 @@ public static partial class Paths
             // User-suggested, confirmed present via UnityPy (like ScarabGame above). No v1 precedent.
             // Fires when accumulated beer can be exchanged for Tavern Market game tokens.
             public const string BeerExchangeBtn = Root + "/BeerExchange";
+
+            // Confirmed present via UnityPy (like ScarabGame/BeerExchange above). No v1 precedent.
+            // Fires whenever an unspent talent point is available (Character screen, Talents tab).
+            public const string TalentAvailableBtn = Root + "/TalentAvailable";
         }
 
         public static class RightSideUILoc

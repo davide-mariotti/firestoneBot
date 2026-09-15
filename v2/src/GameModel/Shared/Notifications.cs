@@ -74,4 +74,8 @@ public static class Notifications
     // Confirmed present via UnityPy (see Battle.cs). No v1 precedent.
     public static IEnumerator BeerExchange =>
         new GameNotificationButton(Paths.BattleLoc.NotificationsLoc.BeerExchangeBtn).Click();
+
+    // Confirmed present via UnityPy (see Battle.cs). No v1 precedent.
+    public static IEnumerator TalentAvailable =>
+        new GameNotificationButton(Paths.BattleLoc.NotificationsLoc.TalentAvailableBtn).Click();
 }
