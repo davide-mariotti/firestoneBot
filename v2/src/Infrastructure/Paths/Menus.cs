@@ -235,6 +235,12 @@ public static partial class Paths
             public const string ClaimBtn = Root + "/submenus/bg/engineerSubmenu/toolsProductionSection/claimToolsButton";
 
             public const string NextRunTimeTxt = ClaimBtn + "/cooldownOn/cooldownTimeLeft";
+
+            // Opens WarMachinesLoc - confirmed via UnityPy. A separate "GarageSelection" hub popup
+            // (same 3 destinations: engineer/garage/trainingBase) also exists but wasn't used here,
+            // since this button reuses the already-live-confirmed Engineer screen entry point instead
+            // of an unconfirmed second route.
+            public const string WarMachinesBtn = Root + "/warMachinesButton";
         }
 
         public static class MagicQuartersLoc
