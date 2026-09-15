@@ -78,4 +78,9 @@ public static class Notifications
     // Confirmed present via UnityPy (see Battle.cs). No v1 precedent.
     public static IEnumerator TalentAvailable =>
         new GameNotificationButton(Paths.BattleLoc.NotificationsLoc.TalentAvailableBtn).Click();
+
+    // Confirmed present via UnityPy (see Battle.cs). No v1 precedent. Opportunistic fast path only,
+    // not used as any task's NotificationPath - see ArenaOfKingsTask.
+    public static IEnumerator ArenaTokens =>
+        new GameNotificationButton(Paths.BattleLoc.NotificationsLoc.ArenaTokensBtn).Click();
 }

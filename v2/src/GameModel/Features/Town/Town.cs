@@ -27,5 +27,7 @@ public static class Town
     public static IEnumerator OpenExoticMerchant =>
         new GameButton(Paths.MenusLoc.TownIrongardLoc.ExoticMerchantBtn).Click();
 
+    public static IEnumerator OpenBattles => new GameButton(Paths.MenusLoc.TownIrongardLoc.BattlesBtn).Click();
+
     public static IEnumerator Close => new GameButton(Paths.MenusLoc.TownIrongardLoc.CloseBtn).Click();
 }

@@ -137,6 +137,11 @@ public static partial class Paths
             public const string TavernBtn = Root + "/townBg/parent/tavern";
 
             public const string ExoticMerchantBtn = Root + "/townBg/parent/exoticMerchant";
+
+            // Opens WFMenuSelectionLoc, a hub with 2 options (campaign/arena) - confirmed via
+            // UnityPy. Matches the wiki's "Arena of Kings [...] is accessible from the Battles
+            // building".
+            public const string BattlesBtn = Root + "/townBg/parent/battles";
         }
 
         // The Tavern's own card-flip minigame screen. Its "shop" action button is the real gateway

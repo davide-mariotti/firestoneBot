@@ -82,6 +82,13 @@ public static partial class Paths
             // Confirmed present via UnityPy (like ScarabGame/BeerExchange above). No v1 precedent.
             // Fires whenever an unspent talent point is available (Character screen, Talents tab).
             public const string TalentAvailableBtn = Root + "/TalentAvailable";
+
+            // Confirmed present via UnityPy (like ScarabGame/BeerExchange above). No v1 precedent.
+            // Presumed to fire when an Arena of Kings battle token is available - opportunistic fast
+            // path only, not used as NotificationPath (same reasoning as the daily-quest tasks: a
+            // periodic recheck is simple/reliable enough, no need to lean on an unconfirmed badge for
+            // scheduling priority).
+            public const string ArenaTokensBtn = Root + "/ArenaTokens";
         }
 
         public static class RightSideUILoc
