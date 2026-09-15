@@ -30,16 +30,20 @@ namespace Firebot.Tasks.Town;
 ///     - past 9 min: fight whichever of the 3 is weakest regardless of margin.
 ///     Formation is set up once manually by the user (see AOKBattlePreview) - same assumption as
 ///     Warfront's Liberator quest, never touches changeFormationButton.
-///     Worth flagging: in a bad-luck run this can legitimately take close to 9 minutes of searching
-///     per token, up to 5 tokens/day - if max_task_runtime (BotSettings) is set low, a search in
-///     progress could get cut off mid-wait. Watchdog's cleanup sweep (runs before/after every task)
-///     should recover from that, but a generous max_task_runtime is worth double-checking if this
-///     task is enabled.
+///     In a bad-luck run this can legitimately take close to 9 minutes of searching per token, up to
+///     5 tokens/day - overrides MaxRuntimeSeconds to the framework's own maximum (3600s, same ceiling
+///     BotSettings.MaxTaskRuntime is clamped to) instead of leaning on the global setting, so this one
+///     task gets the room it can legitimately need without loosening the timeout for every other task.
+///     Watchdog's cleanup sweep (runs before/after every task, unconditionally) still closes whatever
+///     this leaves open if it ever does get cut off - every popup/menu here (WFMenuSelection,
+///     ArenaOfKings, AOKBattlePreview, AOKBattleResult) follows the standard bg/closeButton or
+///     closeButton naming Watchdog already scans for generically, nothing feature-specific needed.
 /// </summary>
 public class ArenaOfKingsTask : BotTask
 {
     internal override TaskGroup Group => TaskGroup.Town;
     protected override int MinimumCharacterLevel => 80;
+    internal override float? MaxRuntimeSeconds => 3600f;
 
     private static readonly WaitForSeconds RerollWait = new(5f);
     private static readonly WaitForSeconds BattlePollWait = new(2f);

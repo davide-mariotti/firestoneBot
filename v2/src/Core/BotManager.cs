@@ -115,7 +115,7 @@ public static class BotManager
 
                     var stopwatch = Stopwatch.StartNew();
 
-                    yield return RunSafe(readyTask.Execute(), $"Task {readyTask.SectionTitle}");
+                    yield return RunSafe(readyTask.Execute(), $"Task {readyTask.SectionTitle}", readyTask.MaxRuntimeSeconds);
                     readyTask.LastRunTime = DateTime.Now;
                     readyTask.EnsureMinimumNextRun(IdleRetryDelay);
                     readyTask.PersistNextRunTime();
@@ -138,7 +138,7 @@ public static class BotManager
         }
     }
 
-    private static IEnumerator RunSafe(IEnumerator routine, string context)
+    private static IEnumerator RunSafe(IEnumerator routine, string context, float? timeoutOverride = null)
     {
         if (routine == null)
         {
@@ -146,7 +146,7 @@ public static class BotManager
             yield break;
         }
 
-        var timeoutSeconds = MaxTaskRuntime;
+        var timeoutSeconds = timeoutOverride ?? MaxTaskRuntime;
         var stopwatch = Stopwatch.StartNew();
 
         while (true)

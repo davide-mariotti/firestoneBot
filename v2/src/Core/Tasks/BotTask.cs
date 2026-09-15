@@ -86,6 +86,17 @@ public abstract class BotTask
 
     private bool MeetsLevelRequirement => PlayerAvatar.CharacterLevel >= MinimumCharacterLevel;
 
+    /// <summary>
+    ///     Per-task override for how long BotManager lets a single Execute() run before forcibly
+    ///     abandoning it (see BotManager.RunSafe) - null (default, almost every task) means "use the
+    ///     global BotSettings.MaxTaskRuntime". Exists for the rare task whose OWN legitimate worst
+    ///     case (not a bug - a deliberately bounded retry loop) can run long: raising the global
+    ///     limit for every task just to accommodate one would weaken the safety net everywhere else.
+    ///     A task that gets cut off mid-run isn't corrupted by it - Watchdog's cleanup sweep (runs
+    ///     right after, unconditionally) closes whatever got left open, same as any other interruption.
+    /// </summary>
+    internal virtual float? MaxRuntimeSeconds => null;
+
     public bool IsEnabled => _enabledEntry != null && _enabledEntry.Value;
 
     private GameElement NotificationElement
