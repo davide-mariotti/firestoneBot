@@ -19,9 +19,10 @@ namespace Firebot.Tasks.Town;
 /// </summary>
 public class GamerQuestTask : BotTask
 {
-    private const int MinimumCharacterLevel = 15;
+    internal override TaskGroup Group => TaskGroup.Quests;
+    protected override int MinimumCharacterLevel => 15;
+
     private const int PlayCount = 10;
-    private static readonly TimeSpan RecheckDelayBelowLevel = TimeSpan.FromHours(1);
     private static readonly TimeSpan RecheckDelay = TimeSpan.FromHours(6);
 
     private MelonPreferences_Entry<int> _minTokenReserve;
@@ -41,12 +42,6 @@ public class GamerQuestTask : BotTask
 
     public override IEnumerator Execute()
     {
-        if (PlayerAvatar.CharacterLevel < MinimumCharacterLevel)
-        {
-            NextRunTime = DateTime.Now + RecheckDelayBelowLevel;
-            yield break;
-        }
-
         yield return TownScreen.Open;
         yield return TownScreen.OpenTavern;
 

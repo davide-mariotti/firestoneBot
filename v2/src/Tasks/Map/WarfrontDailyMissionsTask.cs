@@ -22,6 +22,9 @@ namespace Firebot.Tasks.Map;
 /// </summary>
 public class WarfrontDailyMissionsTask : BotTask
 {
+    internal override TaskGroup Group => TaskGroup.Map;
+    protected override int MinimumCharacterLevel => 50;
+
     private static readonly WaitForSeconds BattlePollWait = new(2f);
 
     // Safety bound only - battles are expected to resolve in well under this. Never observed a real

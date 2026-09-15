@@ -11,6 +11,8 @@ namespace Firebot.Tasks.Town;
 
 public class GuardianTrainingTask : BotTask
 {
+    internal override TaskGroup Group => TaskGroup.Town;
+
     private MelonPreferences_Entry<int> _guardianIndex;
     private MelonPreferences_Entry<bool> _useStrangeDust;
 

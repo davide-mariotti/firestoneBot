@@ -17,6 +17,8 @@ namespace Firebot.Tasks.Town;
 /// </summary>
 public class QuestsTask : BotTask
 {
+    internal override TaskGroup Group => TaskGroup.Quests;
+
     private static readonly TimeSpan FallbackRetryDelay = TimeSpan.FromHours(12);
 
     protected override string NotificationPath => Paths.BattleLoc.NotificationsLoc.QuestsBtn;

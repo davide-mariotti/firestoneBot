@@ -15,6 +15,8 @@ namespace Firebot.Tasks.Map;
 
 public class MapMissionsTask : BotTask
 {
+    internal override TaskGroup Group => TaskGroup.Map;
+
     private MelonPreferences_Entry<string> _timeOrder;
 
     protected override string NotificationPath => Paths.BattleLoc.NotificationsLoc.MapMissionsBtn;

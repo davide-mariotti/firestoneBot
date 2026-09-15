@@ -13,6 +13,9 @@ namespace Firebot.Tasks.Town;
 
 public class ExperimentsTask : BotTask
 {
+    internal override TaskGroup Group => TaskGroup.Town;
+    protected override int MinimumCharacterLevel => 120;
+
     private MelonPreferences_Entry<string> _resourceType;
 
     protected override string NotificationPath => Paths.BattleLoc.NotificationsLoc.ExperimentsBtn;

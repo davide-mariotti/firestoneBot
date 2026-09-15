@@ -29,6 +29,8 @@ namespace Firebot.Tasks.Inventory;
 /// </summary>
 public class CollectorQuestTask : BotTask
 {
+    internal override TaskGroup Group => TaskGroup.Quests;
+
     private static readonly TimeSpan RecheckDelay = TimeSpan.FromHours(6);
 
     private MelonPreferences_Entry<int> _minCommonReserve;

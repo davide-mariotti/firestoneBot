@@ -2,10 +2,29 @@ using System;
 using System.Collections;
 using System.Runtime.CompilerServices;
 using Firebot.GameModel.Base;
+using Firebot.GameModel.Shared;
 using MelonLoader;
 using static Firebot.Utilities.StringUtils;
 
 namespace Firebot.Core.Tasks;
+
+/// <summary>
+///     Thematic grouping for the config file and the terminal status table - not a game-code
+///     concept, purely so ~25 tasks stay navigable instead of appearing in whatever arbitrary order
+///     reflection happens to return them in. Declaration order here IS display order (both places
+///     sort by this first). "Quests" groups the 6 tasks that drive/claim the 9 daily quests together
+///     regardless of which in-game screen they each actually use, since that's what's relevant when
+///     scanning for them - not the underlying screen a Town/Guild/Map/etc. grouping would imply.
+/// </summary>
+public enum TaskGroup
+{
+    Quests,
+    Town,
+    Guild,
+    Map,
+    Character,
+    ScarabGame
+}
 
 public abstract class BotTask
 {
@@ -20,13 +39,46 @@ public abstract class BotTask
         _className = GetType().Name;
     }
 
-    public string SectionTitle => Humanize(GetType().Name);
+    /// <summary>Which section of the terminal table / config file this task belongs in - see
+    /// TaskGroup. Every task must declare one; there's no sensible generic default. Internal (not
+    /// protected) so BotManager can sort on it directly.</summary>
+    internal abstract TaskGroup Group { get; }
+
+    private static string GroupLabel(TaskGroup group) => group switch
+    {
+        TaskGroup.ScarabGame => "Scarab Game",
+        _ => group.ToString()
+    };
+
+    public string SectionTitle
+    {
+        get
+        {
+            var group = GroupLabel(Group);
+            var name = Humanize(GetType().Name);
+            // Avoids "Quests - Quests" for a task whose humanized name already matches its group
+            // (e.g. QuestsTask, which just claims quest rewards rather than driving one specific
+            // quest's progress).
+            return name == group ? group : $"{group} - {name}";
+        }
+    }
 
     public DateTime NextRunTime { get; protected set; } = DateTime.MinValue;
 
     public DateTime? LastRunTime { get; set; }
 
     protected virtual string NotificationPath => null;
+
+    /// <summary>
+    ///     Character level this task's underlying feature unlocks at, per the wiki - 0 (default)
+    ///     means no known/relevant gate. Enforced generically here (IsReady/IsNotificationVisible)
+    ///     instead of each task re-implementing its own "below level, reschedule later" boilerplate:
+    ///     a task below its level requirement is simply never ready, and reacts within one scan cycle
+    ///     of actually reaching it (no separate recheck-delay bookkeeping needed).
+    /// </summary>
+    protected virtual int MinimumCharacterLevel => 0;
+
+    private bool MeetsLevelRequirement => PlayerAvatar.CharacterLevel >= MinimumCharacterLevel;
 
     public bool IsEnabled => _enabledEntry != null && _enabledEntry.Value;
 
@@ -46,7 +98,7 @@ public abstract class BotTask
     {
         if (_enabledEntry != null) return;
 
-        var sectionId = SectionTitle.Replace(" ", "_").ToLowerInvariant();
+        var sectionId = _className.ToLowerInvariant();
         _category = MelonPreferences.CreateCategory(sectionId, $"{SectionTitle} Settings");
         _category.SetFilePath(configPath);
 
@@ -80,10 +132,10 @@ public abstract class BotTask
     protected virtual void OnConfigure(MelonPreferences_Category category) { }
 
     public bool IsReady()
-        => IsNotificationVisible() || (IsEnabled && DateTime.Now >= NextRunTime);
+        => MeetsLevelRequirement && (IsNotificationVisible() || (IsEnabled && DateTime.Now >= NextRunTime));
 
     public bool IsNotificationVisible()
-        => IsEnabled && NotificationElement != null && NotificationElement.IsVisible();
+        => MeetsLevelRequirement && IsEnabled && NotificationElement != null && NotificationElement.IsVisible();
 
     public abstract IEnumerator Execute();
 

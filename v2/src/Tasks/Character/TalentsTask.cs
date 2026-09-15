@@ -36,6 +36,8 @@ namespace Firebot.Tasks.Character;
 /// </summary>
 public class TalentsTask : BotTask
 {
+    internal override TaskGroup Group => TaskGroup.Character;
+
     private static readonly TimeSpan RecheckDelay = TimeSpan.FromHours(2);
 
     protected override string NotificationPath => Paths.BattleLoc.NotificationsLoc.TalentAvailableBtn;

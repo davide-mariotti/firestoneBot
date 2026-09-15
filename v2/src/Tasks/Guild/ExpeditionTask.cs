@@ -9,6 +9,9 @@ namespace Firebot.Tasks.Guild;
 
 public class ExpeditionTask : BotTask
 {
+    internal override TaskGroup Group => TaskGroup.Guild;
+    protected override int MinimumCharacterLevel => 10;
+
     protected override string NotificationPath => Paths.BattleLoc.NotificationsLoc.ExpeditionsBtn;
 
     public override IEnumerator Execute()

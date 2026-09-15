@@ -18,19 +18,14 @@ namespace Firebot.Tasks.Guild;
 /// </summary>
 public class MinerQuestTask : BotTask
 {
-    private const int MinimumCharacterLevel = 50;
+    internal override TaskGroup Group => TaskGroup.Quests;
+    protected override int MinimumCharacterLevel => 50;
+
     private const int HitCount = 5;
-    private static readonly TimeSpan RecheckDelayBelowLevel = TimeSpan.FromHours(1);
     private static readonly TimeSpan RecheckDelay = TimeSpan.FromHours(6);
 
     public override IEnumerator Execute()
     {
-        if (PlayerAvatar.CharacterLevel < MinimumCharacterLevel)
-        {
-            NextRunTime = DateTime.Now + RecheckDelayBelowLevel;
-            yield break;
-        }
-
         // Fast path - unverified against v1/UnityPy (see Battle.cs), safe no-op if not up.
         yield return Notifications.ArcaneCrystal;
 

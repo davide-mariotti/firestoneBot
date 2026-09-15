@@ -34,20 +34,26 @@ public static class BotManager
             .Where(task => task.Namespace != null && task.Namespace.StartsWith(targetNamespace) &&
                            task.IsSubclassOf(typeof(BotTask)) && !task.IsAbstract);
 
+        var instances = new System.Collections.Generic.List<BotTask>();
         foreach (var type in taskTypes)
             try
             {
                 var task = (BotTask)Activator.CreateInstance(type);
-                if (task != null)
-                {
-                    task.InitializeConfig(ConfigPath);
-                    Tasks.Add(task);
-                }
+                if (task != null) instances.Add(task);
             }
             catch (Exception e)
             {
                 Logger.Info($"[Loader] Failed to load {type.Name}: {e.GetType().Name} - {e.Message}");
             }
+
+        // Config categories are written to the .cfg file in creation order, and this same order
+        // drives the terminal status table - sort here (not relying on whatever arbitrary order
+        // reflection returned) so both places group tasks predictably instead of scattering them.
+        foreach (var task in instances.OrderBy(t => t.Group).ThenBy(t => t.SectionTitle))
+        {
+            task.InitializeConfig(ConfigPath);
+            Tasks.Add(task);
+        }
     }
 
     public static void Start()
@@ -170,21 +176,26 @@ public static class BotManager
         }
     }
 
+    /// <summary>
+    ///     Grouped by TaskGroup (Tasks is already in that order - see Initialize()) instead of by
+    ///     NextRunTime, so a task's row stays in the same place every print instead of jumping around
+    ///     the table as timers count down - easier to scan for one specific task.
+    /// </summary>
     private static void PrintTasksStatusTable()
     {
         var now = DateTime.Now;
         Logger.Info($"[Bot Status] Task Table - {now:MM/dd/yyyy HH:mm:ss}");
-        Logger.Info("| Next Run            | Time Left   | Task                      | Status        | Last Run            |");
-        Logger.Info("|---------------------|-------------|---------------------------|---------------|---------------------|");
+        Logger.Info("| Next Run            | Time Left   | Task                           | Status        | Last Run            |");
+        Logger.Info("|---------------------|-------------|--------------------------------|---------------|---------------------|");
 
-        foreach (var t in Tasks.OrderBy(t => t.NextRunTime))
+        foreach (var t in Tasks)
         {
             var status = GetTaskStatus(t);
             var nextRun = t.IsEnabled ? t.NextRunTime.ToString("MM/dd/yyyy HH:mm:ss") : "-";
             var lastRun = t.LastRunTime?.ToString("MM/dd/yyyy HH:mm:ss") ?? "-";
             var name = t.SectionTitle;
             var timeLeft = TimeParser.FormatFriendlyDuration(t.NextRunTime - now);
-            Logger.Info($"| {nextRun,-19} | {timeLeft,-11} | {name,-25} | {status,-13} | {lastRun,-19} |");
+            Logger.Info($"| {nextRun,-19} | {timeLeft,-11} | {name,-30} | {status,-13} | {lastRun,-19} |");
         }
     }
 

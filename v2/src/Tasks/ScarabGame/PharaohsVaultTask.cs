@@ -28,18 +28,13 @@ namespace Firebot.Tasks.ScarabGame;
 /// </summary>
 public class PharaohsVaultTask : BotTask
 {
-    private const int MinimumCharacterLevel = 60;
-    private static readonly TimeSpan RecheckDelayBelowLevel = TimeSpan.FromHours(1);
+    internal override TaskGroup Group => TaskGroup.ScarabGame;
+    protected override int MinimumCharacterLevel => 60;
+
     private static readonly TimeSpan RecheckDelay = TimeSpan.FromHours(6);
 
     public override IEnumerator Execute()
     {
-        if (PlayerAvatar.CharacterLevel < MinimumCharacterLevel)
-        {
-            NextRunTime = DateTime.Now + RecheckDelayBelowLevel;
-            yield break;
-        }
-
         yield return TownScreen.Open;
         yield return TownScreen.OpenTavern;
         yield return TavernScreen.OpenScarabGame;

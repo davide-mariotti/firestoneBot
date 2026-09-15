@@ -19,6 +19,9 @@ namespace Firebot.Tasks.Town;
 /// </summary>
 public class BeerExchangeTask : BotTask
 {
+    internal override TaskGroup Group => TaskGroup.Quests;
+    protected override int MinimumCharacterLevel => 15;
+
     private static readonly TimeSpan RecheckDelay = TimeSpan.FromHours(2);
 
     protected override string NotificationPath => Paths.BattleLoc.NotificationsLoc.BeerExchangeBtn;

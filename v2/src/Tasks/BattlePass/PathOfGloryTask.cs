@@ -18,6 +18,8 @@ namespace Firebot.Tasks.BattlePass;
 /// </summary>
 public class PathOfGloryTask : BotTask
 {
+    internal override TaskGroup Group => TaskGroup.Character;
+
     private MelonPreferences_Entry<int> _recheckIntervalMinutes;
 
     // The badge lives directly on the battle-screen button itself (see Battle.cs), not on the

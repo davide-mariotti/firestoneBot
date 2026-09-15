@@ -22,22 +22,15 @@ namespace Firebot.Tasks.ScarabGame;
 /// </summary>
 public class ScarabGameFreeTokenTask : BotTask
 {
-    private const int MinimumCharacterLevel = 60;
-    private static readonly TimeSpan RecheckDelayBelowLevel = TimeSpan.FromHours(1);
+    internal override TaskGroup Group => TaskGroup.ScarabGame;
+    protected override int MinimumCharacterLevel => 60;
+
     private static readonly TimeSpan FallbackRetryDelay = TimeSpan.FromHours(6);
 
     protected override string NotificationPath => Paths.BattleLoc.NotificationsLoc.ScarabGameShopFreeTokenBtn;
 
     public override IEnumerator Execute()
     {
-        if (PlayerAvatar.CharacterLevel < MinimumCharacterLevel)
-        {
-            // Feature doesn't exist yet below the unlock level - nothing to open, just recheck later
-            // as the character levels up instead of retrying every scan cycle.
-            NextRunTime = DateTime.Now + RecheckDelayBelowLevel;
-            yield break;
-        }
-
         // Fast paths: either badge (when up) may already open the shop directly. Safe no-ops otherwise.
         yield return Notifications.ScarabGameShopFreeToken;
         yield return Notifications.ScarabGame;

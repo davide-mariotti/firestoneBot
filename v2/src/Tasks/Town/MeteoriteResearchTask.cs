@@ -27,6 +27,8 @@ namespace Firebot.Tasks.Town;
 /// </summary>
 public class MeteoriteResearchTask : BotTask
 {
+    internal override TaskGroup Group => TaskGroup.Town;
+
     private const int TreeCount = 5;
     private const int NodeCount = 13; // research0..12 per tree
 

@@ -20,6 +20,8 @@ namespace Firebot.Tasks.Town;
 /// </summary>
 public class EmpowerTask : BotTask
 {
+    internal override TaskGroup Group => TaskGroup.Town;
+
     private static readonly TimeSpan RetryDelay = TimeSpan.FromMinutes(5);
 
     private MelonPreferences_Entry<float> _minResetRatio;

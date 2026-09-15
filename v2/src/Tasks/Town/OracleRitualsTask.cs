@@ -9,6 +9,9 @@ namespace Firebot.Tasks.Town;
 
 public class OracleRitualsTask : BotTask
 {
+    internal override TaskGroup Group => TaskGroup.Town;
+    protected override int MinimumCharacterLevel => 200;
+
     protected override string NotificationPath => Paths.BattleLoc.NotificationsLoc.OracleRitualsBtn;
 
     public override IEnumerator Execute()

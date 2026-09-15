@@ -9,6 +9,9 @@ namespace Firebot.Tasks.Guild;
 
 public class FreePickaxesTask : BotTask
 {
+    internal override TaskGroup Group => TaskGroup.Guild;
+    protected override int MinimumCharacterLevel => 50;
+
     private MelonPreferences_Entry<int> _pickaxeClaimThreshold;
 
     public int PickaxeClaimThreshold => _pickaxeClaimThreshold?.Value ?? 1;

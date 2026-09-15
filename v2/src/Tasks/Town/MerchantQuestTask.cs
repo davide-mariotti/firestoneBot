@@ -31,18 +31,13 @@ namespace Firebot.Tasks.Town;
 /// </summary>
 public class MerchantQuestTask : BotTask
 {
-    private const int MinimumCharacterLevel = 30;
-    private static readonly TimeSpan RecheckDelayBelowLevel = TimeSpan.FromHours(1);
+    internal override TaskGroup Group => TaskGroup.Quests;
+    protected override int MinimumCharacterLevel => 30;
+
     private static readonly TimeSpan RecheckDelay = TimeSpan.FromHours(6);
 
     public override IEnumerator Execute()
     {
-        if (PlayerAvatar.CharacterLevel < MinimumCharacterLevel)
-        {
-            NextRunTime = DateTime.Now + RecheckDelayBelowLevel;
-            yield break;
-        }
-
         yield return InventoryScreen.Open;
         yield return InventoryScreen.OpenItemsTab;
         yield return InventoryScreen.UseAllGoldItems();

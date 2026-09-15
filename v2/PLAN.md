@@ -98,6 +98,61 @@ nessuna parte in `Main.cs` (la v1 lo fa per `AutoUpgrade`) — la categoria di c
 non veniva mai creata, quindi non era possibile abilitarlo da file di config. Aggiunta la chiamata
 mancante insieme a `AutoRetreat.Initialize()`.
 
+## Organizzazione: gruppi tematici e soglie di livello
+
+Richiesto dall'utente una volta che i task hanno iniziato a essere tanti (26): prima l'ordine di
+comparsa nel file di config e nella tabella di stato a terminale era quello — arbitrario — restituito
+dalla reflection su `assembly.GetTypes()`, e la tabella di stato era per giunta ordinata per
+`NextRunTime`, quindi le righe saltavano di posizione ad ogni stampa. Aggiunto:
+
+- **`TaskGroup`** (enum in `Core/Tasks/BotTask.cs`): `Quests, Town, Guild, Map, Character, ScarabGame`
+  — ordine di dichiarazione = ordine di comparsa ovunque. Ogni `BotTask` deve dichiarare
+  `internal override TaskGroup Group => TaskGroup.X;` (proprietà astratta, quindi il compilatore
+  obbliga a classificare ogni task nuovo, non è possibile dimenticarselo). `Quests` raggruppa le 6
+  task che reclamano/fanno progredire le 9 quest giornaliere (Collector/Gamer/BeerExchange/Merchant/
+  Miner/QuestsTask) indipendentemente dalla schermata di gioco che usano — è l'unico raggruppamento
+  "per scopo" invece che "per area di gioco", proprio perché le quest erano il caso concreto lamentato
+  dall'utente ("non voglio trovarmele sparse in qua e la").
+- **`BotManager.Initialize()`** ora ordina le istanze per `(Group, SectionTitle)` PRIMA di chiamare
+  `InitializeConfig` — le categorie MelonPreferences finiscono nel file .cfg nell'ordine in cui
+  vengono create, quindi questo ordina anche il file di config, non solo la tabella a terminale.
+- **`PrintTasksStatusTable`** ora itera `Tasks` così com'è (già ordinato) invece di riordinare per
+  `NextRunTime` ad ogni stampa — una task resta sempre nella stessa riga tra una stampa e l'altra.
+- **`SectionTitle`** (nome mostrato ovunque) diventato `"{Gruppo} - {NomeUmanizzato}"`, es.
+  `"Quests - Collector"`, `"Town - Oracle Rituals"`, `"Scarab Game - Pharaohs Vault"` — con
+  un'eccezione per evitare la ridondanza `"Quests - Quests"` su `QuestsTask` (mostra solo `"Quests"`).
+
+**Soglia di livello generica**: nuova `protected virtual int MinimumCharacterLevel => 0;` sulla
+classe base, applicata automaticamente da `IsReady()`/`IsNotificationVisible()` — una task sotto
+soglia non viene mai considerata pronta, senza che debba più gestirselo da sola con un controllo
+manuale a inizio `Execute()` (pattern che 6 task duplicavano identico: `MinerQuestTask`,
+`PharaohsVaultTask`, `ScarabGameFreeTokenTask`, `GamerQuestTask`, `MerchantQuestTask`,
+`OraclesGiftTask` — rimosso da tutte e sostituito con la sola proprietà). Reagisce entro un ciclo di
+scan (pochi secondi) al superamento soglia, invece di aspettare fino a `RecheckDelayBelowLevel`
+(tipicamente 1h) come nel vecchio pattern per-task.
+
+Soglie aggiunte ex-novo (nessun controllo prima), tutte da infobox "Unlocks at" della wiki tranne
+dove specificato:
+| Task | Soglia | Fonte |
+|---|---|---|
+| Expeditions | 10 | wiki Expeditions |
+| Free Pickaxes | 50 | detto dall'utente stesso ("Pickaxes unlock at character level 50"), più specifico del 10 generico della Guild Shop |
+| Warfront Campaign Loot | 50 | wiki Warfront Campaign |
+| Warfront Daily Missions (Liberator) | 50 | wiki Warfront Campaign |
+| BeerExchange | 15 | stessa Taverna di Gamer |
+| Engineer | 50 | wiki Engineer |
+| Experiments (Alchemist) | 120 | wiki Alchemist, combacia anche con la guida note.com |
+| Oracle Rituals | 200 | stesso edificio "Oracle" di Oracle's Gift, già a 200 |
+
+**Non gestito, segnalato**: la wiki usa "Stage N" (stage di battaglia raggiunto, non livello
+personaggio) per lo sblocco di Library — sia Firestone che Meteorite Research, Stage 45 — e Temple of
+Eternals/Empower, anch'esso Stage 45. È un asse diverso dal livello personaggio e leggerlo richiede
+essere sulla schermata di battaglia (stesso meccanismo di `StageProgress` usato da AutoRetreat), non
+compatibile con il controllo generico appena aggiunto senza altro lavoro — lasciati senza soglia per
+ora (Empower ha comunque un suo gate a parte su rapporto Firestone/minuti avventura, quindi il rischio
+pratico è basso). Magic Quarter (Guardian Training) è "Stage 1" quindi di fatto sempre sbloccato,
+nessuna soglia necessaria.
+
 ## Come procediamo
 
 Un task alla volta. Per ognuno: path nuovi in `Infrastructure/Paths/`, classe task, build, verifica

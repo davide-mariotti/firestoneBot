@@ -17,6 +17,8 @@ namespace Firebot.Tasks.Town;
 /// </summary>
 public class DailyStoreOffersTask : BotTask
 {
+    internal override TaskGroup Group => TaskGroup.Town;
+
     private static readonly TimeSpan FallbackRetryDelay = TimeSpan.FromMinutes(30);
 
     public override IEnumerator Execute()

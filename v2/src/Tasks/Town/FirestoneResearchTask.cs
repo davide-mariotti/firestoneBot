@@ -12,6 +12,8 @@ namespace Firebot.Tasks.Town;
 
 public class FirestoneResearchTask : BotTask
 {
+    internal override TaskGroup Group => TaskGroup.Town;
+
     private const int NodeCount = 16;
     private const int TreeCount = 3;
 

@@ -10,21 +10,13 @@ namespace Firebot.Tasks.Town;
 /// <summary>Claims the daily Oracle's Gift once the character reaches the level it unlocks at.</summary>
 public class OraclesGiftTask : BotTask
 {
-    private const int MinimumCharacterLevel = 200;
-    private static readonly TimeSpan RecheckDelayBelowLevel = TimeSpan.FromHours(1);
+    internal override TaskGroup Group => TaskGroup.Town;
+    protected override int MinimumCharacterLevel => 200;
 
     protected override string NotificationPath => Paths.BattleLoc.NotificationsLoc.OraclesGiftBtn;
 
     public override IEnumerator Execute()
     {
-        if (PlayerAvatar.CharacterLevel < MinimumCharacterLevel)
-        {
-            // Feature doesn't exist yet below the unlock level - nothing to open, just recheck later
-            // as the character levels up instead of retrying every scan cycle.
-            NextRunTime = DateTime.Now + RecheckDelayBelowLevel;
-            yield break;
-        }
-
         yield return Notifications.OraclesGift;
         yield return OracleStore.ClaimGift;
         NextRunTime = OracleStore.NextRunTime;
