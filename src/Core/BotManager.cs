@@ -65,7 +65,7 @@ public static class BotManager
         _botRoutineHandle = MelonCoroutines.Start(BotSchedulerLoop());
         HeroUpgrade.Start();
         AutoRetreat.Start();
-        Logger.Info($"Started. Tasks loaded: {Tasks.Count(t => t.IsEnabled)}");
+        Logger.Info($"Started. Enabled tasks: {Tasks.Count(t => t.IsEnabled)} of {Tasks.Count} loaded.");
     }
 
     public static void Stop()
