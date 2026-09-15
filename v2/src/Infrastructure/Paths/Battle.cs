@@ -104,6 +104,12 @@ public static partial class Paths
             // periodic recheck is simple/reliable enough, no need to lean on an unconfirmed badge for
             // scheduling priority).
             public const string ArenaTokensBtn = Root + "/ArenaTokens";
+
+            // Confirmed present via UnityPy, same grid as every entry above. No v1 precedent, and no
+            // Town-building or Character-menu entry point exists for Hall of Heroes either (checked
+            // both) - this icon is the only way in, so unlike FirestoneResearchBtn etc. it's used as
+            // the sole open step, not just an opportunistic fast path (see HallOfHeroesGearTask).
+            public const string HallOfHeroesBtn = Root + "/HallOfHeroes";
         }
 
         public static class RightSideUILoc
