@@ -40,11 +40,32 @@ public static class HallOfHeroes
         private static GameElement GearGrid => new(Paths.HallOfHeroesLoc.EnchantingSubmenuLoc.GearGridRoot);
 
         // T2 (Wrist/Shoulder/Belt, indices 3-5) and T3 (Ring/Relic, indices 6-7) give an all-heroes
-        // bonus vs T1's (Weapon/Chest/Boots, indices 0-2) single-hero bonus per the Gear wiki's
-        // Bonuses table, so those 5 slots always come first. T1 is deliberately excluded here (not
-        // just deprioritized) - it needs an active-party policy that's a separate follow-up task.
-        public static readonly int[] PriorityGearSlots = { 3, 4, 5, 6, 7 };
+        // bonus per the Gear wiki's Bonuses table, so every hero gets these tried first regardless of
+        // party status.
+        public static readonly int[] AlwaysEnchantSlots = { 3, 4, 5, 6, 7 };
+
+        // T1 (Weapon/Chest/Boots) only benefits the hero wearing it, so it's only worth spending
+        // Void Crystals on for heroes actually in the active formation (Party.ActivePartyIndices) -
+        // per the user's explicit choice ("squadra attuale, dinamico").
+        public static readonly int[] ActivePartyOnlyGearSlots = { 0, 1, 2 };
 
         public static GameButton SlotButton(int index) => new(parent: GearGrid.GetChild(index));
+    }
+
+    public static class JewelEnchanting
+    {
+        public static IEnumerator OpenJewelsCategory =>
+            new GameButton(Paths.HallOfHeroesLoc.EnchantingSubmenuLoc.JewelsCategoryTabBtn).Click();
+
+        private static GameElement JewelGrid => new(Paths.HallOfHeroesLoc.EnchantingSubmenuLoc.JewelGridRoot);
+
+        // All 6 slots (Ankh/Rune/Idol T1, Talisman/Necklace/Trinket T2), every hero - unlike Void
+        // Crystals, Ethereal Shards have no other use per the Jewels wiki, so there's no opportunity
+        // cost to weigh by scoping to which heroes currently crew a War Machine (the wiki's stated
+        // condition for a jewel's bonus to actually apply). Revisit with crew-based targeting if that
+        // turns out to matter in practice - would need the War Machine crew screen, not investigated.
+        public static readonly int[] AllSlots = { 0, 1, 2, 3, 4, 5 };
+
+        public static GameButton SlotButton(int index) => new(parent: JewelGrid.GetChild(index));
     }
 }

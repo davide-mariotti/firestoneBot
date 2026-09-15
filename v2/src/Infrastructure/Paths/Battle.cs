@@ -154,6 +154,11 @@ public static partial class Paths
             // way to open the bag/Inventory screen - a second independent confirmation that this HUD
             // region is actually live, alongside pathOfGloryButton.
             public const string InventoryBtn = Root + "/menuButtons/inventoryButtonUI";
+
+            // Opens the battle formation editor ("Party" screen) - confirmed present via UnityPy,
+            // same menuButtons row as InventoryBtn above (not independently confirmed live, but high
+            // confidence given InventoryBtn's confirmation covers this exact HUD region).
+            public const string PartyBtn = Root + "/menuButtons/partyButtonUI";
         }
 
         public static class BottomSideUINewLoc

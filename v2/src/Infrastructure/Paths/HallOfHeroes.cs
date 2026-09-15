@@ -4,9 +4,10 @@ namespace Firebot.Infrastructure;
 ///     Hero roster/gear management screen. Confirmed via UnityPy (screen root literally named
 ///     "HallOfHeroes", not renamed) - root path convention inferred from every other menus/&lt;Name&gt;
 ///     screen in this file, same flagged-assumption situation as CharacterLoc.
-///     No Town-building or Character-menu entry point exists for it (checked both) - the only way in
-///     found is the battle-screen notification rail icon (BattleLoc.NotificationsLoc.HallOfHeroesBtn),
-///     same single-entry-point situation as Mailbox.
+///     Reached via Town -> hallOfHeroes building icon (TownIrongardLoc.HallOfHeroesBtn) - an earlier
+///     UnityPy pass missed this building and wrongly concluded the notification rail icon
+///     (BattleLoc.NotificationsLoc.HallOfHeroesBtn, kept as an opportunistic fast path) was the only
+///     way in, corrected after the user pointed it out live.
 /// </summary>
 public static partial class Paths
 {
@@ -53,6 +54,12 @@ public static partial class Paths
             public const string GearCategoryTabBtn = Root + "/categoryButtons/gear";
 
             public const string GearGridRoot = Root + "/categories/gearCategory/gearScrollView/viewport/content";
+
+            // Jewels wiki: 2 tiers, 3 slots each (Ankh/Rune/Idol T1, Talisman/Necklace/Trinket T2) -
+            // jewel (0)-(5) confirmed via UnityPy, same "no interspersed headers" grid shape as gear.
+            public const string JewelsCategoryTabBtn = Root + "/categoryButtons/jewels";
+
+            public const string JewelGridRoot = Root + "/categories/jewelsCategory/jewelScrollView/viewport/content";
         }
     }
 }
