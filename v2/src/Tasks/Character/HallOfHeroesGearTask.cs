@@ -3,6 +3,7 @@ using System.Collections;
 using Firebot.Core.Tasks;
 using Firebot.GameModel.Shared;
 using HallOfHeroesModel = Firebot.GameModel.Features.Character.HallOfHeroes;
+using TownScreen = Firebot.GameModel.Features.Town.Town;
 
 namespace Firebot.Tasks.Character;
 
@@ -42,10 +43,15 @@ public class HallOfHeroesGearTask : BotTask
 
     public override IEnumerator Execute()
     {
-        // No Town-building or Character-menu entry point exists for this screen (checked both) - the
-        // notification rail icon is the only way in, so unlike every other notification-backed task
-        // this is the sole open step, not just an opportunistic fast path.
+        // Fast path: the notification (when up) opens Hall of Heroes directly. Safe no-op otherwise.
         yield return Notifications.HallOfHeroes;
+
+        // Guaranteed path regardless of the notification - Town -> hallOfHeroes building icon
+        // (townBg/parent, 24 icons total). Corrected after the user pointed out live that it's
+        // reached through Town - an earlier UnityPy pass missed it by only grepping the building
+        // icons already mapped in this codebase instead of dumping the live full list.
+        yield return TownScreen.Open;
+        yield return TownScreen.OpenHallOfHeroes;
 
         foreach (var hero in HallOfHeroesModel.Heroes)
         {
@@ -77,6 +83,7 @@ public class HallOfHeroesGearTask : BotTask
         }
 
         yield return HallOfHeroesModel.Close;
+        yield return TownScreen.Close;
 
         NextRunTime = DateTime.Now + RecheckDelay;
     }

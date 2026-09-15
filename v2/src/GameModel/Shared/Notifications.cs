@@ -84,8 +84,8 @@ public static class Notifications
     public static IEnumerator ArenaTokens =>
         new GameNotificationButton(Paths.BattleLoc.NotificationsLoc.ArenaTokensBtn).Click();
 
-    // Confirmed present via UnityPy (see Battle.cs). No v1 precedent. The only entry point found for
-    // Hall of Heroes - used as the sole open step in HallOfHeroesGearTask, not just a fast path.
+    // Confirmed present via UnityPy (see Battle.cs). No v1 precedent. Opportunistic fast path only -
+    // the real entry point is Town -> hallOfHeroes building icon (see HallOfHeroesGearTask).
     public static IEnumerator HallOfHeroes =>
         new GameNotificationButton(Paths.BattleLoc.NotificationsLoc.HallOfHeroesBtn).Click();
 }

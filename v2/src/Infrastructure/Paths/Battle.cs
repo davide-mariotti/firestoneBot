@@ -105,10 +105,9 @@ public static partial class Paths
             // scheduling priority).
             public const string ArenaTokensBtn = Root + "/ArenaTokens";
 
-            // Confirmed present via UnityPy, same grid as every entry above. No v1 precedent, and no
-            // Town-building or Character-menu entry point exists for Hall of Heroes either (checked
-            // both) - this icon is the only way in, so unlike FirestoneResearchBtn etc. it's used as
-            // the sole open step, not just an opportunistic fast path (see HallOfHeroesGearTask).
+            // Confirmed present via UnityPy, same grid as every entry above. No v1 precedent. Used as
+            // an opportunistic fast path only (see HallOfHeroesGearTask) - the real entry point is
+            // the Town building icon (TownIrongardLoc.HallOfHeroesBtn), same as most other features.
             public const string HallOfHeroesBtn = Root + "/HallOfHeroes";
         }
 

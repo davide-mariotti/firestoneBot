@@ -146,6 +146,12 @@ public static partial class Paths
             // UnityPy. Matches the wiki's "Arena of Kings [...] is accessible from the Battles
             // building".
             public const string BattlesBtn = Root + "/townBg/parent/battles";
+
+            // Confirmed via UnityPy full child dump of townBg/parent (24 building icons) - missed in
+            // the first pass over Hall of Heroes (only grepped the icons already mapped in this file
+            // instead of dumping the live list), corrected after the user pointed out live in-game
+            // that Hall of Heroes is reached through Town, not just the notification rail.
+            public const string HallOfHeroesBtn = Root + "/townBg/parent/hallOfHeroes";
         }
 
         // The Tavern's own card-flip minigame screen. Its "shop" action button is the real gateway

@@ -29,5 +29,8 @@ public static class Town
 
     public static IEnumerator OpenBattles => new GameButton(Paths.MenusLoc.TownIrongardLoc.BattlesBtn).Click();
 
+    public static IEnumerator OpenHallOfHeroes =>
+        new GameButton(Paths.MenusLoc.TownIrongardLoc.HallOfHeroesBtn).Click();
+
     public static IEnumerator Close => new GameButton(Paths.MenusLoc.TownIrongardLoc.CloseBtn).Click();
 }
