@@ -68,6 +68,33 @@ public static partial class Paths
         public const string FightBtn = "/fightButton";
     }
 
+    // Opened by WFLiberationMissionsLoc.FightBtn - a squad/formation preview with the actual "start"
+    // button (fightBtn). Formation (changeAttackerFormationButton) is set up once manually by the
+    // user per their instructions - only FightBtn is ever wired here.
+    public static class WFBattleSimLoc
+    {
+        private const string Root = MenusLoc.Root + "/popups/WFBattleSim";
+
+        public const string FightBtn = Root + "/bg/mask/fightBtn";
+    }
+
+    // Real-time battle screen opened by WFBattleSimLoc.FightBtn, resolving into either
+    // WFBattleWonLoc or WFBattleDefeatLoc. No path defined for WFBattle itself - nothing on it needs
+    // clicking (its own closeButton would forfeit mid-battle); the bot only waits for a result popup.
+    public static class WFBattleWonLoc
+    {
+        private const string Root = MenusLoc.Root + "/popups/WFBattleWon";
+
+        public const string CloseBtn = Root + "/bg/closeButton";
+    }
+
+    public static class WFBattleDefeatLoc
+    {
+        private const string Root = MenusLoc.Root + "/popups/WFBattleDefeat";
+
+        public const string CloseBtn = Root + "/bg/closeButton";
+    }
+
     // Popup shown when a mission pin is clicked - lives under menuCanvas/popups, not menus/WorldMap.
     public static class PreviewMissionLoc
     {

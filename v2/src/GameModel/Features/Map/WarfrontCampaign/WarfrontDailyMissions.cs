@@ -24,3 +24,29 @@ public static class WarfrontLiberationMissions
 
     public static IEnumerator Close => new GameButton(Paths.WFLiberationMissionsLoc.CloseBtn).Click();
 }
+
+/// <summary>Squad/formation preview opened by a liberation mission's fightButton - the user sets the
+/// formation once manually, so this only ever needs to press the "start" button.</summary>
+public static class WFBattleSim
+{
+    public static bool IsVisible => new GameElement(Paths.WFBattleSimLoc.FightBtn).IsVisible();
+
+    public static IEnumerator Fight => new GameButton(Paths.WFBattleSimLoc.FightBtn).Click();
+}
+
+/// <summary>The Won/Defeat popup a liberation battle resolves into - see WFBattleSim.Fight.</summary>
+public static class WFBattleResult
+{
+    public static bool IsDecided =>
+        new GameElement(Paths.WFBattleWonLoc.CloseBtn).IsVisible() ||
+        new GameElement(Paths.WFBattleDefeatLoc.CloseBtn).IsVisible();
+
+    public static IEnumerator Close
+    {
+        get
+        {
+            yield return new GameButton(Paths.WFBattleWonLoc.CloseBtn).Click();
+            yield return new GameButton(Paths.WFBattleDefeatLoc.CloseBtn).Click();
+        }
+    }
+}
