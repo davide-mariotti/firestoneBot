@@ -22,7 +22,19 @@ public static class Town
     public static IEnumerator OpenTempleOfEternals =>
         new GameButton(Paths.MenusLoc.TownIrongardLoc.TempleOfEternalsBtn).Click();
 
-    public static IEnumerator OpenTavern => new GameButton(Paths.MenusLoc.TownIrongardLoc.TavernBtn).Click();
+    // Live-confirmed, 2026-09-18: the "tavern" building doesn't jump straight into a destination -
+    // it opens the "TavernSelection" choice popup (Tavern/Scarab's game cards), so both entry points
+    // are the building click followed by the right card's click.
+    public static IEnumerator OpenTavern => OpenViaTavernSelection(Paths.MenusLoc.TavernSelectionLoc.OpenTavernBtn);
+
+    public static IEnumerator OpenScarabGame =>
+        OpenViaTavernSelection(Paths.MenusLoc.TavernSelectionLoc.OpenScarabGameBtn);
+
+    private static IEnumerator OpenViaTavernSelection(string cardPath)
+    {
+        yield return new GameButton(Paths.MenusLoc.TownIrongardLoc.TavernBtn).Click();
+        yield return new GameButton(cardPath).Click();
+    }
 
     public static IEnumerator OpenExoticMerchant =>
         new GameButton(Paths.MenusLoc.TownIrongardLoc.ExoticMerchantBtn).Click();

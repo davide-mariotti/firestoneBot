@@ -5,7 +5,6 @@ using Firebot.GameModel.Shared;
 using Firebot.Infrastructure;
 using PharaohsVaultScreen = Firebot.GameModel.Features.ScarabGame.PharaohsVault;
 using ScarabGameScreen = Firebot.GameModel.Features.ScarabGame.ScarabGame;
-using TavernScreen = Firebot.GameModel.Features.Town.Tavern;
 using TownScreen = Firebot.GameModel.Features.Town.Town;
 
 namespace Firebot.Tasks.ScarabGame;
@@ -36,8 +35,7 @@ public class PharaohsVaultTask : BotTask
     public override IEnumerator Execute()
     {
         yield return TownScreen.Open;
-        yield return TownScreen.OpenTavern;
-        yield return TavernScreen.OpenScarabGame;
+        yield return TownScreen.OpenScarabGame;
 
         yield return ScarabGameScreen.MaxOutBet();
         var spinBtn = ScarabGameScreen.SpinBtn;
@@ -50,7 +48,6 @@ public class PharaohsVaultTask : BotTask
         yield return PharaohsVaultScreen.Close;
 
         yield return ScarabGameScreen.Close;
-        yield return TavernScreen.Close;
         yield return TownScreen.Close;
 
         NextRunTime = DateTime.Now + RecheckDelay;

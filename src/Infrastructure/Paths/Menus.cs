@@ -167,30 +167,66 @@ public static partial class Paths
             public const string HallOfHeroesBtn = Root + "/townBg/parent/hallOfHeroes";
         }
 
-        // The Tavern's own card-flip minigame screen. Its "shop" action button is the real gateway
-        // to Scarab's Game (see ScarabGame.cs comment) - confirmed via the wiki
-        // (firestone-idle-rpg.fandom.com/wiki/Tavern: "The scarab's game is a part of the Tavern"),
-        // corrected after initially assuming Scarab's Game had no permanent manual entry point at all.
+        // Live-confirmed, 2026-09-18 (user screenshot + dump): clicking the "tavern" building
+        // doesn't jump straight into the card-flip screen - it opens this intermediate choice popup
+        // with two cards, real names "tavern" (the card game) and "scarabGame". A second click on
+        // the right card is needed to actually enter either destination - see Town.OpenTavern /
+        // Town.OpenScarabGame, which both do the building click + card click as one step.
+        public static class TavernSelectionLoc
+        {
+            private const string Root = MenusLoc.Root + "/popups/TavernSelection";
+
+            public const string CloseBtn = Root + "/bg/closeButton";
+
+            private const string CardsRoot = Root + "/bg";
+
+            public const string OpenTavernBtn = CardsRoot + "/tavern";
+
+            public const string OpenScarabGameBtn = CardsRoot + "/scarabGame";
+        }
+
+        // The Tavern's own card-flip minigame screen, entered via Town.OpenTavern (building click +
+        // "tavern" card in TavernSelection - see that class' doc comment). Scarab's Game turned out
+        // to be a sibling card in that same selection popup (Town.OpenScarabGame), not something
+        // reached from inside this screen - the "shop" action button once assumed here for that was
+        // never confirmed live and has been removed.
         public static class TavernLoc
         {
             private const string Root = MenusLoc.Root + "/menus/Tavern";
 
             public const string CloseBtn = Root + "/closeButton";
 
-            public const string OpenScarabGameBtn = Root + "/helpCanvas/actionButtons/shop";
-
             // Opens TavernMarket - "Stormy, the tavern keeper" per the wiki's Tavern Market section.
             public const string OpenMarketBtn = Root + "/helpCanvas/stormyButton";
 
-            // Draws one card, costing game tokens (confirmed via wiki: "Card draws require Game
-            // Tokens") - the button's own costText shows the exact amount, read live rather than
-            // hardcoded.
+            // Starts a round at the current quantity - costs 1 game token per draw at the default
+            // "x1" multiplier (live-confirmed via user screenshot: "Play 1" costs 1, "Play 10" costs
+            // 10 - linear). Doesn't deduct tokens or count towards the quest by itself: it reveals a
+            // set of face-down card stacks (see CardsRoot) and a card still has to be picked to
+            // actually trigger the reveal animation and complete the round (live-confirmed, 2026-09-18
+            // - the token count stayed unchanged right after Play until a card was clicked).
             public const string PlayBtn = Root + "/helpCanvas/bottomUI/playButton";
 
-            // Generic pooled currency counter (see path-verification-hierarchy memory) - assumed to
-            // show the game token balance while on this screen, since that's this screen's primary
-            // spendable resource. Not independently confirmed which currency it's bound to.
-            public const string GameTokenCountTxt = Root + "/helpCanvas/counters/counterInteraction/quantity";
+            // Live-confirmed, 2026-09-18 (user screenshot): 6 identical face-down card stacks appear
+            // after Play, real names "tavernCard0".."tavernCard5" - clicking any one completes the
+            // round (they're interchangeable for a bundled/lucky-style draw, not separate outcomes).
+            public const string CardsRoot = Root + "/helpCanvas/cardHolder";
+
+            public const string FirstCardBtn = CardsRoot + "/tavernCard0";
+
+            // Live-confirmed, 2026-09-18: cycles the draw-count multiplier (user screenshot: "x1" /
+            // "x10" seen) - same "changeQuantity" pattern as ScarabGame/PharaohsVault. Lets
+            // GamerQuestTask cover its whole daily quota (10 draws) in one click when affordable,
+            // same idea as ArcaneCrystal's hit-quantity multiplier for Miner Quest.
+            public const string ChangeQuantityBtn = Root + "/helpCanvas/bottomRightUI/changeQuantity";
+
+            public const string QuantityTxt = ChangeQuantityBtn + "/text";
+
+            // Live-confirmed, 2026-09-18: the real, populated currency counter is
+            // "currencyInteraction (GameToken)" - its literal name spells out which currency it's
+            // bound to. A sibling "counterInteraction" (generic/pooled, previously assumed to be this
+            // counter) exists but stays inactive on this screen - reading it always returned empty.
+            public const string GameTokenCountTxt = Root + "/helpCanvas/counters/currencyInteraction (GameToken)/quantity";
         }
 
         public static class TempleOfEternalsLoc

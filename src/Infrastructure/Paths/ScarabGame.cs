@@ -1,13 +1,12 @@
 namespace Firebot.Infrastructure;
 
 /// <summary>
-///     Scarab's Game (a slot-machine minigame) and its shop. No prior precedent at all. Corrected after
-///     initially assuming there was no permanent manual entry point (only the battle-screen
-///     notification badges) - the user pointed out and the wiki confirms
-///     (firestone-idle-rpg.fandom.com/wiki/Tavern) it's reached via Town/townButton -&gt; Tavern
-///     (TavernLoc in Menus.cs) -&gt; Tavern's own "shop" action button, same guaranteed-navigation
-///     pattern as every other task. Unlocks at character level 60 per the wiki (Tavern itself
-///     unlocks earlier, at level 15).
+///     Scarab's Game (a slot-machine minigame) and its shop. No prior precedent at all. Corrected
+///     twice: first from "no permanent manual entry point" to "Town -&gt; Tavern -&gt; Tavern's own 'shop'
+///     button" (per the wiki), then live-confirmed 2026-09-18 that the real route is Town -&gt; the
+///     "tavern" building's TavernSelection choice popup -&gt; its "scarabGame" card directly - it never
+///     actually goes through the card-flip Tavern screen at all (see Town.OpenScarabGame). Unlocks at
+///     character level 60 per the wiki (Tavern itself unlocks earlier, at level 15).
 /// </summary>
 public static partial class Paths
 {
