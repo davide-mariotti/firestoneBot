@@ -133,6 +133,12 @@ public static partial class Paths
 
             public const string CloseBtn = Root + "/closeButton";
 
+            // DIAGNOSTIC (2026-09-18): exposed to dump the real building names live - TavernBtn
+            // below doesn't resolve despite every sibling building using the same
+            // "townBg/parent/<name>" pattern successfully (Engineer/MagicQuarters/Library all
+            // confirmed working), so "tavern" itself is suspected wrong.
+            public const string BuildingsRoot = Root + "/townBg/parent";
+
             public const string EngineerBtn = Root + "/townBg/parent/engineer";
 
             public const string MagicQuartersBtn = Root + "/townBg/parent/magicQuarters";
