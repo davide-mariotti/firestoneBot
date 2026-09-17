@@ -149,7 +149,7 @@ Questi due non hanno una sezione "un task alla volta" nello stesso senso - parto
 
 | # | Nome | Sezione cfg | Livello min. | Comportamento atteso |
 |---|------|--------------|:---:|----------------------|
-| 23 | Expedition | `[expeditiontask]` | 10 | Reclama la spedizione attiva completata e ne avvia una nuova. |
+| 23 | ✅ Expedition | `[expeditiontask]` | 10 | Reclama la spedizione attiva completata e ne avvia una nuova. **Testato 2026-09-18: funziona, nessun errore, nuova spedizione avviata e prossimo controllo schedulato correttamente.** |
 | 24 | Tree of Life (Personal) | `[treeoflifetask]` | 10 | Gilda → Albero della Vita → vista Personale: compra upgrade con Expedition Token, priorità a Raining Gold/Firestone Finder/Firestone Effect. |
 | 25 | Awakening | `[awakeningtask]` | 50 | Spende Arcane Crystal per risvegliare eroi, usando sempre il moltiplicatore più alto disponibile. **Testalo dopo Mailbox**, altrimenti probabilmente non ci sono cristalli da spendere. |
 
@@ -157,7 +157,7 @@ Questi due non hanno una sezione "un task alla volta" nello stesso senso - parto
 
 | # | Nome | Sezione cfg | Livello min. | Comportamento atteso |
 |---|------|--------------|:---:|----------------------|
-| 26 | Map Missions | `[mapmissionstask]` | - | Reclama missioni completate, ne avvia di nuove nell'ordine configurato (`mission_time_order`, default `asc`). |
+| 26 | ✅ Map Missions | `[mapmissionstask]` | - | Reclama missioni completate, ne avvia di nuove nell'ordine configurato (`mission_time_order`, default `asc`). **Testato 2026-09-18: funziona, più missioni attive scansionate correttamente (tempi parsati bene), nuova missione avviata senza errori.** |
 | 27 | Warfront Campaign Loot | `[warfrontcampaignloottask]` | 50 | Reclama i rotoli di ricompensa disponibili della campagna Warfront. |
 | 28 | Warfront Daily Missions (Liberator) | `[warfrontdailymissionstask]` | 50 | Combatte le missioni di liberazione una a una, aspettando l'esito reale della battaglia prima di passare alla successiva. |
 
