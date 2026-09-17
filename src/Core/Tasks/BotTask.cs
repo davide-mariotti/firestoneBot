@@ -2,7 +2,9 @@ using System;
 using System.Collections;
 using System.Runtime.CompilerServices;
 using Firebot.GameModel.Base;
+using Firebot.GameModel.Primitives;
 using Firebot.GameModel.Shared;
+using Firebot.Infrastructure;
 using MelonLoader;
 using static Firebot.Utilities.StringUtils;
 
@@ -38,7 +40,7 @@ public abstract class BotTask
     private MelonPreferences_Category _category;
     private MelonPreferences_Entry<bool> _enabledEntry;
     private MelonPreferences_Entry<string> _nextRunTimeEntry;
-    private GameElement _notificationElement;
+    private GameElement[] _notificationElements;
 
     protected BotTask()
     {
@@ -73,6 +75,9 @@ public abstract class BotTask
 
     public DateTime? LastRunTime { get; set; }
 
+    // A bare badge name (e.g. "GuardianTraining"), not a full path - see NotificationElements
+    // below for why: this same rail lives under one of two alternate HUD roots depending on the
+    // client, so both candidates need building from the name, not just one fixed absolute path.
     protected virtual string NotificationPath => null;
 
     /// <summary>
@@ -99,15 +104,21 @@ public abstract class BotTask
 
     public bool IsEnabled => _enabledEntry != null && _enabledEntry.Value;
 
-    private GameElement NotificationElement
+    // See UiVariantButton - this rail lives under one of two alternate HUD roots depending on the
+    // client, only one populated per session, so both candidates are checked.
+    private GameElement[] NotificationElements
     {
         get
         {
-            if (_notificationElement != null) return _notificationElement;
+            if (_notificationElements != null) return _notificationElements;
             if (string.IsNullOrEmpty(NotificationPath)) return null;
 
-            _notificationElement = new GameElement(NotificationPath);
-            return _notificationElement;
+            _notificationElements = new GameElement[]
+            {
+                new(Paths.BattleLoc.NotificationsLoc.Root + "/" + NotificationPath),
+                new(Paths.BattleLoc.NotificationsLoc.FallbackRoot + "/" + NotificationPath)
+            };
+            return _notificationElements;
         }
     }
 
@@ -157,7 +168,8 @@ public abstract class BotTask
         => MeetsLevelRequirement && (IsNotificationVisible() || (IsEnabled && DateTime.Now >= NextRunTime));
 
     public bool IsNotificationVisible()
-        => MeetsLevelRequirement && IsEnabled && NotificationElement != null && NotificationElement.IsVisible();
+        => MeetsLevelRequirement && IsEnabled && NotificationElements != null &&
+           UiVariantButton.AnyVisible(NotificationElements);
 
     public abstract IEnumerator Execute();
 

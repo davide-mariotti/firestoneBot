@@ -131,10 +131,28 @@ diverse tra loro nonostante il sintomo identico:
   affatto (nodo assente), mentre il sweep generico del Watchdog - che enumera i figli reali di
   `menus/` - ha trovato un figlio chiamato proprio `TownIrongard` con `closeButton` risolvibile
   (solo inattivo). Riportato a `menus/TownIrongard`.
-- **Rail di notifica battaglia**: `NotificationsLoc`/il bottone mail erano su `leftSideUINew`, ma un
-  dump dal vivo della gerarchia reale (fatto dall'utente, `docs/simple-path/simple-path.txt`) mostra
-  che il gioco usa `leftSideUI` (senza "New") per le notifiche e `bottomLeftSideUI/mail` per la
-  posta — non `leftSideUINew/mail`. Corretto in `Battle.cs`.
+- **Rail di notifica battaglia / bottone mail** (`NotificationsLoc`, bottone mail): storia lunga,
+  vedi la voce dedicata più sotto ("HUD a doppia variante") per la soluzione finale - i tentativi
+  precedenti (`leftSideUINew`, poi `leftSideUI`+`bottomLeftSideUI`) erano ciascuno corretto solo in
+  metà delle sessioni live testate.
+- **HUD a doppia variante (2026-09-17, System Mail)**: un dump dal vivo dei figli reali di
+  `SafeArea` (diagnostico temporaneo in `SystemMailTask`) ha mostrato `leftSideUINew` popolato
+  (mail, notifications, chat, ...) mentre `leftSideUI`/`bottomLeftSideUI` erano vuoti o quasi - un
+  retest a distanza di minuti, stesso timing dall'avvio, ha mostrato l'esatto opposto. L'utente ha
+  confermato: **il gioco sceglie tra due varianti HUD parallele in base alla risoluzione/aspect
+  ratio del client**, non è un problema di versione. Conclusione: qualsiasi path sotto una di
+  queste regioni è corretto solo per metà dei client. Corretto sistematicamente (non solo per la
+  posta): aggiunto `GameModel/Primitives/UiVariantButton.cs`, un helper che prova un elenco di
+  path candidati in ordine e usa il primo effettivamente visibile (click) o segnala visibile se
+  uno qualsiasi lo è (per la programmazione basata su notifica in `BotTask.IsNotificationVisible`).
+  Applicato a: bottone mail (`LeftSideUINewLoc`/`BottomLeftSideUILoc.MailBtn`) e a **tutta** la
+  rail di notifica (`NotificationsLoc`, ~20 badge, usata sia come fast-path in `Notifications.cs`
+  sia come segnale di priorità in ogni task che imposta `NotificationPath`) - quest'ultimo era
+  sempre silenziosamente fallito finora (mai un crash, solo il fast-path mai scattato) quindi il
+  fix è puro guadagno, nessun rischio di regressione. **Non ancora esteso** all'ambiguità analoga
+  Desktop/Mobile/New della barra inferiore (`BottomSideUIDesktopLoc`/`BottomSideUINewLoc`, Path of
+  Glory/Inventory/Party/Hero Upgrade) - nessun test dal vivo di oggi l'ha toccata, da verificare in
+  un giro dedicato prima di applicare lo stesso pattern lì.
 - **Oracle Rituals / Experiments / Firestone Research** (`ClaimBtn` in `OracleLoc.RitualLoc`,
   `AlchemistLoc.ExperimentsLoc`, `LibraryLoc.ResearchPanelLoc`): un tentativo di fix intermedio
   (analisi esterna, poi verificata) aveva reso questi path assoluti (prefissati con `Root`), ma il

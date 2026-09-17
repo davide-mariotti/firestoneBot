@@ -18,100 +18,120 @@ public static partial class Paths
             public const string CharacterLevel = OpenBtn + "/characterLevelBg/characterLevel";
         }
 
-        // Direct children of bottomLeftSideUI itself, not the notifications/Viewport/grid badge list
-        // below (NotificationsLoc) - same general HUD region, different sub-path.
+        // Live children dump (SystemMailTask diagnostic, 2026-09-17, see git history) of every
+        // direct child of SafeArea proved the previous "bottomLeftSideUI/mail" guess wrong in that
+        // session: "leftSideUINew" had 6 children - menuButtons, dps, mail, chat, chatLastMsgBg,
+        // notifications - while "bottomLeftSideUI" existed but was empty. BUT a same-timing retest
+        // right after found the exact opposite (leftSideUINew/mail missing again) - this looks like
+        // the game instantiates one of two alternate HUD prefab sets (matches the "New" vs "Desktop"
+        // ambiguity already flagged elsewhere in this file for other regions), likely picked by
+        // screen resolution/aspect ratio, not a single fixed layout. SystemMail.Open tries this one
+        // first, then falls back to BottomLeftSideUILoc below - whichever one the game actually
+        // instantiated this session, one of the two should resolve.
+        public static class LeftSideUINewLoc
+        {
+            // Public, not private: shared with the sibling NotificationsLoc class below (both are
+            // rooted under this same real parent).
+            public const string Root = BattleLoc.Root + "/leftSideUINew";
+
+            public const string MailBtn = Root + "/mail";
+        }
+
+        // The "normal" (non-"New") HUD variant's equivalent of LeftSideUINewLoc above - fallback
+        // target when that one doesn't resolve. Never independently confirmed as populated in any
+        // live session yet (always saw either leftSideUINew populated, or this one empty) - kept as
+        // the fallback on the strength of the resolution/variant-switch theory, not a live
+        // confirmation of its own content.
         public static class BottomLeftSideUILoc
         {
             private const string Root = BattleLoc.Root + "/bottomLeftSideUI";
 
-            // Corrected against a live in-game runtime dump the user captured (docs/simple-path/
-            // simple-path.txt): "bottomLeftSideUI/mail" is the real live path, not "leftSideUINew/mail" -
-            // both "leftSideUI" and "leftSideUINew" exist as near-identical prefab variants in the
-            // static assets (same ambiguity as BottomSideUIDesktopLoc vs BottomSideUINewLoc below),
-            // and the earlier "leftSideUINew" pick for this whole HUD region turned out to be the
-            // wrong one for the currently-installed game version - see NotificationsLoc just below.
             public const string MailBtn = Root + "/mail";
         }
 
         public static class NotificationsLoc
         {
-            // Corrected to "leftSideUI" (not "leftSideUINew") against a live in-game runtime dump the
-            // user captured (docs/simple-path/simple-path.txt) - confirms every notification badge
-            // (Quests, Engineer, FreePickaxes, etc.) actually lives under leftSideUI right now. Both
-            // variants exist as near-identical prefabs in the static assets (same "New" naming
-            // ambiguity flagged for bottomSideUINew vs bottomSideUIDesktop below) - static analysis
-            // alone can't tell which one the game actually instantiates, only a live capture can, and
-            // this one had been guessed wrong.
-            private const string Root = BattleLoc.Root + "/leftSideUI/notifications/Viewport/grid";
+            // Same two-variant situation as LeftSideUINewLoc/BottomLeftSideUILoc above, for the same
+            // reason (this whole grid lives right under leftSideUINew, next to mail) - a previous
+            // single-root "correction" to leftSideUI (or, before that, this "New" root) always
+            // eventually turned out wrong in some session (same mistake pattern as TownIrongard's
+            // popups/ detour, see PLAN.md). Every "quick access" notification check in every task
+            // used to silently fail and fall through to the guaranteed navigation path - never broke
+            // anything (that path is a safe no-op fast path), just never actually fired. Exposed as
+            // two roots + bare badge names (not precomputed full paths) so both NotificationBtn(name)
+            // below and Notifications.cs can build and try both candidates.
+            public const string Root = LeftSideUINewLoc.Root + "/notifications/Viewport/grid";
 
-            public const string OraclesGiftBtn = Root + "/OraclesGift";
+            public const string FallbackRoot = BattleLoc.Root + "/leftSideUI/notifications/Viewport/grid";
 
-            public const string CheckInBtn = Root + "/CheckIn";
+            public const string OraclesGift = "OraclesGift";
 
-            public const string MysteryBoxBtn = Root + "/MysteryBox";
+            public const string CheckIn = "CheckIn";
 
-            public const string QuestsBtn = Root + "/Quests";
+            public const string MysteryBox = "MysteryBox";
 
-            public const string FreePickaxesBtn = Root + "/FreePickaxes";
+            public const string Quests = "Quests";
 
-            public const string EngineerBtn = Root + "/Engineer";
+            public const string FreePickaxes = "FreePickaxes";
 
-            public const string ExpeditionsBtn = Root + "/Expeditions";
+            public const string Engineer = "Engineer";
 
-            public const string GuardianTrainingBtn = Root + "/GuardianTraining";
+            public const string Expeditions = "Expeditions";
 
-            public const string OracleRitualsBtn = Root + "/OracleRituals";
+            public const string GuardianTraining = "GuardianTraining";
 
-            public const string ExperimentsBtn = Root + "/Experiments";
+            public const string OracleRituals = "OracleRituals";
 
-            public const string WarfrontCampaignBtn = Root + "/WarfrontCampaign";
+            public const string Experiments = "Experiments";
 
-            public const string MapMissionsBtn = Root + "/MapMissions";
+            public const string WarfrontCampaign = "WarfrontCampaign";
 
-            public const string FirestoneResearchBtn = Root + "/FirestoneResearch";
+            public const string MapMissions = "MapMissions";
+
+            public const string FirestoneResearch = "FirestoneResearch";
 
             // Unlike every other entry above, this one has no prior precedent to cross-check against -
             // the original TempleOfEternalsTask never used a notification at all, only the manual chain below.
             // Sourced only from the static doc scan (docs/path.firestone.html, "TemplePrestige...
             // probabile alias di Temple of Eternals") - lowest-trust tier per the path-verification
             // convention. Flag for live verification before relying on it.
-            public const string TemplePrestigeBtn = Root + "/TemplePrestige";
+            public const string TemplePrestige = "TemplePrestige";
 
-            // Same situation as TemplePrestigeBtn above - never implemented Meteorite Research at
+            // Same situation as TemplePrestige above - never implemented Meteorite Research at
             // all (docs/path.firestone.html explicitly notes this badge as "Rimossa dal bot, feature
             // mai raggiunta"), so there's no live-tested precedent. Flag for live verification.
-            public const string MeteoriteResearchBtn = Root + "/MeteoriteResearch";
+            public const string MeteoriteResearch = "MeteoriteResearch";
 
             // Confirmed present (unlike TemplePrestige/MeteoriteResearch above, these were directly
             // verified via UnityPy, not just the static doc scan) - but still no prior precedent, since
             // never implemented Scarab Game at all.
-            public const string ScarabGameBtn = Root + "/ScarabGame";
+            public const string ScarabGame = "ScarabGame";
 
-            public const string ScarabGameShopFreeTokenBtn = Root + "/ScarabGameShopFreeToken";
+            public const string ScarabGameShopFreeToken = "ScarabGameShopFreeToken";
 
             // Sourced from the static doc scan only (docs/path.firestone.html), not independently
             // verified via UnityPy - unlike ScarabGame above. No prior precedent either.
-            public const string ArcaneCrystalBtn = Root + "/ArcaneCrystal";
+            public const string ArcaneCrystal = "ArcaneCrystal";
 
             // User-suggested, confirmed present via UnityPy (like ScarabGame above). No prior precedent.
             // Fires when accumulated beer can be exchanged for Tavern Market game tokens.
-            public const string BeerExchangeBtn = Root + "/BeerExchange";
+            public const string BeerExchange = "BeerExchange";
 
             // Confirmed present via UnityPy (like ScarabGame/BeerExchange above). No prior precedent.
             // Fires whenever an unspent talent point is available (Character screen, Talents tab).
-            public const string TalentAvailableBtn = Root + "/TalentAvailable";
+            public const string TalentAvailable = "TalentAvailable";
 
             // Confirmed present via UnityPy (like ScarabGame/BeerExchange above). No prior precedent.
             // Presumed to fire when an Arena of Kings battle token is available - opportunistic fast
             // path only, not used as NotificationPath (same reasoning as the daily-quest tasks: a
             // periodic recheck is simple/reliable enough, no need to lean on an unconfirmed badge for
             // scheduling priority).
-            public const string ArenaTokensBtn = Root + "/ArenaTokens";
+            public const string ArenaTokens = "ArenaTokens";
 
             // Confirmed present via UnityPy, same grid as every entry above. No prior precedent. Used as
             // an opportunistic fast path only (see HallOfHeroesGearTask) - the real entry point is
             // the Town building icon (TownIrongardLoc.HallOfHeroesBtn), same as most other features.
-            public const string HallOfHeroesBtn = Root + "/HallOfHeroes";
+            public const string HallOfHeroes = "HallOfHeroes";
         }
 
         public static class RightSideUILoc

@@ -40,7 +40,7 @@ public class TalentsTask : BotTask
 
     private static readonly TimeSpan RecheckDelay = TimeSpan.FromHours(2);
 
-    protected override string NotificationPath => Paths.BattleLoc.NotificationsLoc.TalentAvailableBtn;
+    protected override string NotificationPath => Paths.BattleLoc.NotificationsLoc.TalentAvailable;
 
     public override IEnumerator Execute()
     {

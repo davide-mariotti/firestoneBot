@@ -6,7 +6,7 @@ namespace Firebot.Infrastructure;
 ///     screen in this file, same flagged-assumption situation as CharacterLoc.
 ///     Reached via Town -> hallOfHeroes building icon (TownIrongardLoc.HallOfHeroesBtn) - an earlier
 ///     UnityPy pass missed this building and wrongly concluded the notification rail icon
-///     (BattleLoc.NotificationsLoc.HallOfHeroesBtn, kept as an opportunistic fast path) was the only
+///     (BattleLoc.NotificationsLoc.HallOfHeroes, kept as an opportunistic fast path) was the only
 ///     way in, corrected after the user pointed it out live.
 /// </summary>
 public static partial class Paths

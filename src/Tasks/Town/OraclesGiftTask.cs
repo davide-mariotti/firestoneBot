@@ -13,7 +13,7 @@ public class OraclesGiftTask : BotTask
     internal override TaskGroup Group => TaskGroup.Town;
     protected override int MinimumCharacterLevel => 200;
 
-    protected override string NotificationPath => Paths.BattleLoc.NotificationsLoc.OraclesGiftBtn;
+    protected override string NotificationPath => Paths.BattleLoc.NotificationsLoc.OraclesGift;
 
     public override IEnumerator Execute()
     {

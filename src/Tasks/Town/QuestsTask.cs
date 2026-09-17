@@ -21,7 +21,7 @@ public class QuestsTask : BotTask
 
     private static readonly TimeSpan FallbackRetryDelay = TimeSpan.FromHours(12);
 
-    protected override string NotificationPath => Paths.BattleLoc.NotificationsLoc.QuestsBtn;
+    protected override string NotificationPath => Paths.BattleLoc.NotificationsLoc.Quests;
 
     public override IEnumerator Execute()
     {

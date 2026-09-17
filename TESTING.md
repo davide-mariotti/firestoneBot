@@ -20,6 +20,23 @@ schermata città invece di tornare alla battaglia come gli altri task - non anco
 certezza (potrebbe essere un altro task, es. Daily Store Offers, che riapre Town subito dopo).
 Da riverificare in un giro dedicato, ignorato per ora.
 
+**Aggiornamento (2026-09-17, System Mail)**: scoperta importante confermata dall'utente - il gioco
+sceglie tra **due varianti HUD parallele in base alla risoluzione/aspect ratio del client**, non è
+un'ambiguità di versione. Un path hardcoded su una sola variante funziona in metà delle sessioni e
+fallisce silenziosamente nell'altra metà. Corretto sistematicamente con un helper
+(`UiVariantButton`, prova più path candidati) applicato al bottone mail e a **tutta** la rail di
+notifica (`NotificationsLoc`, usata da quasi ogni task come fast-path opzionale + segnale di
+priorità) - vedi `PLAN.md`. **Non ancora esteso** all'ambiguità Desktop/Mobile/New della barra
+inferiore (Path of Glory/Inventory/Party/Hero Upgrade) - nessun test dal vivo l'ha ancora toccata.
+Testato dal vivo e confermato funzionante: Mailbox (System Mail) - claim riuscito, popup "Rewards"
+di conferma chiuso correttamente dal Watchdog generico (non serve un click esplicito su "OK").
+
+Per velocizzare i cicli di test in questa sessione, `auto_start` è stato temporaneamente messo a
+`true` (con `start_bot_delay` al minimo consentito di 10s) invece di `false` come raccomandato
+sotto - il bot parte da solo ad ogni avvio del gioco senza bisogno di premere F7. Ricordarsi di
+rimetterlo a `false` a fine sessione di test se si torna alla procedura "un task alla volta" con
+osservazione manuale.
+
 ## Perché un task alla volta
 
 Attivare tutto insieme renderebbe impossibile capire quale azione ha causato quale effetto nel
@@ -104,7 +121,7 @@ Questi due non hanno una sezione "un task alla volta" nello stesso senso - parto
 | 17 | Free Pickaxes | `[freepickaxestask]` | 50 | Reclama piccozze gratuite solo una volta raggiunta la soglia `pickaxe_claim_threshold`. |
 | 18 | Scarab's Game (omaggio) | `[scarabgamefreetokentask]` | 60 | Taverna → Scarab's Game → shop: reclama l'omaggio giornaliero gratuito nel tab Saldi. |
 | 19 | Pharaoh's Vault + spin | `[pharaohsvaulttask]` | 60 | Gira la slot con i Noble Token gratuiti, apre il Pharaoh's Vault quando ci sono abbastanza Ancient Coin. |
-| 20 | Mailbox | `[systemmailtask]` | - | Reclama ogni ricompensa in posta (Arcane Crystal, traguardi livello, rank Arena, Battle Pass) - non deve mai toccare il tasto elimina. |
+| 20 | ✅ Mailbox | `[systemmailtask]` | - | Reclama ogni ricompensa in posta (Arcane Crystal, traguardi livello, rank Arena, Battle Pass) - non deve mai toccare il tasto elimina. **Testato 2026-09-17 (fix HUD a doppia variante, vedi nota in alto): funziona.** |
 | 21 | Hall of Heroes | `[hallofheroestask]` | - | Per ogni eroe: sblocca tier gear T2/T3 se possibile, incanta gear T2/T3 (tutti gli eroi) + T1 (solo eroi nella formazione attiva) + tutti i jewel. **Punto critico da osservare**: verifica che il T1 venga incantato sugli eroi giusti (quelli davvero in formazione) - è l'assunzione meno sicura di tutto il codice, vedi `PLAN.md` Task 31. |
 | 22 | Arena of Kings | `[arenaofkingstask]` | 80 | Sceglie l'avversario più debole tra i 3 mostrati, rerollando ogni 5s; dopo 3 min accetta fino a +5% di potenza, poi +10%, poi +20%, oltre i 9 min combatte comunque il migliore. Può girare a lungo (fino a 5 token/giorno) - non è un bug se impiega minuti. |
 

@@ -27,7 +27,7 @@ public class ScarabGameFreeTokenTask : BotTask
 
     private static readonly TimeSpan FallbackRetryDelay = TimeSpan.FromHours(6);
 
-    protected override string NotificationPath => Paths.BattleLoc.NotificationsLoc.ScarabGameShopFreeTokenBtn;
+    protected override string NotificationPath => Paths.BattleLoc.NotificationsLoc.ScarabGameShopFreeToken;
 
     public override IEnumerator Execute()
     {
