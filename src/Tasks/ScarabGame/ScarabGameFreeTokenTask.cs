@@ -1,8 +1,11 @@
 using System;
 using System.Collections;
+using System.Linq;
 using Firebot.Core.Tasks;
+using Firebot.GameModel.Base;
 using Firebot.GameModel.Shared;
 using Firebot.Infrastructure;
+using Logger = Firebot.Core.Logger;
 using ScarabGameScreen = Firebot.GameModel.Features.ScarabGame.ScarabGame;
 using ScarabGameShopScreen = Firebot.GameModel.Features.ScarabGame.ScarabGameShop;
 using TownScreen = Firebot.GameModel.Features.Town.Town;
@@ -38,6 +41,33 @@ public class ScarabGameFreeTokenTask : BotTask
         yield return TownScreen.Open;
         yield return TownScreen.OpenScarabGame;
         yield return ScarabGameScreen.OpenShop;
+
+        // DIAGNOSTIC (2026-09-18, kept active): root/"bg" wrapper confirmed correct - now dumping the
+        // real tab names under "submenuButtons" and each tab's item structure under "submenus" to
+        // find the "Monthly pass" tab's real name and its "Pharaoh's token" free-claim button (see
+        // class doc comment - not yet handled by this task).
+        var tabs = new GameElement(Paths.ScarabGameShopLoc.SubmenuButtonsRoot).GetChildren().ToList();
+        Logger.Debug($"[DIAG] ScarabGameShop tabs ({tabs.Count}): " +
+                     string.Join(", ", tabs.Select(t => $"'{t.Name}'(visible={t.IsVisible()})")));
+
+        var submenus = new GameElement(Paths.ScarabGameShopLoc.SubmenusRoot).GetChildren().ToList();
+        Logger.Debug($"[DIAG] ScarabGameShop submenus ({submenus.Count}): " +
+                     string.Join(", ", submenus.Select(s => $"'{s.Name}'(visible={s.IsVisible()})")));
+        foreach (var submenu in submenus)
+        {
+            var items = submenu.GetChildren().ToList();
+            Logger.Debug($"[DIAG] '{submenu.Name}' items: " +
+                         string.Join(", ", items.Select(i => $"'{i.Name}'")));
+
+            foreach (var item in items)
+            {
+                var itemChildren = item.GetChildren().ToList();
+                if (itemChildren.Count == 0) continue;
+                Logger.Debug($"[DIAG]   '{item.Name}' children: " +
+                             string.Join(", ", itemChildren.Select(c => $"'{c.Name}'")));
+            }
+        }
+
         yield return ScarabGameShopScreen.OpenSaleTab;
         yield return ScarabGameShopScreen.ClaimFreeToken;
 

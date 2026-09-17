@@ -38,13 +38,11 @@ public class PharaohsVaultTask : BotTask
         yield return TownScreen.OpenScarabGame;
 
         yield return ScarabGameScreen.MaxOutBet();
-        var spinBtn = ScarabGameScreen.SpinBtn;
-        while (spinBtn.IsClickable()) yield return spinBtn.Click();
+        yield return ScarabGameScreen.SpinUntilExhausted();
 
         yield return ScarabGameScreen.OpenVault;
         yield return PharaohsVaultScreen.MaxOutQuantity();
-        var openBtn = PharaohsVaultScreen.OpenBtn;
-        while (openBtn.IsClickable()) yield return openBtn.Click();
+        yield return PharaohsVaultScreen.OpenUntilExhausted();
         yield return PharaohsVaultScreen.Close;
 
         yield return ScarabGameScreen.Close;

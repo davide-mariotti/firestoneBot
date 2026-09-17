@@ -1,11 +1,19 @@
 using System.Collections;
 using Firebot.GameModel.Primitives;
 using Firebot.Infrastructure;
+using UnityEngine;
 
 namespace Firebot.GameModel.Features.ScarabGame;
 
 public static class ScarabGame
 {
+    // Neither the slot spin nor the vault reveal has been tested live before - same lesson as
+    // chest-opening/Tavern/Awakening: their result animation likely runs well past the standard
+    // interaction_delay, so poll for the button to actually become clickable again instead of
+    // guessing a fixed delay (see ChestOpening.ChestTransitionPollWait for the same pattern).
+    private static readonly WaitForSeconds AnimationPollWait = new(0.3f);
+    private const int MaxAnimationPolls = 25; // ~7.5s ceiling
+
     public static IEnumerator OpenShop => new GameButton(Paths.ScarabGameLoc.OpenShopBtn).Click();
 
     public static IEnumerator OpenVault => new GameButton(Paths.ScarabGameLoc.OpenVaultBtn).Click();
@@ -17,6 +25,18 @@ public static class ScarabGame
     /// whether it wraps or clamps aren't verified live).</summary>
     public static IEnumerator MaxOutBet() =>
         CycleToMax(new GameButton(Paths.ScarabGameLoc.ChangeBetBtn), new GameText(Paths.ScarabGameLoc.BetQuantityTxt));
+
+    /// <summary>Spins repeatedly (free Noble Tokens first, per the user - safe to click purely via
+    /// IsClickable()) until unaffordable, waiting out each spin's reveal animation in between so the
+    /// next spin doesn't cut it short.</summary>
+    public static IEnumerator SpinUntilExhausted()
+    {
+        while (SpinBtn.IsClickable())
+        {
+            yield return SpinBtn.Click();
+            yield return WaitUntilClickable(SpinBtn);
+        }
+    }
 
     public static IEnumerator Close => new GameButton(Paths.ScarabGameLoc.CloseBtn).Click();
 
@@ -32,6 +52,16 @@ public static class ScarabGame
             if (quantityTxt.GetParsedText().Contains("10")) yield break;
             if (!cycleBtn.IsClickable()) yield break;
             yield return cycleBtn.Click();
+        }
+    }
+
+    internal static IEnumerator WaitUntilClickable(GameButton button)
+    {
+        var pollsLeft = MaxAnimationPolls;
+        while (pollsLeft > 0 && !button.IsClickable())
+        {
+            yield return AnimationPollWait;
+            pollsLeft--;
         }
     }
 }
@@ -54,6 +84,17 @@ public static class PharaohsVault
 
     public static IEnumerator MaxOutQuantity() => ScarabGame.CycleToMax(
         new GameButton(Paths.PharaohsVaultLoc.ChangeQuantityBtn), new GameText(Paths.PharaohsVaultLoc.QuantityTxt));
+
+    /// <summary>Opens repeatedly until unaffordable, waiting out each open's reveal animation in
+    /// between so the next open doesn't cut it short - same lesson as ScarabGame.SpinUntilExhausted.</summary>
+    public static IEnumerator OpenUntilExhausted()
+    {
+        while (OpenBtn.IsClickable())
+        {
+            yield return OpenBtn.Click();
+            yield return ScarabGame.WaitUntilClickable(OpenBtn);
+        }
+    }
 
     public static IEnumerator Close => new GameButton(Paths.PharaohsVaultLoc.CloseBtn).Click();
 }

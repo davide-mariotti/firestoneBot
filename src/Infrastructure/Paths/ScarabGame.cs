@@ -38,12 +38,13 @@ public static partial class Paths
 
     // Opened by ScarabGameLoc.OpenVaultBtn. Spends accumulated Ancient Coins (5000 per the wiki) for
     // 5 random rewards - no real choice involved, openButton is a safe no-op via IsClickable() if
-    // not yet affordable. Root path follows the same popups/&lt;Name&gt; convention as every other
-    // popup opened from a menu screen (ChestOpenPreview, TalentPreview, etc.) - not independently
-    // cross-checked for this specific popup, flag for live verification.
+    // not yet affordable. Live-confirmed, 2026-09-18: it's a "menus/" screen, not a "popups/" one -
+    // the originally assumed "popups/PharaohsVault" never resolved at all (same wrong-guess pattern
+    // already seen on BattlePass and TavernMarket), while a generic Watchdog sweep found
+    // "menus/PharaohsVault/closeButton" resolving fine.
     public static class PharaohsVaultLoc
     {
-        private const string Root = MenusLoc.Root + "/popups/PharaohsVault";
+        private const string Root = MenusLoc.Root + "/menus/PharaohsVault";
 
         public const string CloseBtn = Root + "/closeButton";
 
@@ -56,11 +57,24 @@ public static partial class Paths
         public const string QuantityTxt = ChangeQuantityBtn + "/text";
     }
 
+    // Live-confirmed, 2026-09-18: this is a popup, not a menu (same wrong-guess pattern already seen
+    // on BattlePass/TavernMarket/PharaohsVault) - a generic active-screen dump found it listed under
+    // "popups" (with "menus/ScarabGame" still active underneath it, confirming it's an overlay).
     public static class ScarabGameShopLoc
     {
-        private const string Root = MenusLoc.Root + "/menus/ScarabGameShop";
+        private const string Root = MenusLoc.Root + "/popups/ScarabGameShop";
 
         public const string CloseBtn = Root + "/closeButton";
+
+        // DIAGNOSTIC (2026-09-18): the user found a SEPARATE free claim ("Pharaoh's token x1") under
+        // a "Monthly pass" tab, not yet handled - only the "sale" tab's free item is claimed today.
+        // Exposed to find the tab's real internal name and item structure, and whether a "bg" wrapper
+        // actually exists at this level (unconfirmed - the old menus/ root guess never resolved far
+        // enough to tell).
+        public const string ContentRoot = Root;
+
+        public const string SubmenuButtonsRoot = Root + "/bg/submenuButtons";
+        public const string SubmenusRoot = Root + "/bg/submenus";
 
         public const string SaleTabBtn = Root + "/bg/submenuButtons/sale/button";
 
