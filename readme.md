@@ -32,6 +32,7 @@ Firebot **is not a cheat**. It does not modify game resources, grant unfair adva
 Every automation below runs on its own schedule once enabled, is individually configurable, and shows up as its own section in `FirebotPreferences.cfg` - see [Configuration](#configuration).
 
 - **Easy Start/Stop**: Turn the bot on or off during gameplay with a hotkey (default `F7`, `shortcut_key`). You can also auto-start and adjust bot timings with `auto_start`, `start_bot_delay`, `scan_interval`, `interaction_delay`, and `max_task_runtime`.
+- **Low Resource Mode**: Caps the frame rate and forces the lowest graphics quality at startup (`low_resource_mode`, `target_frame_rate`, `render_quality_level`) - the bot reads game state directly, not rendered pixels, so this only affects CPU/GPU load, not bot behavior. On by default; matters most when running several instances on the same machine.
 - **Free Speedups**: Uses free speedups (no gems) whenever a timer is close enough to finish, based on `free_speedup_seconds` - applies across research, missions, experiments, and map reset timers.
 
 **In battle**
@@ -229,6 +230,12 @@ debug_mode = false
 shortcut_key = "F7"
 # Some timers in the game can be sped up for free if the remaining time is below this threshold (default: 170 seconds = 2 minutes and 50 seconds). The maximum allowed value is 180 seconds (3 minutes). Set to 0 to disable free speedup. Adjust this value to account for lag or future game changes. Affects firestone researches, missions, experiments, and map reset timers. If the remaining time is less than or equal to this value, the speedup is free (no gems required).
 free_speedup_seconds = 170.0
+# When enabled, caps the game's frame rate and forces the lowest graphics quality level at startup. The bot reads game state directly from the Unity scene hierarchy, not from rendered pixels, so visual quality/frame rate have no effect on bot functionality - only on CPU/GPU load. Recommended when running several simultaneous instances on the same machine.
+low_resource_mode = true
+# Frame rate cap applied when low_resource_mode is enabled. Clamped between 5 and 60. Default: 15.
+target_frame_rate = 15
+# Unity quality level index applied when low_resource_mode is enabled (0 = lowest/fastest). Clamped between 0 and 5. Default: 0.
+render_quality_level = 0
 ```
 
 Every other feature is disabled by default (`enabled = false`) until you turn it on in its own section.

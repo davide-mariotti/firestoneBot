@@ -16,6 +16,9 @@ public static class BotSettings
     private static MelonPreferences_Entry<bool> _debugMode;
     private static MelonPreferences_Entry<KeyCode> _shortcutKey;
     private static MelonPreferences_Entry<float> _freeSpeedupSeconds;
+    private static MelonPreferences_Entry<bool> _lowResourceMode;
+    private static MelonPreferences_Entry<int> _targetFrameRate;
+    private static MelonPreferences_Entry<int> _renderQualityLevel;
 
     private static string _configPath;
     public static float FreeSpeedupSeconds => Mathf.Clamp(_freeSpeedupSeconds.Value, 0.0f, 180.0f);
@@ -83,7 +86,35 @@ public static class BotSettings
             "If the remaining time is less than or equal to this value, the speedup is free (no gems required)."
         );
 
+        _lowResourceMode = _category.CreateEntry("low_resource_mode", true, "Low Resource Mode",
+            "When enabled, caps the game's frame rate and forces the lowest graphics quality level " +
+            "at startup. The bot reads game state directly from the Unity scene hierarchy, not from " +
+            "rendered pixels, so visual quality/frame rate have no effect on bot functionality - only " +
+            "on CPU/GPU load. Recommended when running several simultaneous instances on the same " +
+            "machine.");
+
+        _targetFrameRate = _category.CreateEntry("target_frame_rate", 15, "Target Frame Rate",
+            "Frame rate cap applied when low_resource_mode is enabled. Clamped between 5 and 60. " +
+            "Default: 15.");
+
+        _renderQualityLevel = _category.CreateEntry("render_quality_level", 0, "Render Quality Level",
+            "Unity quality level index applied when low_resource_mode is enabled (0 = lowest/fastest). " +
+            "Clamped between 0 and 5. Default: 0.");
+
         _category.SaveToFile();
         Logger.Info($"System Initialized. Configuration: {ConfigPath}");
+
+        ApplyLowResourceMode();
+    }
+
+    private static void ApplyLowResourceMode()
+    {
+        if (!_lowResourceMode.Value) return;
+
+        Application.targetFrameRate = Mathf.Clamp(_targetFrameRate.Value, 5, 60);
+        QualitySettings.SetQualityLevel(Mathf.Clamp(_renderQualityLevel.Value, 0, 5), true);
+
+        Logger.Info($"Low resource mode applied: targetFrameRate={Application.targetFrameRate}, " +
+                    $"qualityLevel={QualitySettings.GetQualityLevel()}.");
     }
 }
