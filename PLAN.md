@@ -106,6 +106,67 @@ Cose non ancora implementate, concrete:
   probabilmente serve osservarli dal vivo in gioco. Non implementato, lasciato apposta come punto
   aperto.
 
+## Primo giro di test dal vivo (2026-09-15/17): bug reali trovati e corretti
+
+Prima di questo giro, nessun task era mai stato testato dentro il gioco vero (solo verifica statica
+via UnityPy + build pulita). Il pattern emerso testando i primi task uno alla volta: la navigazione
+arriva quasi sempre nel posto giusto, ma il bottone di claim non fa nulla. Cause reali trovate,
+diverse tra loro nonostante il sintomo identico:
+
+- **Free Pickaxes**: `ClaimBtn` puntava all'intero contenitore `freePickaxe` (zero componenti,
+  nemmeno un Button — confermato via UnityPy) invece del `purchaseButton` annidato dentro
+  `claimBg`. Stesso schema di Oracle's Gift sotto.
+- **Oracle's Gift**: `OraclesGiftBtn` puntava al contenitore `oraclesGift`, che ha SÌ un suo Button
+  (apre/seleziona la card) ma non è quello che riscatta il regalo — il vero claim è sul
+  `purchaseButton` annidato. Punto sottile: qui il contenitore aveva comunque un Button, solo quello
+  sbagliato, non semplicemente "zero componenti" come Pickaxes.
+- **Character (Task Quests/Talents)**: `CharacterLoc.Root` era `menus/Character`, ma la schermata è
+  in realtà istanziata sotto `popups/Character` — confermato dal log reale
+  (`[FAILED] Path broken: ... menus/Character/bg/submenuButtons/quests`) e per analogia con
+  Expeditions/EmpowerPopup/LockedGuardian, già correttamente sotto `popups/` in questo stesso file.
+- **TownIrongard** (l'hub con Library/MagicQuarters/Tavern/Oracle/Alchemist/TempleOfEternals/
+  ExoticMerchant/Battles/WarMachines/HallOfHeroes): stessa identica firma di rottura di Character
+  (anche il `closeButton` più superficiale falliva) — cambiato da `menus/TownIrongard` a
+  `popups/TownIrongard` per analogia. **Non ancora ri-confermato dal vivo dopo questa modifica
+  specifica** — priorità massima per il prossimo giro di test, dato che da questo hub passano
+  moltissimi task (probabilmente la causa di gran parte dei "claim non funziona" osservati).
+- **Rail di notifica battaglia**: `NotificationsLoc`/il bottone mail erano su `leftSideUINew`, ma un
+  dump dal vivo della gerarchia reale (fatto dall'utente, `docs/simple-path/simple-path.txt`) mostra
+  che il gioco usa `leftSideUI` (senza "New") per le notifiche e `bottomLeftSideUI/mail` per la
+  posta — non `leftSideUINew/mail`. Corretto in `Battle.cs`.
+- **Oracle Rituals / Experiments / Firestone Research** (`ClaimBtn` in `OracleLoc.RitualLoc`,
+  `AlchemistLoc.ExperimentsLoc`, `LibraryLoc.ResearchPanelLoc`): un tentativo di fix intermedio
+  (analisi esterna, poi verificata) aveva reso questi path assoluti (prefissati con `Root`), ma il
+  codice li usa tutti come **suffisso relativo** passato a `GameButton(path, parent)` con un
+  elemento-figlio specifico (rituale/slot/nodo) come parent — renderli assoluti costruiva un path
+  doppio e rotto. Ripristinati come frammenti relativi; corretto anche `NextRunTimeTxt` di Oracle
+  Rituals (`timeBg/timeLeft`, non `timeLeftText` — quel nome esiste solo un livello più in basso,
+  per singolo rituale).
+- **Meteorite Research**: un'analisi esterna segnalava che `MeteoriteResearchPreview.Close` non
+  veniva mai chiamato per i nodi non ancora sbloccati — verificato sul codice attuale, il `Close` è
+  già fuori dall'`if` e viene sempre eseguito. Nessuna modifica necessaria, la segnalazione era
+  basata su una versione diversa del file o era semplicemente sbagliata.
+- **Awakening**: moltiplicatore confermato funzionante, ma il task passava al giro successivo prima
+  che l'animazione di risveglio (spine, cristalli + bagliore sull'eroe) finisse, annullando
+  visivamente l'azione. Aggiunta un'attesa dedicata dopo il click (`Awakening.Awaken()`, ~2.5s,
+  stima non misurata a fotogramma) invece di allungare `interaction_delay` globale (rallenterebbe
+  ogni click di ogni task). Altre azioni con animazioni vistose (apertura Pharaoh's Vault, apertura
+  chest, spin dello slot) non sono state toccate preventivamente — nessuna segnalazione concreta
+  ancora, ma da tenere d'occhio nei prossimi test.
+
+**Metodo usato per trovare questi bug, riutilizzabile per i prossimi**: i log di MelonLoader
+(`MelonLoader/Logs/*.log` + `Latest.log`, con `debug_mode = true`) registrano ogni path che non si
+risolve (`[FAILED] Path broken: ...`) — cercare quelli relativi ai propri task è molto più rapido e
+affidabile che ipotizzare alla cieca. `tools/inspect_claims.py` risolve anche il vero nome dello
+script Unity dietro ogni `MonoBehaviour` (non solo la label generica), quindi distingue in modo
+affidabile un vero `UnityEngine.UI.Button` da un contenitore che sembra cliccabile ma non lo è.
+
+Un'analisi esterna (Gemini) ha contribuito a individuare correttamente Character/TownIrongard/
+Oracle's Gift/leftSideUI, ma ha anche introdotto 3 regressioni (i tre `ClaimBtn` resi erroneamente
+assoluti sopra) applicando lo stesso fix per analogia senza controllare l'uso reale di ciascun
+percorso — ogni sua proposta è stata riverificata con UnityPy/log prima di essere accettata, non
+presa per buona.
+
 ## BotActions portate dalla versione precedente (audit su richiesta dell'utente, non nella lista task originale)
 
 Confronto sistematico tra `BotActions/` + `Core/` della versione precedente e il codice riscritto,

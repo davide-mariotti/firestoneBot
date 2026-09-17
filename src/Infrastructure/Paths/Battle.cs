@@ -18,28 +18,31 @@ public static partial class Paths
             public const string CharacterLevel = OpenBtn + "/characterLevelBg/characterLevel";
         }
 
-        // Direct children of leftSideUINew itself, not the notifications/Viewport/grid badge list
-        // below (NotificationsLoc) - same root region, different sub-path.
-        public static class LeftSideUINewLoc
+        // Direct children of bottomLeftSideUI itself, not the notifications/Viewport/grid badge list
+        // below (NotificationsLoc) - same general HUD region, different sub-path.
+        public static class BottomLeftSideUILoc
         {
-            private const string Root = BattleLoc.Root + "/leftSideUINew";
+            private const string Root = BattleLoc.Root + "/bottomLeftSideUI";
 
-            // Confirmed via UnityPy, with its own notification bell (mail/notification/bell/
-            // amountTMP) - same "mail" button also exists under a second HUD region
-            // (bottomLeftSideUI/mail, structurally identical), same unresolved ambiguity as
-            // BottomSideUIDesktopLoc vs BottomSideUINewLoc below - this one picked as primary since
-            // leftSideUINew (this region) is the one with an already-proven precedent (see NotificationsLoc
-            // just below), unlike bottomLeftSideUI which has none.
+            // Corrected against a live in-game runtime dump the user captured (docs/simple-path/
+            // simple-path.txt): "bottomLeftSideUI/mail" is the real live path, not "leftSideUINew/mail" -
+            // both "leftSideUI" and "leftSideUINew" exist as near-identical prefab variants in the
+            // static assets (same ambiguity as BottomSideUIDesktopLoc vs BottomSideUINewLoc below),
+            // and the earlier "leftSideUINew" pick for this whole HUD region turned out to be the
+            // wrong one for the currently-installed game version - see NotificationsLoc just below.
             public const string MailBtn = Root + "/mail";
         }
 
         public static class NotificationsLoc
         {
-            // "leftSideUINew", not "leftSideUI" - confirmed against an already-proven path.
-            // The static doc scan (docs/path.firestone.html) picked the wrong one of two near-
-            // identical prefab variants here, same ambiguity flagged there for bottomSideUINew vs
-            // bottomSideUIDesktop - worth fixing in the docs too, but the already-proven path wins here.
-            private const string Root = BattleLoc.Root + "/leftSideUINew/notifications/Viewport/grid";
+            // Corrected to "leftSideUI" (not "leftSideUINew") against a live in-game runtime dump the
+            // user captured (docs/simple-path/simple-path.txt) - confirms every notification badge
+            // (Quests, Engineer, FreePickaxes, etc.) actually lives under leftSideUI right now. Both
+            // variants exist as near-identical prefabs in the static assets (same "New" naming
+            // ambiguity flagged for bottomSideUINew vs bottomSideUIDesktop below) - static analysis
+            // alone can't tell which one the game actually instantiates, only a live capture can, and
+            // this one had been guessed wrong.
+            private const string Root = BattleLoc.Root + "/leftSideUI/notifications/Viewport/grid";
 
             public const string OraclesGiftBtn = Root + "/OraclesGift";
 

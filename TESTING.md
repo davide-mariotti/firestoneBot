@@ -3,6 +3,14 @@
 Nessun task è mai stato testato dentro il gioco vero - solo verificato staticamente (scansioni
 UnityPy + build pulita). Questo documento guida il primo giro di test reali, un task alla volta.
 
+**Aggiornamento dopo il primo giro (vedi `PLAN.md`, sezione "Primo giro di test dal vivo")**: trovati
+e corretti diversi bug reali di navigazione (Free Pickaxes, Oracle's Gift, Character/Quests, rail di
+notifica, Oracle Rituals/Experiments/Firestone Research, animazione Awakening). **Priorità per il
+prossimo giro**: ri-testare per prima cosa un task che passa da `TownIrongard` (es. Guardian Training
+o Firestone Research) - quella schermata hub è stata cambiata da `menus/` a `popups/` per analogia
+con un bug identico già confermato altrove, ma questa modifica specifica non è ancora stata
+ri-confermata dal vivo, e da quell'hub passano moltissimi task.
+
 ## Perché un task alla volta
 
 Attivare tutto insieme renderebbe impossibile capire quale azione ha causato quale effetto nel

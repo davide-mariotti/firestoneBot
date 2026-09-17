@@ -41,10 +41,9 @@ public class AwakeningTask : BotTask
         {
             yield return Awakening.SelectBestMultiplier();
 
-            var awakenBtn = Awakening.AwakenBtn;
-            if (!awakenBtn.IsClickable()) break;
+            if (!Awakening.AwakenBtn.IsClickable()) break;
 
-            yield return awakenBtn.Click();
+            yield return Awakening.Awaken();
         }
 
         yield return Awakening.Close;

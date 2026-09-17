@@ -5,7 +5,7 @@ namespace Firebot.Infrastructure;
 ///     rewards, character-level milestone rewards, Arena of Kings rank rewards and unclaimed Battle
 ///     Pass rewards at month-end (per the wiki). This whole feature is new, found via
 ///     a targeted UnityPy scan requested by the user. Opened directly from the battle screen (see
-///     Battle.cs LeftSideUINewLoc.MailBtn), not through Town.
+///     Battle.cs BottomLeftSideUILoc.MailBtn), not through Town.
 /// </summary>
 public static partial class Paths
 {

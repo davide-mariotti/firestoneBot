@@ -47,7 +47,7 @@ public static partial class Paths
 
         public static class CharacterLoc
         {
-            private const string Root = MenusLoc.Root + "/menus/Character";
+            private const string Root = MenusLoc.Root + "/popups/Character";
 
             // Root path convention not independently live-verified for this screen (a newly
             // automated feature, no prior code to cross-check against) - inferred from every other
@@ -122,7 +122,15 @@ public static partial class Paths
 
         public static class TownIrongardLoc
         {
-            private const string Root = MenusLoc.Root + "/menus/TownIrongard";
+            // Corrected from "menus/TownIrongard" to "popups/TownIrongard" - live testing showed even
+            // the shallowest child (closeButton) failed to resolve, the same signature CharacterLoc's
+            // wrong root showed above, and every one of this hub's own buildings (library,
+            // magicQuarters, tavern - see the building buttons below) failed too. Same fix pattern:
+            // this whole hub follows the "popups/<Name>" convention like Expeditions/EmpowerPopup/
+            // LockedGuardian, not "menus/<Name>". Not yet independently re-confirmed live after this
+            // specific change - flag for the next test round; if any building click here still fails,
+            // start by checking whether this root is really the issue.
+            private const string Root = MenusLoc.Root + "/popups/TownIrongard";
 
             public const string CloseBtn = Root + "/closeButton";
 
@@ -310,12 +318,21 @@ public static partial class Paths
 
                 public const string Rituals = Root + "/ritualsGrid";
 
+                // Relative to a ritual child (Rituals.Claim/Start pass a child as GameButton's parent) -
+                // confirmed via UnityPy: claimButton/startButton are direct children of each
+                // oracleRitualInteraction (N), not nested under ritualProgressBg. An earlier fix
+                // attempt wrongly made this an absolute Root-prefixed path, which - combined with
+                // being used as a relative suffix against a child parent - built a garbage
+                // double-nested path; caught by checking the real structure and how Rituals.Claim()
+                // actually calls this (GameButton(ClaimBtn, child), not standalone).
                 public const string ClaimBtn = "/claimButton";
 
                 public const string CurrentRunTimeTxt = "/ritualProgressBg/timeLeftText";
 
                 public const string StartBtn = "/startButton";
 
+                // Confirmed via UnityPy: "timeLeft", not "timeLeftText" (that name only exists one
+                // level deeper, per-ritual-slot under ritualProgressBg - see CurrentRunTimeTxt above).
                 public const string NextRunTimeTxt = Root + "/timeBg/timeLeft";
             }
         }
@@ -332,6 +349,13 @@ public static partial class Paths
 
                 public const string StartBtn = "/startExperiment";
 
+                // Relative to a resource slot (interpolated into "/{Slot}{resource}/{ClaimBtn}" in
+                // Experiments.Claim()) - confirmed via UnityPy: claimButton is a direct child of each
+                // alchExperimentSlot(N), a sibling of progressBarBg, not nested under it. An earlier
+                // fix attempt wrongly nested it under progressBarBg AND made it Root-absolute, which
+                // would build a garbage path once interpolated - same mistake as Oracle Rituals'
+                // ClaimBtn, caught the same way (checking the real structure and how Claim() actually
+                // builds the path).
                 public const string ClaimBtn = "/claimButton";
 
                 public const string NextRunTimeTxt = "/progressBarBg/timeLeftText";
@@ -363,6 +387,9 @@ public static partial class Paths
 
                 public const string UnlockSlotBtn = Root + "/unlockResearchSlot/confirmButton";
 
+                // Relative to a research-table child (ResearchPanel.Claim passes a child as
+                // GameButton's parent) - a prior fix attempt wrongly made this Root-absolute, same
+                // mistake as Oracle Rituals/Experiments' ClaimBtn above, caught the same way.
                 public const string ClaimBtn = "/container/claimButton";
 
                 public const string NextRunTimeTxt = "/container/researchInfo/progressBarBg/timeLeftText";
@@ -470,10 +497,19 @@ public static partial class Paths
 
             public const string CloseBtn = Root + "/closeButton";
 
-            public const string OraclesGiftBtn =
+            private const string OraclesGiftRoot =
                 Root + "/bg/submenus/valueBundles/Scroll View/Viewport/items/oraclesGift";
 
-            public const string OraclesGiftRenewTxt = OraclesGiftBtn + "/Graphics/renewText";
+            // Fixed: the container "oraclesGift" itself has its own Button component (a select/
+            // preview interaction), which silently ate every click intended for the actual claim -
+            // same "clicked the wrong nested Button" shape as Free Pickaxes, confirmed via UnityPy
+            // script-name resolution (both container and purchaseButton genuinely have their own
+            // UnityEngine.UI.Button). The real free-claim target is the nested "purchaseButton".
+            public const string OraclesGiftBtn = OraclesGiftRoot + "/Graphics/purchaseButton";
+
+            // Sibling of purchaseButton under "Graphics", not nested inside it - kept independent of
+            // OraclesGiftBtn so a future change to one doesn't silently break the other.
+            public const string OraclesGiftRenewTxt = OraclesGiftRoot + "/Graphics/renewText";
         }
 
         // Battle Pass ("Path of Glory"). Never automated before.
