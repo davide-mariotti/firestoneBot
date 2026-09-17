@@ -19,7 +19,7 @@ public class MapMissionsTask : BotTask
 
     private MelonPreferences_Entry<string> _timeOrder;
 
-    protected override string NotificationPath => Paths.BattleLoc.NotificationsLoc.MapMissions;
+    protected override string NotificationBadgeName => Paths.BattleLoc.NotificationsLoc.MapMissions;
 
     public override IEnumerator Execute()
     {

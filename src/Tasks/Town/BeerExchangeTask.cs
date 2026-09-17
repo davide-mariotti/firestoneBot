@@ -24,7 +24,7 @@ public class BeerExchangeTask : BotTask
 
     private static readonly TimeSpan RecheckDelay = TimeSpan.FromHours(2);
 
-    protected override string NotificationPath => Paths.BattleLoc.NotificationsLoc.BeerExchange;
+    protected override string NotificationBadgeName => Paths.BattleLoc.NotificationsLoc.BeerExchange;
 
     public override IEnumerator Execute()
     {

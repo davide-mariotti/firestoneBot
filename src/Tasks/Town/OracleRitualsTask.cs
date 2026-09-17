@@ -12,7 +12,7 @@ public class OracleRitualsTask : BotTask
     internal override TaskGroup Group => TaskGroup.Town;
     protected override int MinimumCharacterLevel => 200;
 
-    protected override string NotificationPath => Paths.BattleLoc.NotificationsLoc.OracleRituals;
+    protected override string NotificationBadgeName => Paths.BattleLoc.NotificationsLoc.OracleRituals;
 
     public override IEnumerator Execute()
     {

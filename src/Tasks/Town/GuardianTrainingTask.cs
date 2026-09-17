@@ -16,7 +16,7 @@ public class GuardianTrainingTask : BotTask
     private MelonPreferences_Entry<int> _guardianIndex;
     private MelonPreferences_Entry<bool> _useStrangeDust;
 
-    protected override string NotificationPath => Paths.BattleLoc.NotificationsLoc.GuardianTraining;
+    protected override string NotificationBadgeName => Paths.BattleLoc.NotificationsLoc.GuardianTraining;
 
     public override IEnumerator Execute()
     {

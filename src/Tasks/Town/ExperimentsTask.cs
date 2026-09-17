@@ -18,7 +18,7 @@ public class ExperimentsTask : BotTask
 
     private MelonPreferences_Entry<string> _resourceType;
 
-    protected override string NotificationPath => Paths.BattleLoc.NotificationsLoc.Experiments;
+    protected override string NotificationBadgeName => Paths.BattleLoc.NotificationsLoc.Experiments;
 
     public override IEnumerator Execute()
     {

@@ -17,7 +17,7 @@ public class FirestoneResearchTask : BotTask
     private const int NodeCount = 16;
     private const int TreeCount = 3;
 
-    protected override string NotificationPath => Paths.BattleLoc.NotificationsLoc.FirestoneResearch;
+    protected override string NotificationBadgeName => Paths.BattleLoc.NotificationsLoc.FirestoneResearch;
 
     public override IEnumerator Execute()
     {

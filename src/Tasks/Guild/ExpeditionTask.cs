@@ -12,7 +12,7 @@ public class ExpeditionTask : BotTask
     internal override TaskGroup Group => TaskGroup.Guild;
     protected override int MinimumCharacterLevel => 10;
 
-    protected override string NotificationPath => Paths.BattleLoc.NotificationsLoc.Expeditions;
+    protected override string NotificationBadgeName => Paths.BattleLoc.NotificationsLoc.Expeditions;
 
     public override IEnumerator Execute()
     {

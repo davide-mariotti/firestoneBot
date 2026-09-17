@@ -13,7 +13,7 @@ public class EngineerTask : BotTask
     internal override TaskGroup Group => TaskGroup.Town;
     protected override int MinimumCharacterLevel => 50;
 
-    protected override string NotificationPath => Paths.BattleLoc.NotificationsLoc.Engineer;
+    protected override string NotificationBadgeName => Paths.BattleLoc.NotificationsLoc.Engineer;
 
     public override IEnumerator Execute()
     {

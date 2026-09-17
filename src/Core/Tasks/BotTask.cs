@@ -75,10 +75,16 @@ public abstract class BotTask
 
     public DateTime? LastRunTime { get; set; }
 
-    // A bare badge name (e.g. "GuardianTraining"), not a full path - see NotificationElements
-    // below for why: this same rail lives under one of two alternate HUD roots depending on the
-    // client, so both candidates need building from the name, not just one fixed absolute path.
+    // A full, already-resolved absolute path - for a task with its own self-contained badge
+    // elsewhere (e.g. PathOfGloryTask, WarfrontDailyMissionsTask), not on the shared rail below.
     protected virtual string NotificationPath => null;
+
+    // A bare badge name (e.g. "GuardianTraining") on the shared notification rail - see
+    // NotificationElements below for why this is a name and not a full path: that rail lives
+    // under one of two alternate HUD roots depending on the client, so both candidates need
+    // building from the name. Mutually exclusive with NotificationPath above in practice (a task
+    // uses whichever fits its badge), but nothing stops overriding both if that's ever needed.
+    protected virtual string NotificationBadgeName => null;
 
     /// <summary>
     ///     Character level this task's underlying feature unlocks at, per the wiki - 0 (default)
@@ -104,20 +110,24 @@ public abstract class BotTask
 
     public bool IsEnabled => _enabledEntry != null && _enabledEntry.Value;
 
-    // See UiVariantButton - this rail lives under one of two alternate HUD roots depending on the
-    // client, only one populated per session, so both candidates are checked.
+    // See UiVariantButton - the shared rail (NotificationBadgeName) lives under one of two
+    // alternate HUD roots depending on the client, only one populated per session, so both
+    // candidates are checked; a plain NotificationPath is checked as-is (single candidate).
     private GameElement[] NotificationElements
     {
         get
         {
             if (_notificationElements != null) return _notificationElements;
-            if (string.IsNullOrEmpty(NotificationPath)) return null;
 
-            _notificationElements = new GameElement[]
-            {
-                new(Paths.BattleLoc.NotificationsLoc.Root + "/" + NotificationPath),
-                new(Paths.BattleLoc.NotificationsLoc.FallbackRoot + "/" + NotificationPath)
-            };
+            if (!string.IsNullOrEmpty(NotificationBadgeName))
+                _notificationElements = new GameElement[]
+                {
+                    new(Paths.BattleLoc.NotificationsLoc.Root + "/" + NotificationBadgeName),
+                    new(Paths.BattleLoc.NotificationsLoc.FallbackRoot + "/" + NotificationBadgeName)
+                };
+            else if (!string.IsNullOrEmpty(NotificationPath))
+                _notificationElements = new GameElement[] { new(NotificationPath) };
+
             return _notificationElements;
         }
     }
