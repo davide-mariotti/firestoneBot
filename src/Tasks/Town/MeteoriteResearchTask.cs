@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using Firebot.Core.Tasks;
 using Firebot.GameModel.Features.Town.Library.MeteoriteResearch;
+using Firebot.GameModel.Primitives;
 using Firebot.GameModel.Shared;
 using Firebot.Infrastructure;
 using MelonLoader;
@@ -81,7 +82,8 @@ public class MeteoriteResearchTask : BotTask
         var bestCost = double.MaxValue;
         var bestIsGold = false;
 
-        for (var treeOffset = 0; treeOffset < TreeCount; treeOffset++)
+        var treeOffset = 0;
+        for (; treeOffset < TreeCount; treeOffset++)
         {
             for (var index = 0; index < NodeCount; index++)
             {
@@ -115,15 +117,32 @@ public class MeteoriteResearchTask : BotTask
                 yield return MeteoriteResearchPreview.Close;
             }
 
-            if (treeOffset < TreeCount - 1) yield return node.NextTree;
+            if (treeOffset < TreeCount - 1)
+            {
+                var beforeTree = node.CurrentTreeName;
+                yield return node.NextTree;
+
+                if (node.CurrentTreeName == beforeTree)
+                {
+                    // Didn't actually move - the next tree is locked ("complete tree N first").
+                    // Same fix as FirestoneResearchTask: dismiss just that validation toast and
+                    // stop scanning further trees instead of wastefully re-scanning this same
+                    // tree under each locked attempt.
+                    yield return new GameButton(Paths.MenusLoc.GenericMessageLoc.CloseBtn).Click();
+                    break;
+                }
+            }
         }
 
         if (bestIndex == null) yield break;
 
-        // The scan above ends on the last tree - step back to the tree with the cheapest pick. Works
-        // regardless of whether the tree carousel wraps around or clamps at the ends, since we only
-        // ever move backward from a known position toward a lower one.
-        for (var back = TreeCount - 1; back > bestTreeOffset; back--)
+        // The scan above ends on the last tree it actually reached (TreeCount - 1 normally, or
+        // earlier if a later tree turned out to be locked) - step back from there to the tree
+        // with the cheapest pick. Works regardless of whether the tree carousel wraps around or
+        // clamps at the ends, since we only ever move backward from a known position toward a
+        // lower one.
+        var lastReachedTree = Math.Min(treeOffset, TreeCount - 1);
+        for (var back = lastReachedTree; back > bestTreeOffset; back--)
             yield return node.PreviousTree;
 
         Debug($"[INFO] Cheapest available meteorite research costs {bestCost:0.##} " +

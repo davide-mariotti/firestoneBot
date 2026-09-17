@@ -5,11 +5,20 @@ UnityPy + build pulita). Questo documento guida il primo giro di test reali, un 
 
 **Aggiornamento dopo il primo giro (vedi `PLAN.md`, sezione "Primo giro di test dal vivo")**: trovati
 e corretti diversi bug reali di navigazione (Free Pickaxes, Oracle's Gift, Character/Quests, rail di
-notifica, Oracle Rituals/Experiments/Firestone Research, animazione Awakening). **Priorità per il
-prossimo giro**: ri-testare per prima cosa un task che passa da `TownIrongard` (es. Guardian Training
-o Firestone Research) - quella schermata hub è stata cambiata da `menus/` a `popups/` per analogia
-con un bug identico già confermato altrove, ma questa modifica specifica non è ancora stata
-ri-confermata dal vivo, e da quell'hub passano moltissimi task.
+notifica, Oracle Rituals/Experiments/Firestone Research, animazione Awakening).
+
+**Aggiornamento dopo il secondo giro (2026-09-17)**: confermato dal vivo che `TownIrongard` era
+davvero `menus/TownIrongard`, non `popups/TownIrongard` come cambiato nel giro precedente - riportato
+indietro (vedi `PLAN.md`). Da lì passano moltissimi task, quindi questo sblocca la maggior parte
+della lista sotto. Trovati e corretti anche due bug propri di Firestone Research (scansionava tier
+bloccati invece di fermarsi al primo non sbloccato; crashava silenziosamente se restava un secondo
+slot vuoto da riempire dopo aver avviato la prima ricerca) e applicato preventivamente lo stesso fix
+a Meteorite Research, che ha la stessa identica struttura. Testati dal vivo e confermati funzionanti:
+Guardian Training, Daily Store Offers, Firestone Research, Meteorite Research (vedi righe sotto).
+**Punto aperto, non bloccante**: dopo Firestone Research il bot a volte sembra restare sulla
+schermata città invece di tornare alla battaglia come gli altri task - non ancora isolato con
+certezza (potrebbe essere un altro task, es. Daily Store Offers, che riapre Town subito dopo).
+Da riverificare in un giro dedicato, ignorato per ora.
 
 ## Perché un task alla volta
 
@@ -82,15 +91,15 @@ Questi due non hanno una sezione "un task alla volta" nello stesso senso - parto
 
 | # | Nome | Sezione cfg | Livello min. | Comportamento atteso |
 |---|------|--------------|:---:|----------------------|
-| 7 | Daily Store Offers | `[dailystoreofferstask]` | - | Reclama la ricompensa giornaliera di accesso e la mystery box gratuita giornaliera; non tocca i bundle a pagamento accanto. |
+| 7 | ✅ Daily Store Offers | `[dailystoreofferstask]` | - | Reclama la ricompensa giornaliera di accesso e la mystery box gratuita giornaliera; non tocca i bundle a pagamento accanto. **Testato 2026-09-17: mystery box confermata, funziona.** |
 | 8 | Engineer | `[engineertask]` | 50 | Reclama gli strumenti pronti dall'Ingegnere quando disponibili. |
 | 9 | War Machines | `[warmachinestask]` | 50 | Town → Engineer → War Machines → tab Workshop: livella ogni war machine posseduta finché il bottone di livellamento resta cliccabile (richiede Expedition Token + componenti). |
-| 10 | Guardian Training | `[guardiantrainingtask]` | - | Magic Quarters: avvia l'allenamento sul guardiano configurato (`guardian_index`). |
+| 10 | ✅ Guardian Training | `[guardiantrainingtask]` | - | Magic Quarters: avvia l'allenamento sul guardiano configurato (`guardian_index`). **Testato 2026-09-17: funziona, torna correttamente alla schermata di battaglia.** |
 | 11 | Experiments (Alchemist) | `[experimentstask]` | 120 | Avvia/reclama esperimenti in Alchemist; se `resource_type` è vuoto non fa nulla (comportamento voluto, di norma da configurare esplicitamente). |
 | 12 | Oracle Rituals | `[oracleritualstask]` | 200 | Reclama rituali completati e ne avvia uno nuovo. |
 | 13 | Oracle's Gift | `[oraclesgifttask]` | 200 | Reclama il regalo giornaliero dell'Oracolo. |
-| 14 | Firestone Research | `[firestoneresearchtask]` | - | Library → tab Firestone Research: avvia/reclama ricerca, con "Raining Gold" sempre priorità se disponibile. |
-| 15 | Meteorite Research | `[meteoriteresearchtask]` | - | Library → tab Meteorite Research: stesso principio, sui 5 alberi di meteorite. |
+| 14 | ✅ Firestone Research | `[firestoneresearchtask]` | - | Library → tab Firestone Research: avvia/reclama ricerca, con "Raining Gold" sempre priorità se disponibile. **Testato 2026-09-17 (3 giri, 2 bug trovati e corretti - vedi nota in alto): ora riempie correttamente più slot vuoti in un solo run, senza scansionare tier bloccati.** |
+| 15 | ✅ Meteorite Research | `[meteoriteresearchtask]` | - | Library → tab Meteorite Research: stesso principio, sui 5 alberi di meteorite. **Testato 2026-09-17 (con lo stesso fix applicato preventivamente): funziona.** |
 | 16 | Temple of Eternals (Empower) | `[empowertask]` | - | Fa il reset/prestige solo quando il rapporto Firestone trovate/possedute e i minuti di avventura configurati sono soddisfatti - non dovrebbe mai fare empower "a caso". |
 | 17 | Free Pickaxes | `[freepickaxestask]` | 50 | Reclama piccozze gratuite solo una volta raggiunta la soglia `pickaxe_claim_threshold`. |
 | 18 | Scarab's Game (omaggio) | `[scarabgamefreetokentask]` | 60 | Taverna → Scarab's Game → shop: reclama l'omaggio giornaliero gratuito nel tab Saldi. |

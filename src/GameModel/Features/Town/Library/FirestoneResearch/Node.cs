@@ -10,7 +10,17 @@ public class Node : GameElement
 {
     public Node() : base(Paths.MenusLoc.LibraryLoc.NodeLoc.Root) { }
 
-    private GameElement GetTree() => GetChildren().First(tree => tree.IsVisible());
+    // FirstOrDefault, not First: no tree being visible is a real state (e.g. right after
+    // starting a research, the whole screen briefly - or entirely - closes) rather than a
+    // "should never happen" one, and callers below already treat a null tree as "nothing to do
+    // here yet" instead of crashing on it.
+    private GameElement GetTree() => GetChildren().FirstOrDefault(tree => tree.IsVisible());
+
+    // Used to detect a NextTree/PreviousTree click that didn't actually move (e.g. the game
+    // blocked it behind a "complete the previous tree first" popup) - the visible tree's name
+    // stays the same when that happens. Empty (never equal to a real tree name) if no tree is
+    // visible at all.
+    public string CurrentTreeName => GetTree()?.Name ?? string.Empty;
 
     private static GameElement GetGrow(GameElement gameElement) =>
         new(Paths.MenusLoc.LibraryLoc.NodeLoc.Glow, gameElement);
@@ -38,6 +48,8 @@ public class Node : GameElement
     public IEnumerator Select(int index)
     {
         var tree = GetTree();
+        if (tree == null) yield break;
+
         var child = tree.GetChild(index);
 
         if (!IsActiveNode(child))

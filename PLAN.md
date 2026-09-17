@@ -125,11 +125,12 @@ diverse tra loro nonostante il sintomo identico:
   (`[FAILED] Path broken: ... menus/Character/bg/submenuButtons/quests`) e per analogia con
   Expeditions/EmpowerPopup/LockedGuardian, già correttamente sotto `popups/` in questo stesso file.
 - **TownIrongard** (l'hub con Library/MagicQuarters/Tavern/Oracle/Alchemist/TempleOfEternals/
-  ExoticMerchant/Battles/WarMachines/HallOfHeroes): stessa identica firma di rottura di Character
-  (anche il `closeButton` più superficiale falliva) — cambiato da `menus/TownIrongard` a
-  `popups/TownIrongard` per analogia. **Non ancora ri-confermato dal vivo dopo questa modifica
-  specifica** — priorità massima per il prossimo giro di test, dato che da questo hub passano
-  moltissimi task (probabilmente la causa di gran parte dei "claim non funziona" osservati).
+  ExoticMerchant/Battles/WarMachines/HallOfHeroes): era stato cambiato da `menus/TownIrongard` a
+  `popups/TownIrongard` per analogia con Character, ma **non era corretto**. Live test
+  (2026-09-17, Guardian Training): `popups/TownIrongard/townBg/parent/magicQuarters` non risolveva
+  affatto (nodo assente), mentre il sweep generico del Watchdog - che enumera i figli reali di
+  `menus/` - ha trovato un figlio chiamato proprio `TownIrongard` con `closeButton` risolvibile
+  (solo inattivo). Riportato a `menus/TownIrongard`.
 - **Rail di notifica battaglia**: `NotificationsLoc`/il bottone mail erano su `leftSideUINew`, ma un
   dump dal vivo della gerarchia reale (fatto dall'utente, `docs/simple-path/simple-path.txt`) mostra
   che il gioco usa `leftSideUI` (senza "New") per le notifiche e `bottomLeftSideUI/mail` per la

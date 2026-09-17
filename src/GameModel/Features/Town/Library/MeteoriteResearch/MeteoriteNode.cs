@@ -15,11 +15,20 @@ public class MeteoriteNode : GameElement
 
     public MeteoriteNode() : base(Paths.MenusLoc.LibraryLoc.MeteoriteResearchLoc.TreesRoot) { }
 
-    private GameElement GetTree() => GetChildren().First(tree => tree.IsVisible());
+    // FirstOrDefault, not First: no tree visible is a real state (e.g. a "complete tree N first"
+    // validation toast covering the tree browser), not a "should never happen" one - see
+    // FirestoneResearch.Node, which hit the same crash live and switched to this same pattern.
+    private GameElement GetTree() => GetChildren().FirstOrDefault(tree => tree.IsVisible());
+
+    // Used to detect a NextTree click that didn't actually move (tree still locked) - same
+    // reasoning and fix as FirestoneResearch.Node.CurrentTreeName.
+    public string CurrentTreeName => GetTree()?.Name ?? string.Empty;
 
     public IEnumerator Select(int index)
     {
         var tree = GetTree();
+        if (tree == null) yield break;
+
         var child = tree.GetChild(PathLineCount + index);
 
         if (!child.IsVisible())

@@ -122,15 +122,14 @@ public static partial class Paths
 
         public static class TownIrongardLoc
         {
-            // Corrected from "menus/TownIrongard" to "popups/TownIrongard" - live testing showed even
-            // the shallowest child (closeButton) failed to resolve, the same signature CharacterLoc's
-            // wrong root showed above, and every one of this hub's own buildings (library,
-            // magicQuarters, tavern - see the building buttons below) failed too. Same fix pattern:
-            // this whole hub follows the "popups/<Name>" convention like Expeditions/EmpowerPopup/
-            // LockedGuardian, not "menus/<Name>". Not yet independently re-confirmed live after this
-            // specific change - flag for the next test round; if any building click here still fails,
-            // start by checking whether this root is really the issue.
-            private const string Root = MenusLoc.Root + "/popups/TownIrongard";
+            // Reverted back to "menus/TownIrongard": the previous "popups/TownIrongard" change (see
+            // git history) was never actually confirmed live and turned out wrong. Live test
+            // (2026-09-17, Guardian Training) showed "popups/TownIrongard/townBg/parent/magicQuarters"
+            // failing to resolve at all (node doesn't exist), while the Watchdog's generic sweep -
+            // which enumerates the *real* live children of "menus/" - independently found a child
+            // literally named "TownIrongard" there, with a resolvable (if currently inactive)
+            // closeButton. That's a live structural fact, not a guess: this hub lives under "menus/".
+            private const string Root = MenusLoc.Root + "/menus/TownIrongard";
 
             public const string CloseBtn = Root + "/closeButton";
 
@@ -275,6 +274,18 @@ public static partial class Paths
         public static class LockedGuardianLoc
         {
             private const string Root = MenusLoc.Root + "/popups/LockedGuardian";
+
+            public const string CloseBtn = Root + "/bg/closeButton";
+        }
+
+        // Generic one-off validation toast the game reuses for various blocked actions (e.g.
+        // "You need to complete tree I first" when trying to jump to a locked Firestone Research
+        // tree). Lives under popups/, sibling to the screen that triggered it - not nested inside
+        // it - so closing it does not touch whatever screen (Library, TownIrongard, ...) is
+        // legitimately still open underneath.
+        public static class GenericMessageLoc
+        {
+            private const string Root = MenusLoc.Root + "/popups/GenericMessage";
 
             public const string CloseBtn = Root + "/bg/closeButton";
         }
