@@ -97,7 +97,7 @@ Questi due non hanno una sezione "un task alla volta" nello stesso senso - parto
 
 | # | Nome | Sezione cfg | Livello min. | Comportamento atteso |
 |---|------|--------------|:---:|----------------------|
-| 1 | Quests (claim giornaliere/settimanali) | `[queststask]` | - | Apre Character → Missioni, clicca claim su ogni missione già completata (giornaliere e settimanali), lascia stare quelle non ancora fatte. |
+| 1 | ✅ Quests (claim giornaliere/settimanali) | `[queststask]` | - | Apre Character → Missioni, clicca claim su ogni missione già completata (giornaliere e settimanali), lascia stare quelle non ancora fatte. **Testato 2026-09-17: funziona, switcha correttamente tra daily e weekly.** |
 | 2 | Collector | `[collectorquesttask]` | - | Apre l'Inventario, apre le chest (gear/jewel/celestial) tenendo da parte `min_common_chest_reserve` (default 10) chest comuni - il numero di chest comuni in inventario non dovrebbe scendere sotto quella soglia. |
 | 3 | Gamer | `[gamerquesttask]` | 15 | In Taverna, gioca fino a 10 partite con i Game Token, lasciandone almeno `min_token_reserve` di scorta. |
 | 4 | BeerExchange | `[beerexchangetask]` | 15 | Taverna → Mercato: compra ripetutamente il pacchetto da 5 token finché conviene. **Punto da verificare con attenzione**: deve spendere birra, non gemme - controlla il saldo gemme prima/dopo, se scende qualcosa non va. |
@@ -109,7 +109,7 @@ Questi due non hanno una sezione "un task alla volta" nello stesso senso - parto
 | # | Nome | Sezione cfg | Livello min. | Comportamento atteso |
 |---|------|--------------|:---:|----------------------|
 | 7 | ✅ Daily Store Offers | `[dailystoreofferstask]` | - | Reclama la ricompensa giornaliera di accesso e la mystery box gratuita giornaliera; non tocca i bundle a pagamento accanto. **Testato 2026-09-17: mystery box confermata, funziona.** |
-| 8 | Engineer | `[engineertask]` | 50 | Reclama gli strumenti pronti dall'Ingegnere quando disponibili. |
+| 8 | ✅ Engineer | `[engineertask]` | 50 | Reclama gli strumenti pronti dall'Ingegnere quando disponibili. **Testato 2026-09-17: funziona, letto timer reale (6h) dal quick-access della notifica.** |
 | 9 | War Machines | `[warmachinestask]` | 50 | Town → Engineer → War Machines → tab Workshop: livella ogni war machine posseduta finché il bottone di livellamento resta cliccabile (richiede Expedition Token + componenti). |
 | 10 | ✅ Guardian Training | `[guardiantrainingtask]` | - | Magic Quarters: avvia l'allenamento sul guardiano configurato (`guardian_index`). **Testato 2026-09-17: funziona, torna correttamente alla schermata di battaglia.** |
 | 11 | Experiments (Alchemist) | `[experimentstask]` | 120 | Avvia/reclama esperimenti in Alchemist; se `resource_type` è vuoto non fa nulla (comportamento voluto, di norma da configurare esplicitamente). |
