@@ -53,7 +53,7 @@ public static class HeroUpgrade
             "enabled",
             false,
             "Enable Hero Upgrade",
-            "Enables or disables upgrading heroes/leader during battle. Starts and stops together with the main bot. Default: false."
+            "- - - - - - - - - - - - - - - - - - - - - - - - - -"
         );
 
         _sweepIntervalSeconds = section.CreateEntry(

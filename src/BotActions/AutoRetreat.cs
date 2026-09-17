@@ -55,18 +55,16 @@ public static class AutoRetreat
             "enabled",
             false,
             "Enable AutoRetreat",
-            "Enables or disables AutoRetreat. Starts and stops together with the main bot (shortcut_key in [firebot_settings])." +
-            "\nWhen the current stage stops advancing for `stall_minutes` (a difficulty wall), clicks the in-battle" +
-            "\n'go back stage' arrow `retreat_stages` times to drop to an easier stage that clears quickly. After that it" +
-            "\nstays put (no further checks) until the next Empower, instead of retreating further and further down" +
-            "\nevery time the stall threshold passes. Default: false."
+            "- - - - - - - - - - - - - - - - - - - - - - - - - -"
         );
 
         _stallMinutes = section.CreateEntry(
             "stall_minutes",
             3f,
             "Stall Threshold (minutes)",
-            "How long the current stage number must stay unchanged before it's treated as a wall. Clamped between 1 and 180 minutes. Default: 3."
+            "When the current stage stops advancing for this long (a difficulty wall), clicks the in-battle " +
+            "'go back stage' arrow retreat_stages times to drop to an easier stage that clears quickly, then " +
+            "stays put until the next Empower. Clamped between 1 and 180 minutes. Default: 3."
         );
 
         _retreatStages = section.CreateEntry(

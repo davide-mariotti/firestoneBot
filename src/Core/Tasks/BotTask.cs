@@ -119,18 +119,23 @@ public abstract class BotTask
         _category = MelonPreferences.CreateCategory(sectionId, $"{SectionTitle} Settings");
         _category.SetFilePath(configPath);
 
+        // The separator is folded into "enabled"'s own comment (rather than a category-level one)
+        // since MelonPreferences always renders a comment directly above its own entry, with no way
+        // to place free text above the "[section]" header itself - this is the closest visual
+        // equivalent, and it puts every section's toggle at a glance right under a clear break.
         _enabledEntry = _category.CreateEntry("enabled", false, "Enable Task",
-            $"Enables or disables the {SectionTitle} automation task." +
-            $"\nWhen disabled, this task will be ignored during the execution loop.");
+            "- - - - - - - - - - - - - - - - - - - - - - - - - -");
 
+        OnConfigure(_category);
+
+        // Created last (not right after "enabled") so the settings OnConfigure actually cares about
+        // aren't buried between two housekeeping fields.
         _nextRunTimeEntry = _category.CreateEntry("next_run_time_internal", "", "Next Run Time (internal)",
-            "Bot-managed: remembers when this task should next check, across game/bot restarts. " +
-            "Do not edit manually.");
+            "(auto-managed, don't edit)");
 
         if (DateTime.TryParse(_nextRunTimeEntry.Value, out var savedNextRunTime) && savedNextRunTime > DateTime.Now)
             NextRunTime = savedNextRunTime;
 
-        OnConfigure(_category);
         _category.SaveToFile();
     }
 
