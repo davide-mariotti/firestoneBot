@@ -146,7 +146,7 @@ Questi due non hanno una sezione "un task alla volta" nello stesso senso - parto
 | # | Nome | Sezione cfg | Livello min. | Comportamento atteso |
 |---|------|--------------|:---:|----------------------|
 | 29 | Talents | `[talentstask]` | - | Character → tab Talenti: investe punti seguendo la sequenza guidata, salva dopo ogni nodo. Se il personaggio ha già più punti spesi della guida su un ramo, quel punto va semplicemente saltato (nessun errore atteso). |
-| 30 | Path of Glory (Battle Pass) | `[pathofglorytask]` | - | Reclama le ricompense disponibili sia sulla traccia gratuita che su quella Golden (se posseduta) - non deve mai comprare il pass premium. |
+| 30 | ⚠️ Path of Glory (Battle Pass) | `[pathofglorytask]` | - | Reclama le ricompense disponibili sia sulla traccia gratuita che su quella Golden (se posseduta) - non deve mai comprare il pass premium. **Testato 2026-09-17: path del bottone corretto (Mobile/Desktop, vedi nota in alto), ma il bottone risultava inattivo al momento del check - nessun claim osservato. Probabilmente non funziona ancora, da riverificare con un vero reward disponibile. Lasciato disabilitato.** |
 
 ---
 
