@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using Firebot.GameModel.Base;
 using Firebot.GameModel.Primitives;
@@ -76,15 +77,22 @@ public abstract class BotTask
     public DateTime? LastRunTime { get; set; }
 
     // A full, already-resolved absolute path - for a task with its own self-contained badge
-    // elsewhere (e.g. PathOfGloryTask, WarfrontDailyMissionsTask), not on the shared rail below.
+    // elsewhere (e.g. WarfrontDailyMissionsTask), not on the shared rail below, and not itself
+    // split across multiple HUD variants.
     protected virtual string NotificationPath => null;
 
     // A bare badge name (e.g. "GuardianTraining") on the shared notification rail - see
     // NotificationElements below for why this is a name and not a full path: that rail lives
     // under one of two alternate HUD roots depending on the client, so both candidates need
-    // building from the name. Mutually exclusive with NotificationPath above in practice (a task
-    // uses whichever fits its badge), but nothing stops overriding both if that's ever needed.
+    // building from the name.
     protected virtual string NotificationBadgeName => null;
+
+    // Multiple full, already-resolved absolute paths for a task whose own self-contained badge
+    // (not on the shared NotificationsLoc rail) is itself split across alternate HUD variants -
+    // e.g. PathOfGloryTask's badge lives on BottomSideUIMobileLoc or BottomSideUIDesktopLoc
+    // depending on the client. Any one being visible counts. The three Notification* properties
+    // are mutually exclusive in practice (a task uses whichever fits its badge).
+    protected virtual string[] NotificationPathCandidates => null;
 
     /// <summary>
     ///     Character level this task's underlying feature unlocks at, per the wiki - 0 (default)
@@ -112,7 +120,8 @@ public abstract class BotTask
 
     // See UiVariantButton - the shared rail (NotificationBadgeName) lives under one of two
     // alternate HUD roots depending on the client, only one populated per session, so both
-    // candidates are checked; a plain NotificationPath is checked as-is (single candidate).
+    // candidates are checked; same idea for NotificationPathCandidates' own multiple absolute
+    // paths; a plain NotificationPath is checked as-is (single candidate).
     private GameElement[] NotificationElements
     {
         get
@@ -125,6 +134,8 @@ public abstract class BotTask
                     new(Paths.BattleLoc.NotificationsLoc.Root + "/" + NotificationBadgeName),
                     new(Paths.BattleLoc.NotificationsLoc.FallbackRoot + "/" + NotificationBadgeName)
                 };
+            else if (NotificationPathCandidates != null)
+                _notificationElements = NotificationPathCandidates.Select(p => new GameElement(p)).ToArray();
             else if (!string.IsNullOrEmpty(NotificationPath))
                 _notificationElements = new GameElement[] { new(NotificationPath) };
 

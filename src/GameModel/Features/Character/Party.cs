@@ -8,7 +8,10 @@ namespace Firebot.GameModel.Features.Character;
 
 public static class Party
 {
-    public static IEnumerator Open => new GameButton(Paths.BattleLoc.BottomSideUIDesktopLoc.PartyBtn).Click();
+    // See UiVariantButton - Mobile vs Desktop, only one populated per session.
+    public static IEnumerator Open => UiVariantButton.Click(
+        new GameButton(Paths.BattleLoc.BottomSideUIMobileLoc.PartyBtn),
+        new GameButton(Paths.BattleLoc.BottomSideUIDesktopLoc.PartyBtn));
 
     public static IEnumerator Close => new GameButton(Paths.PartyLoc.CloseBtn).Click();
 

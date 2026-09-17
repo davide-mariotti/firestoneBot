@@ -9,7 +9,10 @@ namespace Firebot.GameModel.Features.Inventory;
 
 public static class Inventory
 {
-    public static IEnumerator Open => new GameButton(Paths.BattleLoc.BottomSideUIDesktopLoc.InventoryBtn).Click();
+    // See UiVariantButton - Mobile vs Desktop, only one populated per session.
+    public static IEnumerator Open => UiVariantButton.Click(
+        new GameButton(Paths.BattleLoc.BottomSideUIMobileLoc.InventoryBtn),
+        new GameButton(Paths.BattleLoc.BottomSideUIDesktopLoc.InventoryBtn));
 
     public static IEnumerator OpenChestsTab => new GameButton(Paths.InventoryLoc.ChestsTabBtn).Click();
 

@@ -158,10 +158,15 @@ public static partial class Paths
 
         // A DIFFERENT battle-screen HUD region from BottomSideUINewLoc below - both show
         // active:true in the static prefab dump, but only BottomSideUINewLoc has a proven precedent
-        // (Hero Upgrade, live-tested for months). This one ("Desktop" - likely a platform-specific
-        // layout variant) has never been touched by any proven code, so its exact on-screen
-        // visibility is unverified. Sourced from a fresh UnityPy scan, not just the docs (which
-        // already flagged this exact ambiguity in path.firestone.html without resolving it).
+        // (Hero Upgrade, live-tested for months). Live diagnostic dump (PathOfGloryTask,
+        // 2026-09-17, see git history) found this one populated with only leaderPanel (combat HUD)
+        // and menuButtons/upgradesButtonUI in that session - no pathOfGloryButton, no
+        // inventoryButtonUI, no partyButtonUI anywhere under it. Same two-variant-HUD situation as
+        // LeftSideUINewLoc/NotificationsLoc, this time on the bottom bar: BottomSideUIMobileLoc
+        // below had the real content that session (offersLayout/pathOfGloryButton,
+        // menuButtons/inventoryButtonUI, menuButtons/partyButtonUI). Kept as the fallback target -
+        // never independently confirmed populated itself, but plausible for an actual desktop-
+        // resolution client per the resolution-dependent theory.
         public static class BottomSideUIDesktopLoc
         {
             private const string Root = BattleLoc.Root + "/bottomSideUIDesktop";
@@ -181,6 +186,25 @@ public static partial class Paths
             // Opens the battle formation editor ("Party" screen) - confirmed present via UnityPy,
             // same menuButtons row as InventoryBtn above (not independently confirmed live, but high
             // confidence given InventoryBtn's confirmation covers this exact HUD region).
+            public const string PartyBtn = Root + "/menuButtons/partyButtonUI";
+        }
+
+        // The "Mobile" HUD variant - live-confirmed (PathOfGloryTask diagnostic, 2026-09-17) as the
+        // one actually populated in that session: menuButtons (partyButtonUI, fellowshipButtonUI,
+        // inventoryButtonUI, upgradesButtonUI), leaderPanel (combat HUD), offersLayout
+        // (pathOfGloryButton, eventsButton, starterPackButton, specialOffersButton). Tried first
+        // (primary, not fallback) since this is the one with actual live confirmation, unlike
+        // BottomSideUIDesktopLoc above.
+        public static class BottomSideUIMobileLoc
+        {
+            private const string Root = BattleLoc.Root + "/bottomSideUIMobile";
+
+            public const string PathOfGloryBtn = Root + "/offersLayout/pathOfGloryButton";
+
+            public const string PathOfGloryNotification = PathOfGloryBtn + "/notification";
+
+            public const string InventoryBtn = Root + "/menuButtons/inventoryButtonUI";
+
             public const string PartyBtn = Root + "/menuButtons/partyButtonUI";
         }
 

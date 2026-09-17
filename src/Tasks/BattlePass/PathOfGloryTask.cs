@@ -24,8 +24,14 @@ public class PathOfGloryTask : BotTask
 
     // The badge lives directly on the battle-screen button itself (see Battle.cs), not on the
     // leftSideUINew rail - reliably means "something claimable" (not threshold-gated the way Free
-    // Pickaxes/Empower/Meteorite Research are), so it's safe to use for priority scheduling.
-    protected override string NotificationPath => Paths.BattleLoc.BottomSideUIDesktopLoc.PathOfGloryNotification;
+    // Pickaxes/Empower/Meteorite Research are), so it's safe to use for priority scheduling. Two
+    // candidates, not one: this button is itself split across the Mobile/Desktop HUD variants
+    // (see BottomSideUIMobileLoc/BottomSideUIDesktopLoc) - confirmed live, 2026-09-17.
+    protected override string[] NotificationPathCandidates => new[]
+    {
+        Paths.BattleLoc.BottomSideUIMobileLoc.PathOfGloryNotification,
+        Paths.BattleLoc.BottomSideUIDesktopLoc.PathOfGloryNotification
+    };
 
     protected override void OnConfigure(MelonPreferences_Category category)
     {
