@@ -4,13 +4,17 @@ using System.Linq;
 using Firebot.GameModel.Base;
 using Firebot.GameModel.Primitives;
 using Firebot.Infrastructure;
+using UnityEngine;
 
 namespace Firebot.GameModel.Features.Inventory;
 
 public static class Inventory
 {
-    // See UiVariantButton - Mobile vs Desktop, only one populated per session.
+    // See UiVariantButton - this bottom-bar HUD variant switches dynamically within a session
+    // (confirmed live, 2026-09-17), not just once per session like the notification rail. Tries
+    // every known location instead of assuming one is "the" active one.
     public static IEnumerator Open => UiVariantButton.Click(
+        new GameButton(Paths.BattleLoc.BottomRightSideUINewLoc.InventoryBtn),
         new GameButton(Paths.BattleLoc.BottomSideUIMobileLoc.InventoryBtn),
         new GameButton(Paths.BattleLoc.BottomSideUIDesktopLoc.InventoryBtn));
 
@@ -51,6 +55,14 @@ public static class Inventory
 /// </summary>
 public static class ChestOpening
 {
+    // The chest-opening reveal (rarer chests especially) plays a variable-length animation before
+    // the next screen's buttons become interactable - confirmed live, 2026-09-18: a fixed post-click
+    // delay (InteractionDelay) outran it, so the next click landed before the game was ready. Polling
+    // for the actual next button instead of guessing a duration - same pattern as ArenaOfKingsTask's
+    // battle-result wait.
+    private static readonly WaitForSeconds ChestTransitionPollWait = new(0.3f);
+    private const int MaxChestTransitionPolls = 25; // ~7.5s ceiling
+
     /// <summary>
     ///     Opens chests of the given slot (relative to Inventory.Content, e.g. "/commonChestbox")
     ///     down to (not below) targetRemaining. Safe no-op if the slot doesn't exist or is already
@@ -65,7 +77,9 @@ public static class ChestOpening
         var remainingToOpen = quantityTxt.GetParsedInt() - targetRemaining;
         if (remainingToOpen <= 0) yield break;
 
-        yield return slot.Click(); // opens ChestOpenPreview
+        // Confirmed live, 2026-09-17: this slot is a pooled ScrollView list item (like Path of
+        // Glory's reward cells) whose click isn't wired to Button.onClick - see GameButton.ClickSimulated.
+        yield return slot.ClickSimulated(); // opens ChestOpenPreview
 
         var onPreview = true;
         while (remainingToOpen > 0)
@@ -76,6 +90,13 @@ public static class ChestOpening
             var openX1 = new GameButton(onPreview
                 ? Paths.ChestOpenPreviewLoc.OpenX1Btn
                 : Paths.ChestOpeningLoc.OpenX1Btn);
+
+            var pollsLeft = MaxChestTransitionPolls;
+            while (pollsLeft > 0 && !openX10.IsClickable() && !openX1.IsClickable())
+            {
+                yield return ChestTransitionPollWait;
+                pollsLeft--;
+            }
 
             if (remainingToOpen >= 10 && openX10.IsClickable())
             {
@@ -89,7 +110,7 @@ public static class ChestOpening
             }
             else
             {
-                break; // neither button available (e.g. ran out) - stop rather than loop forever
+                break; // neither button ever became available - out of chests, or the flow ended on its own
             }
 
             onPreview = false; // every subsequent click happens on the ChestOpening results screen

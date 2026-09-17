@@ -5,6 +5,8 @@ using System.Linq;
 using Firebot.Core.Tasks;
 using Firebot.Infrastructure;
 using MelonLoader;
+using UnityEngine;
+using Logger = Firebot.Core.Logger;
 using ChestOpening = Firebot.GameModel.Features.Inventory.ChestOpening;
 using InventoryScreen = Firebot.GameModel.Features.Inventory.Inventory;
 
@@ -33,6 +35,15 @@ public class CollectorQuestTask : BotTask
 
     private static readonly TimeSpan RecheckDelay = TimeSpan.FromHours(6);
 
+    // Live-confirmed, 2026-09-17: the Chests tab's real gear-chest slots (5 populated slots seen on
+    // screen: commonChestbox + 4 others) don't exist yet in Content.GetChildren() right after
+    // OpenChestsTab's own 1s interaction_delay - only 2 always-present placeholder slots
+    // (jewelChest/celestialChest) were there that soon. They're instantiated dynamically a moment
+    // later. This extra wait is separate from BotSettings.InteractionDelay (which covers click
+    // response time, not this list's own populate delay) - not a click, so IsClickable-gated Click()
+    // doesn't apply here.
+    private static readonly WaitForSeconds ChestListPopulateDelay = new(1.5f);
+
     private MelonPreferences_Entry<int> _minCommonReserve;
 
     protected override void OnConfigure(MelonPreferences_Category category)
@@ -52,14 +63,42 @@ public class CollectorQuestTask : BotTask
     {
         yield return InventoryScreen.Open;
         yield return InventoryScreen.OpenChestsTab;
+        yield return ChestListPopulateDelay;
 
-        var slotNames = InventoryScreen.Content.GetChildren().Select(c => c.Name).ToList();
+        // DIAGNOSTIC (2026-09-17, kept active per the user - not timing, see git history): only
+        // jewelChest/celestialChest/commonChestbox (all inactive/missing) ever show up here despite
+        // 5 populated chest icons visibly on screen. Path Of Glory's own reward track uses pooled/
+        // recycled scroll cells named "battlePassMilestone [pool N]" rather than per-item names -
+        // this dumps Content's REAL current children to check whether Chests uses the same pooling
+        // pattern instead of literal per-chest-type slot names.
+        var contentChildren = InventoryScreen.Content.GetChildren().ToList();
+        Logger.Debug($"[DIAG] Inventory Chests Content has {contentChildren.Count} real children: " +
+                     string.Join(", ", contentChildren.Select(c => $"'{c.Name}'(visible={c.IsVisible()})")));
+
+        // DIAGNOSTIC (2026-09-17, kept active): real slot names turned out to be "Common"/
+        // "Uncommon"/"Rare"/"Epic" (not "commonChestbox" - that was never right). But clicking
+        // "Common" itself never opened ChestOpenPreview (all its sub-paths came back "path
+        // broken" right after), meaning the clickable target is probably a NESTED child, not the
+        // slot root. Dumping "Common"'s own children one level deep to find it.
+        var commonSlot = contentChildren.FirstOrDefault(c => c.Name == "Common");
+        if (commonSlot != null)
+        {
+            var grandchildren = commonSlot.GetChildren().ToList();
+            Logger.Debug($"[DIAG] 'Common' has {grandchildren.Count} children: " +
+                         string.Join(", ", grandchildren.Select(c => $"'{c.Name}'(visible={c.IsVisible()})")));
+        }
+        else
+        {
+            Logger.Debug("[DIAG] 'Common' not found in this pass's contentChildren");
+        }
+
+        var slotNames = contentChildren.Select(c => c.Name).ToList();
         var nonChestSlots = new HashSet<string>(Paths.InventoryLoc.KnownNonChestSlots);
 
         foreach (var name in slotNames)
         {
             if (string.IsNullOrEmpty(name)) continue;
-            if (name == "commonChestbox") continue; // handled last, with a reserve
+            if (name == "Common") continue; // handled last, with a reserve - real name confirmed live, 2026-09-17 (was wrongly "commonChestbox")
             if (nonChestSlots.Contains(name)) continue;
             if (name.StartsWith("emptySlot")) continue;
 

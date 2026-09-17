@@ -33,8 +33,17 @@ public class MinerQuestTask : BotTask
         yield return TownGuild.Open;
         yield return TownGuild.OpenArcaneCrystal;
 
-        for (var i = 0; i < HitCount; i++)
+        // User-requested optimization: if the game's hit-quantity multiplier can be set to
+        // exactly 5, one click covers all 5 required hits instead of 5 separate ones. Falls back
+        // to the proven one-by-one clicks if "5" isn't one of the available multiplier options
+        // (not live-confirmed - see ArcaneCrystal.TrySetQuantityTo5).
+        yield return ArcaneCrystal.TrySetQuantityTo5();
+
+        if (ArcaneCrystal.IsQuantitySetTo5)
             yield return ArcaneCrystal.Hit;
+        else
+            for (var i = 0; i < HitCount; i++)
+                yield return ArcaneCrystal.Hit;
 
         yield return ArcaneCrystal.Close;
         yield return TownGuild.Close;

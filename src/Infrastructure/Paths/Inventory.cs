@@ -17,13 +17,18 @@ public static partial class Paths
 
         public const string ItemsTabBtn = Root + "/submenuButtons/inventoryItems";
 
+        // Live-confirmed, 2026-09-17: "submenus" has exactly one child, "items" - the 4 tabs (see
+        // class doc above) share this single content pane rather than each having their own
+        // "submenus/<tabName>/..." tree (an earlier attempt to "fix" this to "submenus/chests/..."
+        // was wrong and reverted - that path doesn't exist at all). This path itself was fine all
+        // along; the real bug was a timing race, see CollectorQuestTask.
         public const string ContentRoot = Root + "/submenus/items/ScrollView/Viewport/Content";
 
-        // Confirmed via UnityPy - the only explicitly-named gear chest slot in the shared item-slot
-        // template pool. The other 6 gear chest rarities (uncommon..titan) have no uniquely-named
-        // template found statically - they likely appear at runtime as additional slots in the same
-        // Content list, not individually confirmed. See CollectorQuestTask for how this gap is handled.
-        public const string CommonChestSlot = "/commonChestbox";
+        // Live-confirmed, 2026-09-17: the real slot name is "Common" (capitalized, no "chestbox"
+        // suffix) - the previously-assumed "commonChestbox" never existed at all. Siblings found
+        // the same way: "Uncommon", "Rare", "Epic" (not individually wired up - the generic scan in
+        // CollectorQuestTask picks up any of these by not being in KnownNonChestSlots).
+        public const string CommonChestSlot = "/Common";
 
         // Confirmed non-chest slot names sharing this same Content list - excluded when scanning for
         // "any other openable chest", since these aren't chests at all (mystery box/gift claims,

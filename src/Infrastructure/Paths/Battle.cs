@@ -145,6 +145,29 @@ public static partial class Paths
             public const string TownBtn = Root + "/townButton";
 
             public const string MapBtn = Root + "/mapButton";
+
+            // A THIRD, independent live-confirmed location for Path of Glory (2026-09-17 recursive
+            // search, same session where neither BottomSideUIMobileLoc nor BottomSideUIDesktopLoc
+            // below was active) - this one was activeSelf=True/activeInHierarchy=True right then,
+            // alongside Store/Guild/Town/Map above. The bottom-bar HUD variant switches dynamically
+            // within a session (not fixed once at launch like the notification rail), so rather than
+            // picking one "correct" root, every known location is tried in turn - see UiVariantButton.
+            public const string PathOfGloryBtn = Root + "/pathOfGloryButton";
+
+            public const string PathOfGloryNotification = PathOfGloryBtn + "/notification";
+        }
+
+        // A third, independent live-confirmed location for Inventory/Party (2026-09-17 recursive
+        // search) - active (activeSelf=True/activeInHierarchy=True) in the same session where
+        // neither BottomSideUIMobileLoc nor BottomSideUIDesktopLoc below was. PartyBtn mirrors
+        // InventoryBtn's confirmed menuButtons row but isn't itself independently confirmed live.
+        public static class BottomRightSideUINewLoc
+        {
+            private const string Root = BattleLoc.Root + "/bottomRightSideUINew/menuButtons";
+
+            public const string InventoryBtn = Root + "/inventoryButtonUI";
+
+            public const string PartyBtn = Root + "/partyButtonUI";
         }
 
         public static class StageProgressionLoc

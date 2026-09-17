@@ -8,8 +8,12 @@ namespace Firebot.GameModel.Features.Character;
 
 public static class Party
 {
-    // See UiVariantButton - Mobile vs Desktop, only one populated per session.
+    // See UiVariantButton - this bottom-bar HUD variant switches dynamically within a session
+    // (confirmed live, 2026-09-17, via the sibling InventoryBtn in the same menuButtons row), not
+    // just once per session like the notification rail. Tries every known location instead of
+    // assuming one is "the" active one.
     public static IEnumerator Open => UiVariantButton.Click(
+        new GameButton(Paths.BattleLoc.BottomRightSideUINewLoc.PartyBtn),
         new GameButton(Paths.BattleLoc.BottomSideUIMobileLoc.PartyBtn),
         new GameButton(Paths.BattleLoc.BottomSideUIDesktopLoc.PartyBtn));
 

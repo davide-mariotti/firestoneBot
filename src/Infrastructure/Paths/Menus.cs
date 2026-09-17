@@ -529,7 +529,10 @@ public static partial class Paths
         // "..." was found by dumping a real pathOfGloryTier node directly).
         public static class BattlePassLoc
         {
-            private const string Root = MenusLoc.Root + "/menus/BattlePass";
+            // Confirmed live, 2026-09-17 (PathOfGloryTask diagnostic): "menus/BattlePass" doesn't
+            // exist at all, "popups/BattlePass" does (activeSelf=True/activeInHierarchy=True) - same
+            // wrong-root pattern as TownIrongard/Character/SystemMail found earlier the same day.
+            private const string Root = MenusLoc.Root + "/popups/BattlePass";
 
             public const string CloseBtn = Root + "/bg/closeButton";
 

@@ -31,6 +31,26 @@ inferiore (Path of Glory/Inventory/Party/Hero Upgrade) - nessun test dal vivo l'
 Testato dal vivo e confermato funzionante: Mailbox (System Mail) - claim riuscito, popup "Rewards"
 di conferma chiuso correttamente dal Watchdog generico (non serve un click esplicito su "OK").
 
+**Aggiornamento (2026-09-18, Collector/apertura chest)**: causa radice trovata e risolta. Gli slot
+chest in Inventario (`Common`/`Uncommon`/`Rare`/`Epic`, celle riciclate della ScrollView) hanno un
+componente `Button` presente/abilitato ma con **zero listener su `onClick`** - il vero click nel
+gioco reagisce direttamente agli eventi puntatore, non a `Button.onClick`. `GameButton.Click()`
+(che chiama `onClick.Invoke()`) per questo non faceva nulla, mentre un click reale dell'utente
+funzionava. Aggiunto `GameButton.ClickSimulated()`, che rigioca la sequenza
+PointerDown/Up/Click tramite `UnityEngine.EventSystems.ExecuteEvents` direttamente sul
+GameObject target - è una chiamata puramente in-process nell'EventSystem di Unity di
+quell'istanza, non tocca il mouse/cursore reale del sistema operativo, quindi resta sicura su ~20
+istanze del gioco in parallelo. Confermato dal vivo: la preview si apre e le chest si aprono
+(Rare/Epic svuotate, Uncommon ridotta). Aggiunto anche un poll (non un timer fisso) che aspetta il
+prossimo bottone (`openx1`/`openx10`) diventi cliccabile prima del click successivo, perché
+l'animazione di apertura ha durata variabile e un delay fisso usciva troppo presto rischiando di
+saltare l'apertura successiva. **Punto ancora aperto**: il presunto "secondo schermo" `ChestOpening`
+(per incatenare più aperture dello stesso tipo senza tornare alla preview) non è mai stato
+osservato esistere nella gerarchia finché non serve più di un click - probabile che con quantità
+piccole tutto avvenga in un solo click sulla preview stessa; il codice lo gestisce comunque come
+no-op sicuro se quello schermo non esiste. Resta da verificare con una chest che richieda più di un
+ciclo (es. scorta comune grande) se quel percorso serve davvero o va rimosso.
+
 Per velocizzare i cicli di test in questa sessione, `auto_start` è stato temporaneamente messo a
 `true` (con `start_bot_delay` al minimo consentito di 10s) invece di `false` come raccomandato
 sotto - il bot parte da solo ad ogni avvio del gioco senza bisogno di premere F7. Ricordarsi di
@@ -98,7 +118,7 @@ Questi due non hanno una sezione "un task alla volta" nello stesso senso - parto
 | # | Nome | Sezione cfg | Livello min. | Comportamento atteso |
 |---|------|--------------|:---:|----------------------|
 | 1 | ✅ Quests (claim giornaliere/settimanali) | `[queststask]` | - | Apre Character → Missioni, clicca claim su ogni missione già completata (giornaliere e settimanali), lascia stare quelle non ancora fatte. **Testato 2026-09-17: funziona, switcha correttamente tra daily e weekly.** |
-| 2 | Collector | `[collectorquesttask]` | - | Apre l'Inventario, apre le chest (gear/jewel/celestial) tenendo da parte `min_common_chest_reserve` (default 10) chest comuni - il numero di chest comuni in inventario non dovrebbe scendere sotto quella soglia. |
+| 2 | ⚠️ Collector | `[collectorquesttask]` | - | Apre l'Inventario, apre le chest (gear/jewel/celestial) tenendo da parte `min_common_chest_reserve` (default 10) chest comuni - il numero di chest comuni in inventario non dovrebbe scendere sotto quella soglia. **Testato 2026-09-18: risolto il bug di fondo (click sullo slot chest non arrivava a destinazione, vedi nota sopra) - confermato dal vivo che le chest si aprono davvero (Rare/Epic svuotate, Uncommon ridotta). Funziona ma non è ancora perfetto: i tempi tra un'apertura e l'altra vanno ottimizzati ulteriormente (il poll attuale aiuta ma non è la soluzione definitiva). Percorso "apri più lotti di fila senza richiudere" non ancora esercitato da un caso reale. Da rivedere in un giro dedicato.** |
 | 3 | Gamer | `[gamerquesttask]` | 15 | In Taverna, gioca fino a 10 partite con i Game Token, lasciandone almeno `min_token_reserve` di scorta. |
 | 4 | BeerExchange | `[beerexchangetask]` | 15 | Taverna → Mercato: compra ripetutamente il pacchetto da 5 token finché conviene. **Punto da verificare con attenzione**: deve spendere birra, non gemme - controlla il saldo gemme prima/dopo, se scende qualcosa non va. |
 | 5 | Merchant | `[merchantquesttask]` | 30 | Exotic Merchant: usa tutti gli oggetti oro in inventario, vende in x1 ogni oggetto rimasto in griglia, fa un solo upgrade (il primo disponibile). |
