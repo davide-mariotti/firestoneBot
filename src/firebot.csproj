@@ -37,6 +37,9 @@
         <Reference Include="UnityEngine">
             <HintPath>$(Il2CppAssembliesDir)\UnityEngine.dll</HintPath>
         </Reference>
+        <Reference Include="UnityEngine.AudioModule">
+            <HintPath>$(Il2CppAssembliesDir)\UnityEngine.AudioModule.dll</HintPath>
+        </Reference>
         <Reference Include="UnityEngine.CoreModule">
             <HintPath>$(Il2CppAssembliesDir)\UnityEngine.CoreModule.dll</HintPath>
         </Reference>

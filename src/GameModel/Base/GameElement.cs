@@ -13,6 +13,26 @@ public class GameElement
     // recurring failure is only ever logged once per session instead of on every single check.
     private static readonly HashSet<string> LoggedFailures = new();
 
+    // Every path in this codebase resolves from one of a small, fixed set of scene-wide singleton
+    // roots (menusRoot, battleRoot) that exist for the whole game session and are never destroyed
+    // or recreated - only their CHILDREN change (popups open/close, pooled list items get reused).
+    // GameObject.Find(name) is an unindexed, scene-wide search and was being repeated for every
+    // single GameElement/GameButton/GameText access; caching just this top-level lookup (never the
+    // relative Transform.Find below it) is safe because it never touches pooled/dynamic content -
+    // every child path is still resolved fresh on every call, exactly as before. Unity's overloaded
+    // null-check on a destroyed UnityEngine.Object self-heals this automatically if a root were ever
+    // torn down (e.g. a scene reload), so a cached entry can never get stuck stale.
+    private static readonly Dictionary<string, GameObject> RootObjectCache = new();
+
+    private static GameObject FindRootCached(string rootName)
+    {
+        if (RootObjectCache.TryGetValue(rootName, out var cached) && cached != null) return cached;
+
+        var found = GameObject.Find(rootName);
+        if (found != null) RootObjectCache[rootName] = found;
+        return found;
+    }
+
     private readonly string _className;
 
     public GameElement(string path = null, GameElement parent = null, Transform transform = null)
@@ -54,14 +74,14 @@ public class GameElement
 
         if (slashIndex == -1)
         {
-            var obj = GameObject.Find(path);
+            var obj = FindRootCached(path);
             if (obj == null)
                 DebugOnce($"root-missing:{path}", $"[FAILED] Root Object not found in scene: {path}");
             return obj?.transform;
         }
 
         var rootName = path[..slashIndex];
-        var rootObj = GameObject.Find(rootName);
+        var rootObj = FindRootCached(rootName);
 
         if (rootObj == null)
         {

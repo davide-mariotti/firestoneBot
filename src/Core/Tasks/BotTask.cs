@@ -185,11 +185,23 @@ public abstract class BotTask
 
     protected virtual void OnConfigure(MelonPreferences_Category category) { }
 
-    public bool IsReady()
-        => MeetsLevelRequirement && (IsNotificationVisible() || (IsEnabled && DateTime.Now >= NextRunTime));
+    public bool IsReady() => IsReady(IsNotificationVisible());
+
+    /// <summary>
+    ///     Same result as IsReady(), but takes an already-computed notification-visible flag instead
+    ///     of recomputing it - BotManager's scan loop already needs that value for its own
+    ///     notification-priority check, and recomputing it here used to mean MeetsLevelRequirement
+    ///     (an uncached read, see PlayerAvatar) got evaluated up to 3x per task per tick.
+    ///     IsEnabled is checked first (a plain bool field) so a disabled task never touches the
+    ///     level check at all - order changes performance only, not the result: notificationVisible
+    ///     being true already implies IsEnabled/MeetsLevelRequirement were true (see
+    ///     IsNotificationVisible's own definition).
+    /// </summary>
+    public bool IsReady(bool notificationVisible)
+        => IsEnabled && MeetsLevelRequirement && (notificationVisible || DateTime.Now >= NextRunTime);
 
     public bool IsNotificationVisible()
-        => MeetsLevelRequirement && IsEnabled && NotificationElements != null &&
+        => IsEnabled && MeetsLevelRequirement && NotificationElements != null &&
            UiVariantButton.AnyVisible(NotificationElements);
 
     public abstract IEnumerator Execute();

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using Firebot.BotActions;
 using Firebot.Core.Tasks;
+using Firebot.GameModel.Shared;
 using Firebot.Utilities;
 using MelonLoader;
 using UnityEngine;
@@ -85,19 +86,24 @@ public static class BotManager
 
         while (IsRunning)
         {
+            // Once per tick instead of once per task - see PlayerAvatar.CharacterLevel.
+            PlayerAvatar.RefreshCachedLevel();
+
             BotTask notificationTask = null;
             BotTask readyTask = null;
             var earliest = DateTime.MaxValue;
 
             foreach (var task in Tasks)
             {
-                if (notificationTask == null && task.IsNotificationVisible())
+                var notificationVisible = task.IsNotificationVisible();
+
+                if (notificationTask == null && notificationVisible)
                 {
                     notificationTask = task;
                     continue;
                 }
 
-                if (!task.IsReady()) continue;
+                if (!task.IsReady(notificationVisible)) continue;
                 if (task.NextRunTime >= earliest) continue;
 
                 earliest = task.NextRunTime;

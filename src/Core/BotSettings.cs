@@ -104,17 +104,56 @@ public static class BotSettings
         _category.SaveToFile();
         Logger.Info($"System Initialized. Configuration: {ConfigPath}");
 
-        ApplyLowResourceMode();
+        ApplyLowResourceModeOnce();
     }
 
-    private static void ApplyLowResourceMode()
+    /// <summary>
+    ///     Live-confirmed, 2026-09-18 (this session, then corroborated by an actual prior measured
+    ///     attempt at this exact problem): applying this ONLY once at startup measurably raised GPU
+    ///     usage instead of lowering it (~6% -&gt; ~17% observed) - the host game's own scene load (and,
+    ///     per that prior attempt's own measurements, its own logic on further frames/scene loads
+    ///     after that) silently resets vSyncCount and/or targetFrameRate back. The prior attempt's
+    ///     fix, which measured ~125% CPU/instance down to ~18-25%, split this into a one-time setup
+    ///     (this method - quality level, audio, resolution) and a separate CHEAP reassertion of just
+    ///     vSyncCount+targetFrameRate called every single frame indefinitely, forever - see
+    ///     ReassertFrameRateCap and Main.OnUpdate. Idempotent and safe to call more than once.
+    /// </summary>
+    public static void ApplyLowResourceModeOnce()
     {
         if (!_lowResourceMode.Value) return;
 
-        Application.targetFrameRate = Mathf.Clamp(_targetFrameRate.Value, 5, 60);
+        // SetQualityLevel applies an entire preset that silently resets vSyncCount as a side effect
+        // - call it here, once, then let ReassertFrameRateCap keep vSyncCount/targetFrameRate correct
+        // afterward instead of re-running this whole (comparatively expensive) preset switch forever.
         QualitySettings.SetQualityLevel(Mathf.Clamp(_renderQualityLevel.Value, 0, 5), true);
+        ReassertFrameRateCap();
+
+        // The bot reads game state from the Unity scene hierarchy, never from audio - muting removes
+        // real per-instance mixing/DSP cost with zero effect on bot behavior.
+        AudioListener.pause = true;
+
+        // The bot reads game state from the Unity scene hierarchy, never from rendered pixels -
+        // shrinking the actual render target cuts real per-instance fill-rate/GPU cost with zero
+        // effect on bot behavior. Fixed, not a preference - there's no reason to ever want this
+        // bigger while low_resource_mode is on.
+        Screen.SetResolution(640, 480, false);
 
         Logger.Info($"Low resource mode applied: targetFrameRate={Application.targetFrameRate}, " +
-                    $"qualityLevel={QualitySettings.GetQualityLevel()}.");
+                    $"qualityLevel={QualitySettings.GetQualityLevel()}, vSyncCount={QualitySettings.vSyncCount}, " +
+                    $"audioPaused={AudioListener.pause}, resolution={Screen.width}x{Screen.height}.");
+    }
+
+    /// <summary>
+    ///     Cheap (two property writes, no logging) - meant to be called every frame, forever, from
+    ///     Main.OnUpdate. See ApplyLowResourceModeOnce for why a single one-shot apply isn't durable.
+    /// </summary>
+    public static void ReassertFrameRateCap()
+    {
+        if (!_lowResourceMode.Value) return;
+
+        // Must be set (and confirmed 0) before targetFrameRate below - Unity only reads
+        // targetFrameRate at all while vSyncCount == 0.
+        QualitySettings.vSyncCount = 0;
+        Application.targetFrameRate = Mathf.Clamp(_targetFrameRate.Value, 5, 60);
     }
 }

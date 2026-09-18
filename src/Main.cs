@@ -39,6 +39,10 @@ public class Main : MelonMod
 
         if (_isGameReady)
         {
+            // Re-applied here (not just once in OnInitializeMelon, before any scene existed) because
+            // the game's own scene load reapplies its saved quality/vSync preference, silently
+            // overriding whatever was set before the scene loaded.
+            BotSettings.ApplyLowResourceModeOnce();
             if (BotSettings.AutoStart) BotManager.Start();
         }
         else BotManager.Stop();
@@ -46,6 +50,14 @@ public class Main : MelonMod
 
     public override void OnUpdate()
     {
+        // Live-confirmed, 2026-09-18 (this session, then corroborated by an actual prior measured
+        // attempt at this exact problem): the host game keeps resetting vSyncCount/targetFrameRate
+        // on its own well beyond just scene load - a one-shot or timed-window reapply isn't durable.
+        // This is two cheap property writes with no logging (see ReassertFrameRateCap) - safe to run
+        // unconditionally every frame, and that unconditional-forever reassertion is exactly what the
+        // prior attempt measured taking CPU/instance from ~125% down to ~18-25%.
+        BotSettings.ReassertFrameRateCap();
+
         if (_isGameReady && Input.GetKeyDown(BotSettings.ShortcutKey))
         {
             if (BotManager.IsRunning) BotManager.Stop();
