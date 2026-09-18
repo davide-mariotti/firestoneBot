@@ -12,7 +12,12 @@ public static partial class Paths
 {
     public static class TalentsLoc
     {
-        private const string Root = MenusLoc.Root + "/menus/Character/bg/submenus/talents";
+        // Live-confirmed, 2026-09-18: the Character screen is a popup (MenusLoc.CharacterLoc.Root =
+        // "popups/Character"), not "menus/Character" - this was defined independently and guessed
+        // wrong instead of reusing that already-confirmed root (same wrong-guess pattern as
+        // BattlePass/TavernMarket/PharaohsVault/ScarabGameShop earlier the same day). Everything below
+        // came back "path broken" as a result, including the root itself.
+        public const string Root = MenusLoc.CharacterLoc.Root + "/bg/submenus/talents";
 
         // Index 0-88, tier order matching the wiki's Talent Tree table exactly (see the validation
         // above). Each is a small icon+level button that opens TalentPreviewLoc.

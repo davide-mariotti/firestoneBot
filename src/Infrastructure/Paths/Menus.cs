@@ -47,7 +47,7 @@ public static partial class Paths
 
         public static class CharacterLoc
         {
-            private const string Root = MenusLoc.Root + "/popups/Character";
+            internal const string Root = MenusLoc.Root + "/popups/Character";
 
             // Root path convention not independently live-verified for this screen (a newly
             // automated feature, no prior code to cross-check against) - inferred from every other

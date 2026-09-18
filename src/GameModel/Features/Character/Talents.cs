@@ -225,7 +225,13 @@ public static class Talents
                     $"Talents.Plan target rank {targetRank} out of range for catalog index {idx} (max {Catalog[idx].MaxRank}).");
     }
 
-    public static int AvailablePoints => new GameText(Paths.TalentsLoc.PointsLeftTxt).GetParsedInt();
+    /// <summary>
+    ///     Live-confirmed, 2026-09-18: the text reads "available/total" (e.g. "1/96", total points
+    ///     ever earned - not the tree's max) - GetParsedInt()'s strict full-string parse silently
+    ///     failed on this and fell back to 0, making the task think there was never anything to
+    ///     spend. Takes the leading number, same fix already used for PreviewCurrentRank below.
+    /// </summary>
+    public static int AvailablePoints => ParseLeadingNumber(new GameText(Paths.TalentsLoc.PointsLeftTxt).GetParsedText());
 
     // Defensive - clicked once after any batch of upgrades in case investments are staged rather
     // than instant (see TalentsLoc.SaveBtn comment). Safe no-op if not needed/not clickable.
@@ -244,14 +250,12 @@ public static class Talents
     ///     Current rank shown on the open TalentPreview popup. Exact text format ("5" vs "5/25") not
     ///     verified live - takes the leading number either way.
     /// </summary>
-    public static int PreviewCurrentRank
+    public static int PreviewCurrentRank => ParseLeadingNumber(new GameText(Paths.TalentPreviewLoc.LevelTxt).GetParsedText());
+
+    private static int ParseLeadingNumber(string text)
     {
-        get
-        {
-            var text = new GameText(Paths.TalentPreviewLoc.LevelTxt).GetParsedText();
-            var slashIndex = text.IndexOf('/');
-            var head = slashIndex >= 0 ? text[..slashIndex] : text;
-            return int.TryParse(head.Trim(), out var value) ? value : 0;
-        }
+        var slashIndex = text.IndexOf('/');
+        var head = slashIndex >= 0 ? text[..slashIndex] : text;
+        return int.TryParse(head.Trim(), out var value) ? value : 0;
     }
 }
