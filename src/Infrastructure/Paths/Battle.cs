@@ -132,6 +132,14 @@ public static partial class Paths
             // an opportunistic fast path only (see HallOfHeroesGearTask) - the real entry point is
             // the Town building icon (TownIrongardLoc.HallOfHeroesBtn), same as most other features.
             public const string HallOfHeroes = "HallOfHeroes";
+
+            // DIAGNOSTIC (2026-09-18): best-guess name, same lowest-trust tier as TemplePrestige/
+            // MeteoriteResearch above - not independently confirmed via UnityPy or live, since
+            // docs/screens/PirateShip.html only dumped the screen itself (its own in-screen tab badge,
+            // "bg/submenuButtons/piratesPrize/button/text/notification", is a DIFFERENT thing from
+            // this shared HUD rail). Opportunistic fast path only - the real entry point is the Town
+            // building icon (TownIrongardLoc.PirateShipBtn), same as most other features.
+            public const string PiratesPrize = "PiratesPrize";
         }
 
         public static class RightSideUILoc

@@ -165,6 +165,13 @@ public static partial class Paths
             // instead of dumping the live list), corrected after the user pointed out live in-game
             // that Hall of Heroes is reached through Town, not just the notification rail.
             public const string HallOfHeroesBtn = Root + "/townBg/parent/hallOfHeroes";
+
+            // Live-confirmed, 2026-09-18: full dump of townBg/parent (21 children) shows "ship", not
+            // the originally-guessed "pirateShip" - docs/screens/PirateShip.html only dumped the
+            // screen itself, not the Town building icon. Note a separate "merchantShip" also exists
+            // in the same list (a different feature) - "ship" is the one that actually opened
+            // "menus/PirateShip" when tested.
+            public const string PirateShipBtn = Root + "/townBg/parent/ship";
         }
 
         // Live-confirmed, 2026-09-18 (user screenshot + dump): clicking the "tavern" building

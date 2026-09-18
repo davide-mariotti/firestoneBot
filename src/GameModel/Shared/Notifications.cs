@@ -73,4 +73,9 @@ public static class Notifications
     // Confirmed present via UnityPy (see Battle.cs). No prior precedent. Opportunistic fast path only -
     // the real entry point is Town -> hallOfHeroes building icon (see HallOfHeroesGearTask).
     public static IEnumerator HallOfHeroes => Click(Paths.BattleLoc.NotificationsLoc.HallOfHeroes);
+
+    // Not independently verified (see Battle.cs comment on PiratesPrize) - never implemented this
+    // feature at all. Opportunistic fast path only - the real entry point is Town -> pirateShip
+    // building icon (see PiratesPrizeTask).
+    public static IEnumerator PiratesPrize => Click(Paths.BattleLoc.NotificationsLoc.PiratesPrize);
 }
