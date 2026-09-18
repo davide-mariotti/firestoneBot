@@ -27,12 +27,13 @@ public static partial class Paths
 
         public const string BattleTokensTxt = Root + "/bg/battleTokens/quantity";
 
-        // Arena battles use a different power formula than regular battles (per the wiki) - this is
-        // the arena-specific figure, NOT "battlePower" (a separate, different display right next to
-        // it) which is the regular campaign one. Confirmed via UnityPy: battleFormation has both
-        // "battlePower/text" and "arenaPower/text" side by side - easy to misread, deliberately not
-        // using the first one found.
-        public const string MyArenaPowerTxt = Root + "/bg/battleFormation/arenaPower/text";
+        // Live-confirmed, 2026-09-18: the UnityPy-guessed "arenaPower" name doesn't exist -
+        // battleFormation's real children are title/totalPower/warMachineGrid/decorDetail(x2), and
+        // "totalPower" holds its TMP_Text component directly (no nested "text" child, unlike most
+        // other counters in this codebase). This is the same figure the screen itself labels "Arena
+        // power" (arena battles use a different power formula than regular campaign battles, per the
+        // wiki).
+        public const string MyArenaPowerTxt = Root + "/bg/battleFormation/totalPower";
 
         public const string RerollBtn = Root + "/bg/opponentHub/refreshBg/refreshButton";
 

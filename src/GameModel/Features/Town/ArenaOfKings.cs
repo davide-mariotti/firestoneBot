@@ -19,12 +19,17 @@ public static class ArenaOfKings
     // Always exactly 3 per the wiki: "choose to fight one of 3 player opponents".
     private const int OpponentCount = 3;
 
-    public static int TokensAvailable => new GameText(Paths.ArenaOfKingsLoc.BattleTokensTxt).GetParsedInt();
+    // Live-confirmed, 2026-09-18: reads "current/max" (e.g. "5/5"), same GetParsedInt() strict-parse
+    // failure already found on Talents' available-points counter - always fell back to 0, making the
+    // task think there were never any tokens to spend. Same GetParsedLeadingInt() fix.
+    public static int TokensAvailable => new GameText(Paths.ArenaOfKingsLoc.BattleTokensTxt).GetParsedLeadingInt();
 
     public static double MyPower =>
         new GameText(Paths.ArenaOfKingsLoc.MyArenaPowerTxt).GetParsedDoubleAbbreviated();
 
-    public static IEnumerator Reroll => new GameButton(Paths.ArenaOfKingsLoc.RerollBtn).Click();
+    public static GameButton RerollBtn => new(Paths.ArenaOfKingsLoc.RerollBtn);
+
+    public static IEnumerator Reroll => RerollBtn.Click();
 
     private static GameElement OpponentGrid => new(Paths.ArenaOfKingsLoc.OpponentGridRoot);
 

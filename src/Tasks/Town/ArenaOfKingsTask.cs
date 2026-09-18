@@ -16,9 +16,11 @@ namespace Firebot.Tasks.Town;
 ///     weakest available opponent each time, per the user's requested strategy. No prior precedent - this
 ///     whole feature is new. Level-gated at 80 per the wiki's Arena of Kings infobox.
 ///     For each token: scans the 3 current opponents' power against mine (ArenaOfKings.MyPower reads
-///     "arenaPower", the arena-specific figure - NOT the separate "battlePower" display right next to
-///     it, which is for regular campaign battles and uses a different formula per the wiki). If none
-///     is strictly weaker, rerolls (free every 5s per the wiki) and checks again. The user confirmed
+///     "totalPower" on the battle formation, the arena-specific figure - NOT the separate
+///     "battlePower" display right next to it, which is for regular campaign battles and uses a
+///     different formula per the wiki). If none is strictly weaker, rerolls (free every 5s per the
+///     wiki, polled via RerollBtn's own clickable
+///     state instead of a fixed timer - per the user, 2026-09-18) and checks again. The user confirmed
 ///     losing does NOT lower rank (only winning changes anything, by swapping ranks with the
 ///     opponent - the wiki is explicit about this), so there's no benefit to intentionally losing -
 ///     the progressive fallback below exists only so a token doesn't go completely unused/wasted, not
@@ -45,7 +47,7 @@ public class ArenaOfKingsTask : BotTask
     protected override int MinimumCharacterLevel => 80;
     internal override float? MaxRuntimeSeconds => 3600f;
 
-    private static readonly WaitForSeconds RerollWait = new(5f);
+    private static readonly WaitForSeconds RerollPollWait = new(0.5f);
     private static readonly WaitForSeconds BattlePollWait = new(2f);
     private static readonly TimeSpan RecheckDelay = TimeSpan.FromHours(6);
 
@@ -53,6 +55,10 @@ public class ArenaOfKingsTask : BotTask
     // server-side and then shown as a "recording", so this is expected to resolve quickly, but
     // errs generous rather than risk cutting a real animation short (same reasoning as Liberator).
     private const int MaxBattlePolls = 150; // ~5 minutes at 2s/poll
+
+    // Safety bound only - the wiki says reroll is free every 5s, this just guards against that
+    // cooldown never clearing for some reason instead of looping forever.
+    private const int MaxRerollPolls = 40; // ~20s at 0.5s/poll
 
     // (cumulative deadline since starting this token's search, max acceptable opponent power as a
     // multiple of mine - null means "strictly weaker only"). Checked in order; the first entry whose
@@ -72,6 +78,10 @@ public class ArenaOfKingsTask : BotTask
         yield return Notifications.ArenaTokens;
 
         // Guaranteed path regardless of the notification - same reasoning as every other task.
+        // Live-confirmed, 2026-09-18: "WFMenuSelection" (popups/WFMenuSelection/bg, cards "campaign"/
+        // "arena") is real and does open from BattlesBtn - the previous "path broken" error was the
+        // notification fast path above already having navigated to ArenaOfKings on its own, leaving
+        // no WFMenuSelection popup for this guaranteed path to click into on that run.
         yield return TownScreen.Open;
         yield return TownScreen.OpenBattles;
         yield return WFMenuSelection.OpenArena;
@@ -83,6 +93,11 @@ public class ArenaOfKingsTask : BotTask
             if (slotIndex < 0) break; // shouldn't happen (FindTarget always eventually force-picks)
 
             yield return ArenaOfKings.Fight(slotIndex);
+
+            // Live-confirmed, 2026-09-18: AOKBattlePreviewLoc.FightBtn ("bg/mask/fightButton") and
+            // AOKBattleResultLoc.CloseBtn ("bg/closeButton") both resolved and clicked with no
+            // errors, despite looking on-screen like a plain center icon and an "OK" button
+            // respectively - internal names don't always match the displayed label.
             yield return AOKBattlePreview.Fight;
 
             var pollsLeft = MaxBattlePolls;
@@ -96,9 +111,21 @@ public class ArenaOfKingsTask : BotTask
                 Logger.Warning("[ArenaOfKingsTask] Battle didn't resolve within the wait bound.");
 
             yield return AOKBattleResult.Close;
+
+            // Live-confirmed, 2026-09-18: right after closing the result, the arena hub screen takes
+            // a moment to redraw (its own power/opponent texts and the reroll button briefly read as
+            // "hidden or inactive") - reading TokensAvailable or the opponent grid immediately caused
+            // the next loop iteration to see stale/blank data. Poll for the hub to be genuinely back
+            // (RerollBtn clickable) instead of a fixed timer, same reasoning as the reroll wait below.
+            var stabilizePolls = MaxRerollPolls;
+            while (!ArenaOfKings.RerollBtn.IsClickable() && stabilizePolls > 0)
+            {
+                yield return RerollPollWait;
+                stabilizePolls--;
+            }
         }
 
-        yield return WFMenuSelection.Close;
+        yield return ArenaOfKings.Close;
         yield return TownScreen.Close;
 
         NextRunTime = DateTime.Now + RecheckDelay;
@@ -122,7 +149,15 @@ public class ArenaOfKingsTask : BotTask
             }
 
             yield return ArenaOfKings.Reroll;
-            yield return RerollWait;
+
+            // Poll for the reroll cooldown to clear instead of a fixed timer - per the user,
+            // 2026-09-18 (same reasoning as every other animation/cooldown wait in this codebase).
+            var pollsLeft = MaxRerollPolls;
+            while (!ArenaOfKings.RerollBtn.IsClickable() && pollsLeft > 0)
+            {
+                yield return RerollPollWait;
+                pollsLeft--;
+            }
         }
     }
 

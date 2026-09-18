@@ -231,7 +231,7 @@ public static class Talents
     ///     failed on this and fell back to 0, making the task think there was never anything to
     ///     spend. Takes the leading number, same fix already used for PreviewCurrentRank below.
     /// </summary>
-    public static int AvailablePoints => ParseLeadingNumber(new GameText(Paths.TalentsLoc.PointsLeftTxt).GetParsedText());
+    public static int AvailablePoints => new GameText(Paths.TalentsLoc.PointsLeftTxt).GetParsedLeadingInt();
 
     // Defensive - clicked once after any batch of upgrades in case investments are staged rather
     // than instant (see TalentsLoc.SaveBtn comment). Safe no-op if not needed/not clickable.
@@ -250,12 +250,5 @@ public static class Talents
     ///     Current rank shown on the open TalentPreview popup. Exact text format ("5" vs "5/25") not
     ///     verified live - takes the leading number either way.
     /// </summary>
-    public static int PreviewCurrentRank => ParseLeadingNumber(new GameText(Paths.TalentPreviewLoc.LevelTxt).GetParsedText());
-
-    private static int ParseLeadingNumber(string text)
-    {
-        var slashIndex = text.IndexOf('/');
-        var head = slashIndex >= 0 ? text[..slashIndex] : text;
-        return int.TryParse(head.Trim(), out var value) ? value : 0;
-    }
+    public static int PreviewCurrentRank => new GameText(Paths.TalentPreviewLoc.LevelTxt).GetParsedLeadingInt();
 }
