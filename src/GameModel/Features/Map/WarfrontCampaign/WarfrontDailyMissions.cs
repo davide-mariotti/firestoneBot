@@ -1,8 +1,10 @@
 using System;
 using System.Collections;
+using System.Linq;
 using Firebot.GameModel.Base;
 using Firebot.GameModel.Primitives;
 using Firebot.Infrastructure;
+using UnityEngine;
 
 namespace Firebot.GameModel.Features.Map.WarfrontCampaign;
 
@@ -20,7 +22,27 @@ public static class WarfrontDailyMissions
 
 public static class WarfrontLiberationMissions
 {
+    // Live-confirmed, 2026-09-18: right after opening, every pooled "liberationMission (N)" cell's
+    // fightButton read as hidden/inactive - the ScrollView's cells need a moment to populate, same
+    // pattern as Inventory's chest list (see CollectorQuestTask.ChestListPopulateDelay), but polled
+    // instead of a fixed wait since the exact delay isn't known.
+    private static readonly WaitForSeconds PopulatePollWait = new(0.3f);
+    private const int MaxPopulatePolls = 25; // ~7.5s ceiling
+
     public static GameElement MissionsGrid => new(Paths.WFLiberationMissionsLoc.MissionsGridRoot);
+
+    public static IEnumerator WaitUntilLoaded()
+    {
+        var pollsLeft = MaxPopulatePolls;
+        while (pollsLeft > 0 && !MissionsGrid.GetChildren().Any(HasClickableFightButton))
+        {
+            yield return PopulatePollWait;
+            pollsLeft--;
+        }
+    }
+
+    private static bool HasClickableFightButton(GameElement mission) =>
+        new GameButton(Paths.WFLiberationMissionsLoc.FightBtn, mission).IsClickable();
 
     public static IEnumerator Close => new GameButton(Paths.WFLiberationMissionsLoc.CloseBtn).Click();
 }

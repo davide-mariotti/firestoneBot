@@ -332,6 +332,17 @@ public static partial class Paths
             public const string CloseBtn = Root + "/bg/closeButton";
         }
 
+        // Live-confirmed, 2026-09-18: a SEPARATE popup from GenericMessage above, specifically for
+        // "You need N more <currency>..." warnings (found via TreeOfLifeTask trying to buy an upgrade
+        // without enough Expedition Tokens) - initially assumed to be GenericMessage, which turned out
+        // to be a different, wrong popup name entirely.
+        public static class CurrencyMissingLoc
+        {
+            private const string Root = MenusLoc.Root + "/popups/CurrencyMissing";
+
+            public const string CloseBtn = Root + "/bg/closeButton";
+        }
+
         public static class GuildShopLoc
         {
             private const string Root = MenusLoc.Root + "/menus/GuildShop";

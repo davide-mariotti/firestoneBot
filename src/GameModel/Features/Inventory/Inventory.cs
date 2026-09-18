@@ -36,14 +36,20 @@ public static class Inventory
     /// </summary>
     public static IEnumerator UseAllGoldItems()
     {
-        var slotNames = Content.GetChildren().Select(c => c.Name).ToList();
-        foreach (var name in slotNames)
+        // Live-confirmed, 2026-09-18: consuming a gold slot can compact the grid (later items shift
+        // into the now-empty position) - clicking a cached path name repeatedly ended up hitting
+        // whatever unrelated item slid in after the gold ran out (the user saw totems get consumed
+        // this way). Re-reading the real name at each position fresh every iteration instead of
+        // trusting a name captured once up front.
+        while (true)
         {
-            if (string.IsNullOrEmpty(name)) continue;
-            if (!name.ToLowerInvariant().Contains("gold")) continue;
+            var goldSlot = Content.GetChildren()
+                .FirstOrDefault(c => !string.IsNullOrEmpty(c.Name) && c.Name.ToLowerInvariant().Contains("gold"));
+            if (goldSlot == null) yield break;
 
-            var slot = new GameButton("/" + name, Content);
-            while (slot.IsClickable()) yield return slot.Click();
+            var slot = new GameButton("/" + goldSlot.Name, Content);
+            if (!slot.IsClickable()) yield break;
+            yield return slot.ClickSimulated();
         }
     }
 }

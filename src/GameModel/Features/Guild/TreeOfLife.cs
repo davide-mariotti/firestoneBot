@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Firebot.GameModel.Base;
 using Firebot.GameModel.Primitives;
 using Firebot.Infrastructure;
 
@@ -46,6 +47,32 @@ public static class TreeOfLife
         new GameText(NodePath(index) + Paths.TreeOfLifeLoc.NodeLevelTxt).GetParsedInt();
 
     public static IEnumerator Close => new GameButton(Paths.TreeOfLifeLoc.CloseBtn).Click();
+
+    /// <summary>
+    ///     Confirms the purchase in the preview popup opened by clicking a node (live-confirmed,
+    ///     2026-09-18 - PersonalNode's click alone only opens this popup, it doesn't buy directly).
+    ///     Safe no-op via IsClickable() if the upgrade turned out to be maxed (no buy button in that
+    ///     state). Always attempts the close after, in case buying doesn't auto-dismiss the popup.
+    ///     Live-confirmed, 2026-09-18: buyUpgradeButton's own IsClickable() doesn't reliably predict
+    ///     real affordability - clicking it while short on Expedition Tokens pops the game's generic
+    ///     "You need N more..." validation message (see HasInsufficientFundsMessage) instead of
+    ///     silently failing. Check that after calling this and stop the caller's loop if it's up.
+    /// </summary>
+    public static IEnumerator ConfirmPurchase()
+    {
+        var buyBtn = new GameButton(Paths.TreeOfLifeLoc.PersonalUpgradePreviewBuyBtn);
+        if (buyBtn.IsClickable()) yield return buyBtn.Click();
+
+        yield return new GameButton(Paths.TreeOfLifeLoc.PersonalUpgradePreviewCloseBtn).Click();
+    }
+
+    /// <summary>Live-confirmed, 2026-09-18: a "CurrencyMissing" popup ("You need N more Expedition
+    /// Token...") - NOT the same as GenericMessage, an initial guess that turned out wrong.</summary>
+    public static bool HasInsufficientFundsMessage =>
+        new GameElement(Paths.MenusLoc.CurrencyMissingLoc.CloseBtn).IsVisible();
+
+    public static IEnumerator CloseInsufficientFundsMessage =>
+        new GameButton(Paths.MenusLoc.CurrencyMissingLoc.CloseBtn).Click();
 
     private static string NodePath(int index) =>
         $"{Paths.TreeOfLifeLoc.PersonalNodeRoot}/treeOfLifePersonalUpgrade ({index})";

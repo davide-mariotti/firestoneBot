@@ -1,5 +1,8 @@
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using Firebot.Core.Tasks;
+using Firebot.GameModel.Base;
 using Firebot.GameModel.Features.Map;
 using Firebot.GameModel.Features.Map.WarfrontCampaign;
 using Firebot.GameModel.Primitives;
@@ -25,11 +28,13 @@ public class WarfrontDailyMissionsTask : BotTask
     internal override TaskGroup Group => TaskGroup.Warfront;
     protected override int MinimumCharacterLevel => 50;
 
-    private static readonly WaitForSeconds BattlePollWait = new(2f);
+    private static readonly WaitForSeconds BattlePollWait = new(1f);
 
-    // Safety bound only - battles are expected to resolve in well under this. Never observed a real
-    // duration, so this errs generous rather than risk cutting a real battle short.
-    private const int MaxBattlePolls = 150; // ~5 minutes at 2s/poll
+    // Live-confirmed, 2026-09-18: real liberation battles resolve in well under a minute (a handful
+    // of rounds) - the original 5-minute bound was picked before ever observing a real one and made
+    // getting stuck (see WFBattleResult.IsDecided) far more costly than it needed to be. Per the
+    // user, 40s is a comfortable margin.
+    private const int MaxBattlePolls = 40; // ~40s at 1s/poll
 
     // Badge lives on the button itself (WorldMap/warfrontCampaignSubmenu/dailyMissionsButton), not
     // the battle-screen leftSideUINew rail - same situation as Path of Glory, so there's no separate
@@ -42,6 +47,7 @@ public class WarfrontDailyMissionsTask : BotTask
         yield return WorldMap.OpenWarfrontCampaignTab;
         yield return WarfrontDailyMissions.Open;
         yield return WarfrontDailyMissions.OpenLiberationMissions;
+        yield return WarfrontLiberationMissions.WaitUntilLoaded();
 
         foreach (var mission in WarfrontLiberationMissions.MissionsGrid.GetChildren())
         {
@@ -53,6 +59,13 @@ public class WarfrontDailyMissionsTask : BotTask
 
             yield return WFBattleSim.Fight; // starts the real battle
 
+            // DIAGNOSTIC (2026-09-18, kept active): the user wants the battle's own speed toggle
+            // (screenshot showed "x4") set to max to make each fight resolve faster - real button
+            // name not yet known. Dumping WFBattle's own children once to find it.
+            var battleChildren = new GameElement(Paths.MenusLoc.Root + "/menus/WFBattle").GetChildren().ToList();
+            Logger.Debug($"[DIAG] WFBattle children ({battleChildren.Count}): " +
+                         string.Join(", ", battleChildren.Select(c => $"'{c.Name}'(visible={c.IsVisible()})")));
+
             var pollsLeft = MaxBattlePolls;
             while (!WFBattleResult.IsDecided && pollsLeft > 0)
             {
@@ -61,7 +74,15 @@ public class WarfrontDailyMissionsTask : BotTask
             }
 
             if (pollsLeft == 0)
+            {
                 Logger.Warning("[WarfrontDailyMissionsTask] Liberation battle didn't resolve within the wait bound.");
+
+                // DIAGNOSTIC (2026-09-18, kept active): the user saw a "Here are your rewards!" / "OK"
+                // popup after a battle - not matched by WFBattleWonLoc/WFBattleDefeatLoc (both assumed,
+                // never live-confirmed), so IsDecided never becomes true. Dumping the real active
+                // popups/menus at the moment of the timeout to find its actual name/structure.
+                DumpActiveScreens();
+            }
 
             yield return WFBattleResult.Close;
         }
@@ -72,5 +93,36 @@ public class WarfrontDailyMissionsTask : BotTask
 
         yield return WarfrontDailyMissions.Close;
         yield return WorldMap.Close;
+    }
+
+    // DIAGNOSTIC (2026-09-18, kept active) - see the call site above.
+    private static void DumpActiveScreens()
+    {
+        var menusRoot = GameObject.Find("menusRoot");
+        if (menusRoot == null)
+        {
+            Logger.Debug("[DIAG] menusRoot not found");
+            return;
+        }
+
+        foreach (var rootName in new[] { "popups", "menus" })
+        {
+            var root = menusRoot.transform.Find($"menuCanvasParent/SafeArea/menuCanvas/{rootName}");
+            if (root == null)
+            {
+                Logger.Debug($"[DIAG] '{rootName}' not found");
+                continue;
+            }
+
+            var activeChildren = new List<string>();
+            for (var i = 0; i < root.childCount; i++)
+            {
+                var child = root.GetChild(i);
+                if (child.gameObject.activeSelf) activeChildren.Add(child.name);
+            }
+
+            Logger.Debug($"[DIAG] '{rootName}' has {root.childCount} children, " +
+                         $"{activeChildren.Count} activeSelf=true: {string.Join(", ", activeChildren)}");
+        }
     }
 }

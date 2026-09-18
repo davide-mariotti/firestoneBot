@@ -19,6 +19,12 @@ namespace Firebot.Tasks.Guild;
 ///     since the wiki confirms cost scales purely with an upgrade's own current level) wins.
 ///     Re-scans and re-picks after every single purchase, same reasoning as Research: spreads
 ///     investment across many upgrades instead of rushing one to a high level while the rest sit at 0.
+///     Live-confirmed, 2026-09-18: clicking a node only opens a preview popup ("Magic spells / Level
+///     0/5 / Buy upgrade 600") - it doesn't buy directly like the NodeLevelTxt comment originally
+///     assumed (see TreeOfLife.ConfirmPurchase). Its buyUpgradeButton's own IsClickable() also doesn't
+///     reliably predict real affordability - running out of Expedition Tokens pops a "CurrencyMissing"
+///     warning instead of silently failing (see TreeOfLife.HasInsufficientFundsMessage), so this stops
+///     as soon as that appears instead of wasting the rest of the run hitting it on every remaining node.
 /// </summary>
 public class TreeOfLifeTask : BotTask
 {
@@ -44,6 +50,13 @@ public class TreeOfLifeTask : BotTask
             if (best == null) break;
 
             yield return TreeOfLife.PersonalNode(best.Value).Click();
+            yield return TreeOfLife.ConfirmPurchase();
+
+            if (TreeOfLife.HasInsufficientFundsMessage)
+            {
+                yield return TreeOfLife.CloseInsufficientFundsMessage;
+                break;
+            }
         }
 
         yield return TreeOfLife.Close;

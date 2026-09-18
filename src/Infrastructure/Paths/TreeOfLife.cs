@@ -23,12 +23,22 @@ public static partial class Paths
         // for the name catalog built from that table's row order).
         public const string PersonalNodeRoot = Root + "/submenus/personalTree/talentTree";
 
-        // Relative to a node - shows its current level directly on the grid (no separate preview
-        // popup was found for this feature, unlike Talents/Firestone Research/Meteorite Research -
-        // clicking a node is assumed to buy its next level directly, gated by the node's own
-        // clickability (affordability/cap), same as every other "click while affordable" purchase in
-        // this codebase. Flag for live verification since this is the one tree-upgrade feature this
-        // session that DIDN'T turn out to have a preview popup.
+        // Relative to a node - shows its current level directly on the grid. Still used as the
+        // affordability/cost tie-break even though a preview popup DOES exist (see below) - the
+        // wiki confirms cost scales purely with an upgrade's own current level.
         public const string NodeLevelTxt = "/levelBg/level";
+
+        // Live-confirmed, 2026-09-18: clicking a personal tree node opens this popup ("Magic spells /
+        // Level 0/5 / Buy upgrade 600") rather than buying directly - the original NodeLevelTxt
+        // assumption ("no preview popup") was wrong, found via a generic active-screen dump after
+        // TreeOfLifeTask got stuck re-clicking the same node for a full 120s (it kept re-opening this
+        // same popup since nothing here ever clicked its own buy/close buttons).
+        private const string PersonalUpgradePreviewRoot = MenusLoc.Root + "/popups/TOLPersonalUpgradePreview";
+
+        public const string PersonalUpgradePreviewCloseBtn = PersonalUpgradePreviewRoot + "/bg/closeButton";
+
+        // Live-confirmed, 2026-09-18: only present/visible under "bg/normal" (the not-yet-maxed
+        // state) - "bg/maxed" has no buy button at all, matching a fully maxed upgrade.
+        public const string PersonalUpgradePreviewBuyBtn = PersonalUpgradePreviewRoot + "/bg/normal/buyUpgradeButton";
     }
 }
