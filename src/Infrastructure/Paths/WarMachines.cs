@@ -1,10 +1,11 @@
 namespace Firebot.Infrastructure;
 
 /// <summary>
-///     War machine roster/leveling screen (https://firestone-idle-rpg.fandom.com/wiki/War_Machines),
-///     reached from the Engineer screen's own "warMachinesButton" (Town -> Engineer -> War Machines) -
-///     confirmed via UnityPy. Root path convention inferred from every other menus/&lt;Name&gt; screen,
-///     same flagged-assumption situation as every other newly automated screen.
+///     War machine roster/leveling screen (https://firestone-idle-rpg.fandom.com/wiki/War_Machines).
+///     Live-confirmed 2026-09-18: NOT reached through the Engineer screen (the "warMachinesButton"
+///     once assumed there never existed) - the Engineer building instead opens a "GarageSelection"
+///     choice popup, and this screen lives behind its sibling "garage" card - see
+///     Town.OpenWarMachines.
 /// </summary>
 public static partial class Paths
 {

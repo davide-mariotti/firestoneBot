@@ -2,7 +2,8 @@ using System;
 using System.Collections;
 using Firebot.Core.Tasks;
 using Firebot.GameModel.Features.Town;
-using Engineer = Firebot.GameModel.Features.Town.Engineer.Engineer;
+using Firebot.GameModel.Shared;
+using Firebot.Infrastructure;
 using TownScreen = Firebot.GameModel.Features.Town.Town;
 
 namespace Firebot.Tasks.Town;
@@ -13,8 +14,12 @@ namespace Firebot.Tasks.Town;
 ///     machine costs Expedition Tokens plus 3 components (Screw/Cog/Metal, obtained passively from
 ///     jewel chests, auto-distributed across owned machines by the game itself) for +100 xp: "level
 ///     bonus = 1.05^(level-1) - 1", a flat multiplicative boost to all of that machine's attributes.
-///     Both requirements are enforced by the level-up button's own clickable state, no thresholds
-///     hardcoded here, same as every other gated action in this codebase.
+///     Live-confirmed, 2026-09-18: the level-up button's own clickable state does NOT reliably predict
+///     real affordability - clicking it while short on Expedition Tokens pops the game's generic
+///     "CurrencyMissing" warning instead of silently failing (same issue as Tree of Life's personal
+///     upgrades - see CurrencyMissingPopup), so this stops the whole task as soon as that appears
+///     instead of hitting the same wall on every remaining machine (Expedition Tokens are a single
+///     currency shared across all of them, per the wiki).
 ///     Runs across every owned war machine (WarMachines.Machines), not just the 5 in the active
 ///     battle formation - unlike Hall of Heroes' gear T1, the wiki gives no indication that leveling
 ///     a benched machine is wasted (components are already auto-balanced across ALL owned machines by
@@ -43,8 +48,11 @@ public class WarMachinesTask : BotTask
     public override IEnumerator Execute()
     {
         yield return TownScreen.Open;
-        yield return TownScreen.OpenEngineer;
-        yield return Engineer.OpenWarMachines;
+
+        // Live-confirmed, 2026-09-18: War Machines lives behind the Engineer building's
+        // "GarageSelection" choice popup's sibling "garage" card, not inside the Engineer screen
+        // itself - see Town.OpenWarMachines.
+        yield return TownScreen.OpenWarMachines;
 
         foreach (var machine in WarMachines.Machines)
         {
@@ -52,16 +60,24 @@ public class WarMachinesTask : BotTask
             yield return WarMachines.OpenWorkshopTab;
 
             var iterations = 0;
+            var outOfCurrency = false;
 
             while (WarMachines.LevelUpBtn.IsClickable() && iterations < MaxIterationsPerMachine)
             {
                 iterations++;
                 yield return WarMachines.LevelUpBtn.Click();
+
+                if (!CurrencyMissingPopup.IsShowing) continue;
+
+                yield return CurrencyMissingPopup.Close;
+                outOfCurrency = true;
+                break;
             }
+
+            if (outOfCurrency) break;
         }
 
         yield return WarMachines.Close;
-        yield return Engineer.Close;
         yield return TownScreen.Close;
 
         NextRunTime = DateTime.Now + RecheckDelay;

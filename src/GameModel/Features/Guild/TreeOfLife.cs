@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using Firebot.GameModel.Base;
 using Firebot.GameModel.Primitives;
 using Firebot.Infrastructure;
 
@@ -65,14 +64,6 @@ public static class TreeOfLife
 
         yield return new GameButton(Paths.TreeOfLifeLoc.PersonalUpgradePreviewCloseBtn).Click();
     }
-
-    /// <summary>Live-confirmed, 2026-09-18: a "CurrencyMissing" popup ("You need N more Expedition
-    /// Token...") - NOT the same as GenericMessage, an initial guess that turned out wrong.</summary>
-    public static bool HasInsufficientFundsMessage =>
-        new GameElement(Paths.MenusLoc.CurrencyMissingLoc.CloseBtn).IsVisible();
-
-    public static IEnumerator CloseInsufficientFundsMessage =>
-        new GameButton(Paths.MenusLoc.CurrencyMissingLoc.CloseBtn).Click();
 
     private static string NodePath(int index) =>
         $"{Paths.TreeOfLifeLoc.PersonalNodeRoot}/treeOfLifePersonalUpgrade ({index})";

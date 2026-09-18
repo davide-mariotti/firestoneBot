@@ -275,6 +275,25 @@ public static partial class Paths
             public const string ConfirmBtn = Root + "/bg/confirmButton";
         }
 
+        // Live-confirmed, 2026-09-18: the "Engineer" building doesn't jump straight into the
+        // Engineer screen either - it opens this intermediate choice popup first, real names
+        // "engineer" / "garage" / "trainingBase" (user screenshot: "Engineer" / "Garage" /
+        // "Training base"). Same pattern as Tavern's TavernSelection. War Machines turned out to
+        // live behind "garage", not behind the Engineer screen - see Town.OpenEngineer /
+        // Town.OpenWarMachines, which both do the building click + card click as one step.
+        public static class GarageSelectionLoc
+        {
+            private const string Root = MenusLoc.Root + "/popups/GarageSelection/bg";
+
+            public const string CloseBtn = Root + "/closeButton";
+
+            public const string OpenEngineerBtn = Root + "/engineer";
+
+            public const string OpenGarageBtn = Root + "/garage";
+
+            public const string OpenTrainingBaseBtn = Root + "/trainingBase";
+        }
+
         public static class EngineerLoc
         {
             private const string Root = MenusLoc.Root + "/menus/Engineer";
@@ -284,12 +303,6 @@ public static partial class Paths
             public const string ClaimBtn = Root + "/submenus/bg/engineerSubmenu/toolsProductionSection/claimToolsButton";
 
             public const string NextRunTimeTxt = ClaimBtn + "/cooldownOn/cooldownTimeLeft";
-
-            // Opens WarMachinesLoc - confirmed via UnityPy. A separate "GarageSelection" hub popup
-            // (same 3 destinations: engineer/garage/trainingBase) also exists but wasn't used here,
-            // since this button reuses the already-live-confirmed Engineer screen entry point instead
-            // of an unconfirmed second route.
-            public const string WarMachinesBtn = Root + "/warMachinesButton";
         }
 
         public static class MagicQuartersLoc

@@ -8,7 +8,21 @@ public static class Town
 {
     public static IEnumerator Open => new GameButton(Paths.BattleLoc.RightSideUILoc.TownBtn).Click();
 
-    public static IEnumerator OpenEngineer => new GameButton(Paths.MenusLoc.TownIrongardLoc.EngineerBtn).Click();
+    // Live-confirmed, 2026-09-18: the "Engineer" building opens the "GarageSelection" choice popup
+    // (Engineer/Garage/Training base cards), not the Engineer screen directly - see
+    // OpenViaGarageSelection. War Machines lives behind the sibling "garage" card, not inside the
+    // Engineer screen at all.
+    public static IEnumerator OpenEngineer =>
+        OpenViaGarageSelection(Paths.MenusLoc.GarageSelectionLoc.OpenEngineerBtn);
+
+    public static IEnumerator OpenWarMachines =>
+        OpenViaGarageSelection(Paths.MenusLoc.GarageSelectionLoc.OpenGarageBtn);
+
+    private static IEnumerator OpenViaGarageSelection(string cardPath)
+    {
+        yield return new GameButton(Paths.MenusLoc.TownIrongardLoc.EngineerBtn).Click();
+        yield return new GameButton(cardPath).Click();
+    }
 
     public static IEnumerator OpenMagicQuarters =>
         new GameButton(Paths.MenusLoc.TownIrongardLoc.MagicQuartersBtn).Click();

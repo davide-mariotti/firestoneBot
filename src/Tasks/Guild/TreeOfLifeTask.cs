@@ -3,6 +3,7 @@ using System.Collections;
 using Firebot.Core.Tasks;
 using Firebot.GameModel.Features.Guild;
 using Firebot.GameModel.Features.Town;
+using Firebot.GameModel.Shared;
 
 namespace Firebot.Tasks.Guild;
 
@@ -23,8 +24,9 @@ namespace Firebot.Tasks.Guild;
 ///     0/5 / Buy upgrade 600") - it doesn't buy directly like the NodeLevelTxt comment originally
 ///     assumed (see TreeOfLife.ConfirmPurchase). Its buyUpgradeButton's own IsClickable() also doesn't
 ///     reliably predict real affordability - running out of Expedition Tokens pops a "CurrencyMissing"
-///     warning instead of silently failing (see TreeOfLife.HasInsufficientFundsMessage), so this stops
-///     as soon as that appears instead of wasting the rest of the run hitting it on every remaining node.
+///     warning instead of silently failing (see CurrencyMissingPopup, shared with War Machines' same
+///     issue), so this stops as soon as that appears instead of wasting the rest of the run hitting it
+///     on every remaining node.
 /// </summary>
 public class TreeOfLifeTask : BotTask
 {
@@ -52,9 +54,9 @@ public class TreeOfLifeTask : BotTask
             yield return TreeOfLife.PersonalNode(best.Value).Click();
             yield return TreeOfLife.ConfirmPurchase();
 
-            if (TreeOfLife.HasInsufficientFundsMessage)
+            if (CurrencyMissingPopup.IsShowing)
             {
-                yield return TreeOfLife.CloseInsufficientFundsMessage;
+                yield return CurrencyMissingPopup.Close;
                 break;
             }
         }
